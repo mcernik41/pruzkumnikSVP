@@ -8,6 +8,8 @@
 </head>
 
 <body>
+	{include navbar from 'navbar.latte'}
+
 	<div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
 
 	{include content}
