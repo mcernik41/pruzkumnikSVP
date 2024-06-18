@@ -39,8 +39,6 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 
 	private function schoolFormSucceeded(\stdClass $data): void
 	{
-		$postId = $this->getParameter('postId');
-
 		$this->database->table('skola')->insert([
 			'jmenoSkoly' => $data->name
 		]);

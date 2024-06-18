@@ -5,11 +5,11 @@
 	{control schoolForm}
 
 	<h2>Školy v systému</h2>
-	<div class="comments">
-	{foreach $skoly as $skola}
-		<p>
-			{$skola->jmenoSkoly}
-		</p>
-	{/foreach}
+	<div class="seznamOdkazu skoly">
+		{foreach $skoly as $skola}
+			<p>
+				<a n:href="Skola:default $skola->skolaID">{$skola->jmenoSkoly}</a>
+			</p>
+		{/foreach}
 </div>
 {/block}

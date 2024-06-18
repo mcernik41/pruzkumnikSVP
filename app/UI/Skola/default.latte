@@ -1,0 +1,15 @@
+{block content}
+	<h1>Vzdělávací plány školy {$jmenoSkoly}</h1>
+
+	<h2>Přidat školu</h2>
+	{control planForm}
+
+	<h2>Vzdělávací plány</h2>
+	<div class="seznamOdkazu vzdelavaciPlany">
+		{foreach $vzdelavaciPlany as $vzdelavaciPlan}
+			<p>
+				{$vzdelavaciPlan->jmenoSVP}
+			</p>
+		{/foreach}
+	</div>
+{/block}
