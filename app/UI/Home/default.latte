@@ -1,3 +1,15 @@
 {block content}
-	Hello World
+	<h1>Průzkumník ŠVP</h1>
+
+	<h2>Přidat školu</h2>
+	{control schoolForm}
+
+	<h2>Školy v systému</h2>
+	<div class="comments">
+	{foreach $skoly as $skola}
+		<p>
+			{$skola->jmenoSkoly}
+		</p>
+	{/foreach}
+</div>
 {/block}
