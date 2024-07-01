@@ -22,7 +22,7 @@ USE `pruzkumnikSVP` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`skola` (
   `skolaID` INT NOT NULL AUTO_INCREMENT,
-  `jmenoSkoly` VARCHAR(45) NULL,
+  `jmenoSkoly` VARCHAR(200) NULL,
   PRIMARY KEY (`skolaID`))
 ENGINE = InnoDB;
 
@@ -32,7 +32,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`svp` (
   `svpID` INT NOT NULL AUTO_INCREMENT,
-  `jmenoSVP` VARCHAR(45) NULL,
+  `jmenoSVP` VARCHAR(200) NULL,
   `popisSVP` LONGTEXT NULL,
   `skola_skolaID` INT NOT NULL,
   PRIMARY KEY (`svpID`),
@@ -51,7 +51,7 @@ CREATE INDEX IF NOT EXISTS `fk_svp_skola1_idx` ON `pruzkumnikSVP`.`svp` (`skola_
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`cil` (
   `cilID` INT NOT NULL AUTO_INCREMENT,
-  `jmenoCile` VARCHAR(45) NULL,
+  `jmenoCile` VARCHAR(200) NULL,
   `popisCile` LONGTEXT NULL,
   `svp_svpID` INT NOT NULL,
   PRIMARY KEY (`cilID`),
@@ -70,7 +70,7 @@ CREATE INDEX IF NOT EXISTS `fk_cil_svp1_idx` ON `pruzkumnikSVP`.`cil` (`svp_svpI
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`vzdelavaciObor` (
   `vzdelavaciOborID` INT NOT NULL AUTO_INCREMENT,
-  `jmenoOboru` VARCHAR(45) NULL,
+  `jmenoOboru` VARCHAR(200) NULL,
   `popisOboru` LONGTEXT NULL,
   `rodicovskyVzdelavaciOborID` INT NULL,
   `svp_svpID` INT NOT NULL,
@@ -97,7 +97,7 @@ CREATE INDEX IF NOT EXISTS `fk_vzdelavaciObor_svp1_idx` ON `pruzkumnikSVP`.`vzde
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`vzdelavaciObsah` (
   `vzdelavaciObsahID` INT NOT NULL AUTO_INCREMENT,
-  `jmenoObsahu` VARCHAR(45) NULL,
+  `jmenoObsahu` VARCHAR(200) NULL,
   `popisObsahu` LONGTEXT NULL,
   `rodicovskyVzdelavaciObsahID` INT NULL,
   `cil_cilID` INT NULL,
@@ -132,7 +132,7 @@ CREATE INDEX IF NOT EXISTS `fk_vzdelavaciObsah_svp1_idx` ON `pruzkumnikSVP`.`vzd
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`typAktivity` (
   `typAktivityID` INT NOT NULL AUTO_INCREMENT,
-  `jmenoTypu` VARCHAR(45) NULL,
+  `jmenoTypu` VARCHAR(200) NULL,
   `popisTypu` LONGTEXT NULL,
   PRIMARY KEY (`typAktivityID`))
 ENGINE = InnoDB;
@@ -143,8 +143,8 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`vzdelavaciAktivita` (
   `vzdelavaciAktivitaID` INT NOT NULL AUTO_INCREMENT,
-  `jmenoAktivity` VARCHAR(45) NULL,
-  `popisAktivity` VARCHAR(45) NULL,
+  `jmenoAktivity` VARCHAR(200) NULL,
+  `popisAktivity` LONGTEXT NULL,
   `typAktivity_typAktivityID` INT NOT NULL,
   `svp_svpID` INT NOT NULL,
   PRIMARY KEY (`vzdelavaciAktivitaID`),
@@ -170,8 +170,8 @@ CREATE INDEX IF NOT EXISTS `fk_vzdelavaciAktivita_svp1_idx` ON `pruzkumnikSVP`.`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`soucastAktivity` (
   `soucastAktivityID` INT NOT NULL AUTO_INCREMENT,
-  `jmenoSoucasti` VARCHAR(45) NULL,
-  `popisSoucasti` VARCHAR(45) NULL,
+  `jmenoSoucasti` VARCHAR(200) NULL,
+  `popisSoucasti` LONGTEXT NULL,
   `vzdelavaciAktivita_vzdelavaciAktivitaID` INT NOT NULL,
   `vzdelavaciObor_vzdelavaciOborID` INT NOT NULL,
   `vzdelavaciObsah_vzdelavaciObsahID` INT NOT NULL,
