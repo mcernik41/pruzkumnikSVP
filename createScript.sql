@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`svp` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_svp_skola1_idx` ON `pruzkumnikSVP`.`svp` (`skola_skolaID` ASC);
+CREATE INDEX IF NOT EXISTS `fk_svp_skola1_idx` ON `pruzkumnikSVP`.`svp` (`skola_skolaID` ASC);
 
 
 -- -----------------------------------------------------
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`cil` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_cil_svp1_idx` ON `pruzkumnikSVP`.`cil` (`svp_svpID` ASC);
+CREATE INDEX IF NOT EXISTS `fk_cil_svp1_idx` ON `pruzkumnikSVP`.`cil` (`svp_svpID` ASC);
 
 
 -- -----------------------------------------------------
@@ -87,9 +87,9 @@ CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`vzdelavaciObor` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_vzdelavaciObor_vzdelavaciObor1_idx` ON `pruzkumnikSVP`.`vzdelavaciObor` (`rodicovskyVzdelavaciOborID` ASC);
+CREATE INDEX IF NOT EXISTS `fk_vzdelavaciObor_vzdelavaciObor1_idx` ON `pruzkumnikSVP`.`vzdelavaciObor` (`rodicovskyVzdelavaciOborID` ASC);
 
-CREATE INDEX `fk_vzdelavaciObor_svp1_idx` ON `pruzkumnikSVP`.`vzdelavaciObor` (`svp_svpID` ASC);
+CREATE INDEX IF NOT EXISTS `fk_vzdelavaciObor_svp1_idx` ON `pruzkumnikSVP`.`vzdelavaciObor` (`svp_svpID` ASC);
 
 
 -- -----------------------------------------------------
@@ -99,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`vzdelavaciObsah` (
   `vzdelavaciObsahID` INT NOT NULL AUTO_INCREMENT,
   `jmenoObsahu` VARCHAR(45) NULL,
   `popisObsahu` LONGTEXT NULL,
-  `rodicovskyVzdelavaciObsahID` NULL,
+  `rodicovskyVzdelavaciObsahID` INT NULL,
   `cil_cilID` INT NULL,
   `svp_svpID` INT NOT NULL,
   PRIMARY KEY (`vzdelavaciObsahID`),
@@ -120,11 +120,11 @@ CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`vzdelavaciObsah` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_vzdelavaciObsah_vzdelavaciObsah1_idx` ON `pruzkumnikSVP`.`vzdelavaciObsah` (`rodicovskyVzdelavaciObsahID` ASC);
+CREATE INDEX IF NOT EXISTS `fk_vzdelavaciObsah_vzdelavaciObsah1_idx` ON `pruzkumnikSVP`.`vzdelavaciObsah` (`rodicovskyVzdelavaciObsahID` ASC);
 
-CREATE INDEX `fk_vzdelavaciObsah_cil1_idx` ON `pruzkumnikSVP`.`vzdelavaciObsah` (`cil_cilID` ASC);
+CREATE INDEX IF NOT EXISTS `fk_vzdelavaciObsah_cil1_idx` ON `pruzkumnikSVP`.`vzdelavaciObsah` (`cil_cilID` ASC);
 
-CREATE INDEX `fk_vzdelavaciObsah_svp1_idx` ON `pruzkumnikSVP`.`vzdelavaciObsah` (`svp_svpID` ASC);
+CREATE INDEX IF NOT EXISTS `fk_vzdelavaciObsah_svp1_idx` ON `pruzkumnikSVP`.`vzdelavaciObsah` (`svp_svpID` ASC);
 
 
 -- -----------------------------------------------------
@@ -160,9 +160,9 @@ CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`vzdelavaciAktivita` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_vzdelavaciAktivita_typAktivity_idx` ON `pruzkumnikSVP`.`vzdelavaciAktivita` (`typAktivity_typAktivityID` ASC);
+CREATE INDEX IF NOT EXISTS `fk_vzdelavaciAktivita_typAktivity_idx` ON `pruzkumnikSVP`.`vzdelavaciAktivita` (`typAktivity_typAktivityID` ASC);
 
-CREATE INDEX `fk_vzdelavaciAktivita_svp1_idx` ON `pruzkumnikSVP`.`vzdelavaciAktivita` (`svp_svpID` ASC);
+CREATE INDEX IF NOT EXISTS `fk_vzdelavaciAktivita_svp1_idx` ON `pruzkumnikSVP`.`vzdelavaciAktivita` (`svp_svpID` ASC);
 
 
 -- -----------------------------------------------------
@@ -193,11 +193,11 @@ CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`soucastAktivity` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_soucastAktivity_vzdelavaciAktivita1_idx` ON `pruzkumnikSVP`.`soucastAktivity` (`vzdelavaciAktivita_vzdelavaciAktivitaID` ASC);
+CREATE INDEX IF NOT EXISTS `fk_soucastAktivity_vzdelavaciAktivita1_idx` ON `pruzkumnikSVP`.`soucastAktivity` (`vzdelavaciAktivita_vzdelavaciAktivitaID` ASC);
 
-CREATE INDEX `fk_soucastAktivity_vzdelavaciObor1_idx` ON `pruzkumnikSVP`.`soucastAktivity` (`vzdelavaciObor_vzdelavaciOborID` ASC);
+CREATE INDEX IF NOT EXISTS `fk_soucastAktivity_vzdelavaciObor1_idx` ON `pruzkumnikSVP`.`soucastAktivity` (`vzdelavaciObor_vzdelavaciOborID` ASC);
 
-CREATE INDEX `fk_soucastAktivity_vzdelavaciObsah1_idx` ON `pruzkumnikSVP`.`soucastAktivity` (`vzdelavaciObsah_vzdelavaciObsahID` ASC);
+CREATE INDEX IF NOT EXISTS `fk_soucastAktivity_vzdelavaciObsah1_idx` ON `pruzkumnikSVP`.`soucastAktivity` (`vzdelavaciObsah_vzdelavaciObsahID` ASC);
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
