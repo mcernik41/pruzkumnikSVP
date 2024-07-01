@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`vzdelavaciObor` (
   `vzdelavaciOborID` INT NOT NULL AUTO_INCREMENT,
   `jmenoOboru` VARCHAR(45) NULL,
   `popisOboru` LONGTEXT NULL,
-  `rodicovskyVzdelavaciOborID` INT NOT NULL,
+  `rodicovskyVzdelavaciOborID` INT NULL,
   `svp_svpID` INT NOT NULL,
   PRIMARY KEY (`vzdelavaciOborID`),
   CONSTRAINT `fk_vzdelavaciObor_vzdelavaciObor1`
