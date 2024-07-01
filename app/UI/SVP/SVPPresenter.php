@@ -18,9 +18,10 @@ final class SVPPresenter extends Nette\Application\UI\Presenter
 	protected $explorer;
 	protected $rodicovskyObsah;
 
-	public function renderDefault(int $planID): void
+	public function renderDefault(int $svpID): void
 	{
-		$plan = $this->explorer->table('svp')->get($planID);
+		$plan = $this->explorer->table('svp')->get($svpID);
 		$this->template->jmenoSVP = $plan->jmenoSVP;
+		$this->template->svpID = $plan->svpID;
 	}
 }

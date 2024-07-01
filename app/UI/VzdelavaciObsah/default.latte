@@ -1,0 +1,16 @@
+{block content}
+	<h1>Vzdělávací obsah plánu {$jmenoSVP}</h1>
+	<h2 n:if="$vzdelavaciObsahID != -1">Vzdělávací obsah {$jmenoObsahu}</h2>
+
+	<h2>Přidat vzdělávací obsah</h2>
+	{control contentForm}
+
+	<h2>Vzdělávací obsah</h2>
+	<div class="seznamOdkazu vzdelavaciObsahy">
+		{foreach $vzdelavaciObsahy as $vzdelavaciObsah}
+			<p>
+				<a n:href="VzdelavaciObsah:default $svpID, $vzdelavaciObsah->vzdelavaciObsahID">{$vzdelavaciObsah->jmenoObsahu}</a>
+			</p>
+		{/foreach}
+	</div>
+{/block}

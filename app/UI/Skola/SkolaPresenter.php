@@ -51,7 +51,7 @@ final class SkolaPresenter extends Nette\Application\UI\Presenter
 			'popisSVP' => $data->popisSVP,
 		]);
 
-		$this->flashMessage('Škola úspěšně přidána', 'success');
+		$this->flashMessage('Vzdělávací plán úspěšně přidán', 'success');
 		$this->redirect('this');
 	}
 }
