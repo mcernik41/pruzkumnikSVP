@@ -7,6 +7,13 @@
     margin: 8px;
 }
 
+.flash {
+    background-color: rgb(135, 187, 17);
+    color: rgb(0, 0, 0);
+    padding: 16px;
+    margin-top: 8px;
+}
+
 table {
     border-collapse: collapse;
 }
