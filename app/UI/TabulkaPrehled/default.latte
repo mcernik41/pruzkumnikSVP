@@ -7,7 +7,11 @@
         <tr>
             <th>Obsahy/Obory</th>
             {foreach $obory as $obor}
-                <th>{$obor->jmenoOboru}</th>
+                <th>
+                    <a n:href="VzdelavaciObor:default $svpID, $obor->vzdelavaciOborID">
+                        {$obor->jmenoOboru}
+                    </a>
+                </th>
                 {include #rekurzivniObory, obory => $obor->children, uroven => 1}
             {/foreach}
         </tr>
@@ -15,7 +19,11 @@
     <tbody>
         {foreach $obsahy as $obsah}
             <tr>
-                <td>{$obsah->jmenoObsahu}</td>
+                <td>
+                    <a n:href="VzdelavaciObsah:default $svpID, $obsah->vzdelavaciObsahID">
+                        {$obsah->jmenoObsahu}
+                    </a>
+                </td>
                 {foreach $obory as $obor}
                     <td>
                         {* Zde můžete přidat obsah přiřazený k oboru *}
@@ -31,7 +39,11 @@
 {block #rekurzivniObsahy}
     {foreach $obsahy as $obsah}
         <tr>
-            <td style="padding-left: {$uroven * 20}px">{$obsah->jmenoObsahu}</td>
+            <td style="padding-left: {$uroven * 20}px">
+                <a n:href="VzdelavaciObsah:default $svpID, $obsah->vzdelavaciObsahID">
+                    {$obsah->jmenoObsahu}
+                </a>
+            </td>
             {foreach $oboryIds as $obor}
                 <td>
                     {$obor}
@@ -45,7 +57,11 @@
 
 {block #rekurzivniObory}
     {foreach $obory as $obor}
-        <th style="padding-top: {$uroven * 30}px">{$obor->jmenoOboru}</th>
+        <th style="padding-top: {$uroven * 30}px">
+            <a n:href="VzdelavaciObor:default $svpID, $obor->vzdelavaciOborID">
+                {$obor->jmenoOboru}
+            </a>
+        </th>
         {include #rekurzivniObory, obory => $obor->children, uroven => $uroven + 1}
     {/foreach}
 {/block}
