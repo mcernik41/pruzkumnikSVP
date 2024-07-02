@@ -30,7 +30,7 @@ final class VzdelavaciObsahPresenter extends Nette\Application\UI\Presenter
 		if ($vzdelavaciObsahID === -1) 
 		{
 			$obsahy = $this->explorer->table('vzdelavaciObsah')
-				->where('rodicovskyVzdelavaciObsahID IS NULL')
+				->where('rodicovskyVzdelavaciObsahID IS NULL AND svp_svpID = ?', $svpID)
 				->fetchAll();
 		} 
 		else 
@@ -56,8 +56,6 @@ final class VzdelavaciObsahPresenter extends Nette\Application\UI\Presenter
 		$form->addTextarea('popisObsahu', 'Popis vzdělvávacího obsahu:');
 
 		$form->addSubmit('send', 'Přidat vzdělávací obsah');
-
-		//$form->addHidden('vzdelavaciObsahID', $this->template->vzdelavaciObsahID);
 
 		$form->onSuccess[] = $this->contentFormSucceeded(...);
 

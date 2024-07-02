@@ -29,7 +29,7 @@ final class VzdelavaciOborPresenter extends Nette\Application\UI\Presenter
 		if ($vzdelavaciOborID === -1) 
 		{
 			$obory = $this->explorer->table('vzdelavaciObor')
-				->where('rodicovskyVzdelavaciOborID IS NULL')
+				->where('rodicovskyVzdelavaciOborID IS NULL AND svp_svpID = ?', $svpID)
 				->fetchAll();
 		} 
 		else 
@@ -55,8 +55,6 @@ final class VzdelavaciOborPresenter extends Nette\Application\UI\Presenter
 		$form->addTextarea('popisOboru', 'Popis vzdělvávacího oboru:');
 
 		$form->addSubmit('send', 'Přidat vzdělávací obor');
-
-		//$form->addHidden('vzdelavaciOborID', $this->template->vzdelavaciOborID);
 
 		$form->onSuccess[] = $this->areaFormSucceeded(...);
 
