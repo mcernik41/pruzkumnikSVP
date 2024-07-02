@@ -21,6 +21,9 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	{
 		$skoly = $this->explorer->table('skola');
 		$this->template->skoly = $skoly;
+		
+		$typyAktivit = $this->explorer->table('typAktivity');
+		$this->template->typyAktivit = $typyAktivit;
 	}
 
 	protected function createComponentSchoolForm(): Form
@@ -44,6 +47,33 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 		]);
 
 		$this->flashMessage('Škola úspěšně přidána', 'success');
+		$this->redirect('this');
+	}
+
+	protected function createComponentActivityTypeForm(): Form
+	{
+		$form = new Form; // means Nette\Application\UI\Form
+
+		$form->addText('jmenoTypu', 'Jméno typu aktivity:')
+			->setRequired();
+
+		$form->addTextarea('popisTypu', 'Popis typu aktivity:');
+
+		$form->addSubmit('send', 'Přidat typ aktivity');
+
+		$form->onSuccess[] = $this->activityTypeFormSucceeded(...);
+
+		return $form;
+	}
+
+	private function activityTypeFormSucceeded(\stdClass $data): void
+	{
+		$this->database->table('typAktivity')->insert([
+			'jmenoTypu' => $data->jmenoTypu,
+			'popisTypu' => $data->popisTypu
+		]);
+
+		$this->flashMessage('Typ aktivity úspěšně přidán', 'success');
 		$this->redirect('this');
 	}
 }

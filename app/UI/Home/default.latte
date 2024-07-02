@@ -1,15 +1,35 @@
 {block content}
 	<h1>Průzkumník ŠVP</h1>
 
-	<h2>Přidat školu</h2>
-	{control schoolForm}
+	<div>
+		<h2>Školy</h2>
 
-	<h2>Školy v systému</h2>
-	<div class="seznamOdkazu skoly">
-		{foreach $skoly as $skola}
-			<p>
-				<a n:href="Skola:default $skola->skolaID">{$skola->jmenoSkoly}</a>
-			</p>
-		{/foreach}
-</div>
+		<h3>Přidat školu</h3>
+		{control schoolForm}
+
+		<h3>Školy v systému</h3>
+		<div class="seznamOdkazu skoly">
+			{foreach $skoly as $skola}
+				<p>
+					<a n:href="Skola:default $skola->skolaID">{$skola->jmenoSkoly}</a>
+				</p>
+			{/foreach}
+		</div>
+	</div>
+
+	<div>
+		<h2>Typy aktivit</h2>
+
+		<h3>Přidat typ aktivity</h3>
+		{control activityTypeForm}
+
+		<h3>Typy aktivit</h3>
+		<div class="seznamOdkazu skoly">
+			{foreach $typyAktivit as $typ}
+				<p>
+					{$typ->jmenoTypu}
+				</p>
+			{/foreach}
+		</div>
+	</div>
 {/block}
