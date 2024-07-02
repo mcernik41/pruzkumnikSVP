@@ -5,6 +5,8 @@
 
 .navbar a {
     margin: 8px;
+    margin-left: 0px;
+    margin-right: 16px;
 }
 
 .flash {
