@@ -1,0 +1,15 @@
+{block content}
+	<h1>Seznam aktivit plánu {$jmenoSVP}</h1>
+
+	<h2>Přidat aktivitu</h2>
+	{control activityForm}
+
+	<h2>Aktivity</h2>
+	<div class="seznamOdkazu vzdelavaciObory">
+		{foreach $aktivity as $aktivita}
+			<p>
+				{$aktivita->jmenoAktivity}
+			</p>
+		{/foreach}
+	</div>
+{/block}
