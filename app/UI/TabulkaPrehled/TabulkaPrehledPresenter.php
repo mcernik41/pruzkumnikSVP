@@ -36,7 +36,33 @@ final class TabulkaPrehledPresenter extends Nette\Application\UI\Presenter
 
         $oboryIds = $this->getInfixIds($this->template->obory);
         $this->template->oboryIds = $oboryIds;
-	}
+
+        //načtení součástí vzdělávacích aktivit
+        $soucastiAktivit = $this->explorer->table('soucastAktivity')
+            ->where('vzdelavaciObor_vzdelavaciOborID IN ?', $oboryIds)
+            ->fetchAll();
+
+        foreach ($soucastiAktivit as $soucastAktivity) 
+        {
+            $oborID = $soucastAktivity->vzdelavaciObor_vzdelavaciOborID;
+            $obsahID = $soucastAktivity->vzdelavaciObsah_vzdelavaciObsahID;
+
+            $soucasti[$oborID][$obsahID][] = [
+                'jmenoSoucasti' => $soucastAktivity->jmenoSoucasti,
+                'popisSoucasti' => $soucastAktivity->popisSoucasti,
+                'idAktivity' => $soucastAktivity->vzdelavaciAktivita_vzdelavaciAktivitaID,
+                'jmenoAktivity' => $this->ziskatJmenoAktivity($soucastAktivity->vzdelavaciAktivita_vzdelavaciAktivitaID),
+            ];
+        }
+        
+        $this->template->soucastiAktivit = $soucasti;
+	}    
+
+    private function ziskatJmenoAktivity(int $aktivitaID): string
+    {
+        $aktivita = $this->explorer->table('vzdelavaciAktivita')->get($aktivitaID);
+        return $aktivita->jmenoAktivity;
+    }
     
     private function getInfixIds(array $obory): array
     {

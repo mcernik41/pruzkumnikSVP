@@ -24,9 +24,9 @@
                         {$obsah->jmenoObsahu}
                     </a>
                 </td>
-                {foreach $obory as $obor}
+                {foreach $oboryIds as $obor}
                     <td>
-                        {* Zde můžete přidat obsah přiřazený k oboru *}
+                        {include #soucastiAktivit, soucastiAktivit => $soucastiAktivit, oborID => $obor, obsahID => $obsah->vzdelavaciObsahID}
                     </td>
                 {/foreach}
             </tr>
@@ -46,8 +46,7 @@
             </td>
             {foreach $oboryIds as $obor}
                 <td>
-                    {$obor}
-                    {* Zde můžete přidat obsah přiřazený k oboru *}
+                    {include #soucastiAktivit, soucastiAktivit => $soucastiAktivit, oborID => $obor, obsahID => $obsah->vzdelavaciObsahID}
                 </td>
             {/foreach}
         </tr>
@@ -64,4 +63,17 @@
         </th>
         {include #rekurzivniObory, obory => $obor->children, uroven => $uroven + 1}
     {/foreach}
+{/block}
+
+{block #soucastiAktivit}
+    {if isset($soucastiAktivit[$oborID][$obsahID])}
+        {foreach $soucastiAktivit[$oborID][$obsahID] as $soucast}
+            <div>
+                {$soucast['jmenoSoucasti']}
+                <a n:href="VzdelavaciAktivita:default $soucast['idAktivity']">
+                    {$soucast['jmenoAktivity']}
+                </a>
+            </div>
+        {/foreach}
+    {/if}
 {/block}
