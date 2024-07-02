@@ -51,10 +51,12 @@ final class VzdelavaciObsahPresenter extends Nette\Application\UI\Presenter
 
 	private function nacistAktivity($vzdelavaciObsahID)
 	{
+		//najdu všechny aktivity, které se váží k tomuto obsahu
 		$soucastiAktivit = $this->explorer->table('soucastAktivity')
 			->where('vzdelavaciObsah_vzdelavaciObsahID = ?', $vzdelavaciObsahID)
 			->fetchAll();
 
+		//najdu ID oborů, do kterých patří nalezené aktivity
 		$vzdelavaciOboryID = [];
 		foreach ($soucastiAktivit as $soucastAktivity) { $vzdelavaciOboryID[] = $soucastAktivity->vzdelavaciObor_vzdelavaciOborID; }
 		$vzdelavaciOboryID = array_unique($vzdelavaciOboryID);

@@ -14,6 +14,20 @@
 		{/foreach}
 	</div>
 
+	<h2>Přidružené aktivity</h2>
+	<div class="pridruzeneAktivity">
+		{foreach $obsahy as $obsah}
+			<h3>{$obsah->jmenoObsahu}</h3>
+			{foreach $obsah->aktivity as $aktivita}
+				<h4>{$aktivita->jmenoAktivity}</h4>
+				{foreach $aktivita->soucastiAktivity as $soucast}
+					<strong>{$soucast->jmenoSoucasti}</strong>
+					<p>{$soucast->popisSoucasti}</p>
+				{/foreach}
+			{/foreach}
+		{/foreach}
+	</div>
+
 	<h2>Předvolené sady</h2>
 	<form action="{link nahratOborySVP_NV!}" method="post">
 		<button type="submit">Nahrát vzdělávací obory - základní vzdělávání</button>

@@ -43,6 +43,70 @@ final class VzdelavaciOborPresenter extends Nette\Application\UI\Presenter
 		}
 
 		$this->template->vzdelavaciObory = $obory;
+
+		//nalezení součástí vzdělávacích aktivit - podle obsahu a aktivity
+		$this->nacistAktivity($vzdelavaciOborID);
+	}
+
+	private function nacistAktivity($vzdelavaciOborID)
+	{
+		//najdu všechny aktivity, které se váží k tomuto oboru
+		$soucastiAktivit = $this->explorer->table('soucastAktivity')
+			->where('vzdelavaciObor_vzdelavaciOborID = ?', $vzdelavaciOborID)
+			->fetchAll();
+
+		//najdu ID obsahů, do kterých patří nalezené aktivity
+		$vzdelavaciObsahyID = [];
+		foreach ($soucastiAktivit as $soucastAktivity) { $vzdelavaciObsahyID[] = $soucastAktivity->vzdelavaciObsah_vzdelavaciObsahID; }
+		$vzdelavaciObsahyID = array_unique($vzdelavaciObsahyID);
+
+		//najdu příslušné obsahy
+		$obsahy = $this->explorer->table('vzdelavaciObsah')
+			->where('vzdelavaciObsahID', $vzdelavaciObsahyID)
+			->fetchAll();
+
+		$obsahyKOboru = [];
+
+		foreach($obsahy as $obsah)
+		{
+			$soucastiAktivit = $this->explorer->table('soucastAktivity')
+				->where('vzdelavaciObor_vzdelavaciOborID = ?', $vzdelavaciOborID)
+				->where('vzdelavaciObsah_vzdelavaciObsahID = ?', $obsah)
+				->fetchAll();
+
+			$vzdelavaciAktivityID = [];
+			foreach ($soucastiAktivit as $soucastAktivity) { $vzdelavaciAktivityID[] = $soucastAktivity->vzdelavaciAktivita_vzdelavaciAktivitaID; }
+			$vzdelavaciAktivityID = array_unique($vzdelavaciAktivityID);
+
+			$aktivity = $this->explorer->table('vzdelavaciAktivita')
+				->where('vzdelavaciAktivitaID', $vzdelavaciAktivityID)
+				->fetchAll();
+
+			$obsahKOboru = new Obsah($obsah->jmenoObsahu);
+
+			foreach($aktivity as $aktivita)
+			{
+				$aktivitaKObsahu = new Aktivita($aktivita->jmenoAktivity);
+
+				$soucastiAktivit = $this->explorer->table('soucastAktivity')
+					->where('vzdelavaciObor_vzdelavaciOborID = ?', $vzdelavaciOborID)
+					->where('vzdelavaciObsah_vzdelavaciObsahID = ?', $obsah)
+					->where('vzdelavaciAktivita_vzdelavaciAktivitaID = ?', $aktivita)
+					->fetchAll();
+
+				foreach($soucastiAktivit as $soucastAktivity)
+				{
+					$soucastAktivity_akt = new SoucastAktivity($soucastAktivity->jmenoSoucasti, $soucastAktivity->popisSoucasti);
+					$aktivitaKObsahu->soucastiAktivity[] = $soucastAktivity_akt;
+				}
+
+				$obsahKOboru->aktivity[] = $aktivitaKObsahu;
+			}
+
+			$obsahyKOboru[] = $obsahKOboru;
+		}
+
+		$this->template->obsahy = $obsahyKOboru;
 	}
 
 	protected function createComponentAreaForm(): Form
@@ -163,4 +227,40 @@ final class VzdelavaciOborPresenter extends Nette\Application\UI\Presenter
 			]
 		]
 	];
+}
+
+class Obsah
+{
+	public string $jmenoObsahu;
+	public array $aktivity;
+	
+	public function __construct(string $jmenoObsahu)
+	{
+		$this->jmenoObsahu = $jmenoObsahu;
+		$this->aktivity = [];
+	}
+}
+
+class Aktivita
+{
+	public string $jmenoAktivity;
+	public array $soucastiAktivity;
+	
+	public function __construct(string $jmenoAktivity)
+	{
+		$this->jmenoAktivity = $jmenoAktivity;
+		$this->soucastiAktivity = [];
+	}
+}
+
+class SoucastAktivity
+{
+	public string $jmenoSoucasti;
+	public string $popisSoucasti;
+
+	public function __construct(string $jmenoSoucasti, string $popisSoucasti)
+	{
+		$this->jmenoSoucasti = $jmenoSoucasti;
+		$this->popisSoucasti = $popisSoucasti;
+	}
 }
