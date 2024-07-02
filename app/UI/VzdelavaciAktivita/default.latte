@@ -1,0 +1,15 @@
+{block content}
+	<h1>Vzdělávací aktivita {$jmenoAktivity}</h1>
+
+	<h2>Přidat součást</h2>
+	{control activityPartForm}
+
+	<h2>Součásti vzdělávací aktivity</h2>
+	<div class="seznamOdkazu vzdelavaciAktivity">
+		{foreach $soucastiAktivity as $soucast}
+			<p>
+				{$soucast->jmenoSoucasti}
+			</p>
+		{/foreach}
+	</div>
+{/block}
