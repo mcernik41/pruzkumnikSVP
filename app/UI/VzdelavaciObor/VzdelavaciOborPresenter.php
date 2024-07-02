@@ -82,11 +82,11 @@ final class VzdelavaciOborPresenter extends Nette\Application\UI\Presenter
 				->where('vzdelavaciAktivitaID', $vzdelavaciAktivityID)
 				->fetchAll();
 
-			$obsahKOboru = new Obsah($obsah->jmenoObsahu);
+			$obsahKOboru = new Obsah($obsah->vzdelavaciObsahID, $obsah->jmenoObsahu);
 
 			foreach($aktivity as $aktivita)
 			{
-				$aktivitaKObsahu = new Aktivita($aktivita->jmenoAktivity);
+				$aktivitaKObsahu = new Aktivita($aktivita->vzdelavaciAktivitaID, $aktivita->jmenoAktivity);
 
 				$soucastiAktivit = $this->explorer->table('soucastAktivity')
 					->where('vzdelavaciObor_vzdelavaciOborID = ?', $vzdelavaciOborID)
@@ -96,7 +96,7 @@ final class VzdelavaciOborPresenter extends Nette\Application\UI\Presenter
 
 				foreach($soucastiAktivit as $soucastAktivity)
 				{
-					$soucastAktivity_akt = new SoucastAktivity($soucastAktivity->jmenoSoucasti, $soucastAktivity->popisSoucasti);
+					$soucastAktivity_akt = new SoucastAktivity($soucastAktivity->soucastAktivityID, $soucastAktivity->jmenoSoucasti, $soucastAktivity->popisSoucasti);
 					$aktivitaKObsahu->soucastiAktivity[] = $soucastAktivity_akt;
 				}
 
@@ -231,11 +231,13 @@ final class VzdelavaciOborPresenter extends Nette\Application\UI\Presenter
 
 class Obsah
 {
+	public int $obsahID;
 	public string $jmenoObsahu;
 	public array $aktivity;
 	
-	public function __construct(string $jmenoObsahu)
+	public function __construct(int $obsahID, string $jmenoObsahu)
 	{
+		$this->obsahID = $obsahID;
 		$this->jmenoObsahu = $jmenoObsahu;
 		$this->aktivity = [];
 	}
@@ -243,11 +245,13 @@ class Obsah
 
 class Aktivita
 {
+	public int $aktivitaID;
 	public string $jmenoAktivity;
 	public array $soucastiAktivity;
 	
-	public function __construct(string $jmenoAktivity)
+	public function __construct(int $aktivitaID, string $jmenoAktivity)
 	{
+		$this->aktivitaID = $aktivitaID;
 		$this->jmenoAktivity = $jmenoAktivity;
 		$this->soucastiAktivity = [];
 	}
@@ -255,11 +259,13 @@ class Aktivita
 
 class SoucastAktivity
 {
+	public int $soucastID;
 	public string $jmenoSoucasti;
 	public string $popisSoucasti;
 
-	public function __construct(string $jmenoSoucasti, string $popisSoucasti)
+	public function __construct(int $soucastID, string $jmenoSoucasti, string $popisSoucasti)
 	{
+		$this->soucastID = $soucastID;
 		$this->jmenoSoucasti = $jmenoSoucasti;
 		$this->popisSoucasti = $popisSoucasti;
 	}
