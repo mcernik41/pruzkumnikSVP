@@ -3,6 +3,10 @@
     padding: 16px;
 }
 
+.navbar a {
+    margin: 8px;
+}
+
 table {
     border-collapse: collapse;
 }

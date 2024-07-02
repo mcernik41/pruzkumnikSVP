@@ -8,7 +8,7 @@
 	<div class="seznamOdkazu vzdelavaciObory">
 		{foreach $aktivity as $aktivita}
 			<p>
-				<a n:href="VzdelavaciAktivita:default $aktivita->vzdelavaciAktivitaID">{$aktivita->jmenoAktivity}</a>
+				<a n:href="VzdelavaciAktivita:default $aktivita->vzdelavaciAktivitaID, $svpID">{$aktivita->jmenoAktivity}</a>
 			</p>
 		{/foreach}
 	</div>

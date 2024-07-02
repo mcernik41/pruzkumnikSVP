@@ -72,7 +72,7 @@
         {foreach $soucastiAktivit[$oborID][$obsahID] as $soucast}
             <div>
                 {$soucast['jmenoSoucasti']}
-                <a n:href="VzdelavaciAktivita:default $soucast['idAktivity']">
+                <a n:href="VzdelavaciAktivita:default $soucast['idAktivity'], $svpID">
                     {$soucast['jmenoAktivity']}
                 </a>
             </div>

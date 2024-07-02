@@ -17,10 +17,12 @@ final class VzdelavaciAktivitaPresenter extends Nette\Application\UI\Presenter
 
 	protected $explorer;
 
-	public function renderDefault(int $aktivitaID): void
+	public function renderDefault(int $aktivitaID, int $svpID): void
 	{
 		$aktivita = $this->explorer->table('vzdelavaciAktivita')->get($aktivitaID);
 		$this->template->jmenoAktivity = $aktivita->jmenoAktivity;
+
+		$this->template->svpID = $svpID;
 
 		$this->template->soucastiAktivity = $aktivita->related('soucastAktivity');
 	}
