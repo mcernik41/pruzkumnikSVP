@@ -1,0 +1,15 @@
+{block content}
+	<h1>Seznam cílů plánu {$jmenoSVP}</h1>
+
+	<h2>Přidat cíl</h2>
+	{control goalForm}
+
+	<h2>Cíle vzdělávacího plánu</h2>
+	<div class="seznamOdkazu cilePlanu">
+		{foreach $cile as $cil}
+			<p>
+				{$cil->jmenoCile}
+			</p>
+		{/foreach}
+	</div>
+{/block}
