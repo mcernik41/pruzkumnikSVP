@@ -2,38 +2,40 @@
 <h1>Vzdělávací plán {$jmenoSVP}</h1>
 
 {* Latte šablona pro vykreslení tabulky s obory a obsahy *}
-<table>
-    <thead>
-        <tr>
-            <th>Obsahy/Obory</th>
-            {foreach $obory as $obor}
-                <th>
-                    <a n:href="VzdelavaciObor:default $svpID, $obor->vzdelavaciOborID">
-                        {$obor->jmenoOboru}
-                    </a>
-                </th>
-                {include #rekurzivniObory, obory => $obor->children, uroven => 1}
-            {/foreach}
-        </tr>
-    </thead>
-    <tbody>
-        {foreach $obsahy as $obsah}
+<div class="scrollTable">
+    <table>
+        <thead>
             <tr>
-                <td>
-                    <a n:href="VzdelavaciObsah:default $svpID, $obsah->vzdelavaciObsahID">
-                        {$obsah->jmenoObsahu}
-                    </a>
-                </td>
-                {foreach $oboryIds as $obor}
-                    <td>
-                        {include #soucastiAktivit, soucastiAktivit => $soucastiAktivit, oborID => $obor, obsahID => $obsah->vzdelavaciObsahID}
-                    </td>
+                <th>Obsahy/Obory</th>
+                {foreach $obory as $obor}
+                    <th>
+                        <a n:href="VzdelavaciObor:default $svpID, $obor->vzdelavaciOborID">
+                            {$obor->jmenoOboru}
+                        </a>
+                    </th>
+                    {include #rekurzivniObory, obory => $obor->children, uroven => 1}
                 {/foreach}
             </tr>
-            {include #rekurzivniObsahy, obsahy => $obsah->children, uroven => 1}
-        {/foreach}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            {foreach $obsahy as $obsah}
+                <tr>
+                    <td>
+                        <a n:href="VzdelavaciObsah:default $svpID, $obsah->vzdelavaciObsahID">
+                            {$obsah->jmenoObsahu}
+                        </a>
+                    </td>
+                    {foreach $oboryIds as $obor}
+                        <td>
+                            {include #soucastiAktivit, soucastiAktivit => $soucastiAktivit, oborID => $obor, obsahID => $obsah->vzdelavaciObsahID}
+                        </td>
+                    {/foreach}
+                </tr>
+                {include #rekurzivniObsahy, obsahy => $obsah->children, uroven => 1}
+            {/foreach}
+        </tbody>
+    </table>
+</div>
 {/block}
 
 {block #rekurzivniObsahy}

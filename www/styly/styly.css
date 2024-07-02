@@ -3,8 +3,45 @@ table {
 }
 
 td, th {
-    border: 1px solid black;
     padding: 8px;
     vertical-align: top;
     text-align: left;
+}
+
+th:nth-child(even) { background-color: rgb(191, 191, 191); }
+th:nth-child(odd) { background-color: rgb(185, 185, 185); }
+tr:nth-child(even) td:nth-child(even) { background-color: rgb(242, 242, 242); }
+tr:nth-child(even) td:nth-child(odd) { background-color: rgb(235, 235, 235); }
+tr:nth-child(odd) td:nth-child(even) { background-color: rgb(229, 229, 229); }
+tr:nth-child(odd) td:nth-child(odd) { background-color: rgb(220, 220, 220); }
+
+tr:nth-child(even) td:first-child { background-color: rgb(205, 205, 205); }
+tr:nth-child(odd) td:first-child { background-color: rgb(198, 198, 198); }
+
+.scrollTable {
+    overflow: auto;
+    overflow-y: visible;
+    width: 100%;
+    height: calc(100vh - 10rem);
+}
+
+.scrollTable table {
+    table-layout: fixed;
+}
+
+.scrollTable th:first-child,
+.scrollTable td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+}
+
+.scrollTable th {
+    position: sticky;
+    top: 0;
+    z-index: 2 !important;
+}
+
+.scrollTable th:first-child {
+    z-index: 3 !important;
 }
