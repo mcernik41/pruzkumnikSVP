@@ -108,11 +108,6 @@ CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`vzdelavaciObsah` (
     REFERENCES `pruzkumnikSVP`.`vzdelavaciObsah` (`vzdelavaciObsahID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_vzdelavaciObsah_cil1`
-    FOREIGN KEY (`cil_cilID`)
-    REFERENCES `pruzkumnikSVP`.`cil` (`cilID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_vzdelavaciObsah_svp1`
     FOREIGN KEY (`svp_svpID`)
     REFERENCES `pruzkumnikSVP`.`svp` (`svpID`)
@@ -121,8 +116,6 @@ CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`vzdelavaciObsah` (
 ENGINE = InnoDB;
 
 CREATE INDEX IF NOT EXISTS `fk_vzdelavaciObsah_vzdelavaciObsah1_idx` ON `pruzkumnikSVP`.`vzdelavaciObsah` (`rodicovskyVzdelavaciObsahID` ASC);
-
-CREATE INDEX IF NOT EXISTS `fk_vzdelavaciObsah_cil1_idx` ON `pruzkumnikSVP`.`vzdelavaciObsah` (`cil_cilID` ASC);
 
 CREATE INDEX IF NOT EXISTS `fk_vzdelavaciObsah_svp1_idx` ON `pruzkumnikSVP`.`vzdelavaciObsah` (`svp_svpID` ASC);
 
@@ -198,6 +191,32 @@ CREATE INDEX IF NOT EXISTS `fk_soucastAktivity_vzdelavaciAktivita1_idx` ON `pruz
 CREATE INDEX IF NOT EXISTS `fk_soucastAktivity_vzdelavaciObor1_idx` ON `pruzkumnikSVP`.`soucastAktivity` (`vzdelavaciObor_vzdelavaciOborID` ASC);
 
 CREATE INDEX IF NOT EXISTS `fk_soucastAktivity_vzdelavaciObsah1_idx` ON `pruzkumnikSVP`.`soucastAktivity` (`vzdelavaciObsah_vzdelavaciObsahID` ASC);
+
+
+-- -----------------------------------------------------
+-- Table `pruzkumnikSVP`.`plneniCile`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`plneniCile` (
+  `plneniCileID` INT NOT NULL,
+  `popisPlneniCile` LONGTEXT NULL,
+  `cil_cilID` INT NOT NULL,
+  `vzdelavaciObsah_vzdelavaciObsahID` INT NOT NULL,
+  PRIMARY KEY (`plneniCileID`),
+  CONSTRAINT `fk_plneniCile_cil1`
+    FOREIGN KEY (`cil_cilID`)
+    REFERENCES `pruzkumnikSVP`.`cil` (`cilID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_plneniCile_vzdelavaciObsah1`
+    FOREIGN KEY (`vzdelavaciObsah_vzdelavaciObsahID`)
+    REFERENCES `pruzkumnikSVP`.`vzdelavaciObsah` (`vzdelavaciObsahID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE INDEX IF NOT EXISTS `fk_plneniCile_cil1_idx` ON `pruzkumnikSVP`.`plneniCile` (`cil_cilID` ASC);
+
+CREATE INDEX IF NOT EXISTS `fk_plneniCile_vzdelavaciObsah1_idx` ON `pruzkumnikSVP`.`plneniCile` (`vzdelavaciObsah_vzdelavaciObsahID` ASC);
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
