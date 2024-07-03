@@ -42,6 +42,8 @@ final class TabulkaPrehledPresenter extends Nette\Application\UI\Presenter
             ->where('vzdelavaciObor_vzdelavaciOborID IN ?', $oboryIds)
             ->fetchAll();
 
+        $soucasti = [];
+
         foreach ($soucastiAktivit as $soucastAktivity) 
         {
             $oborID = $soucastAktivity->vzdelavaciObor_vzdelavaciOborID;
