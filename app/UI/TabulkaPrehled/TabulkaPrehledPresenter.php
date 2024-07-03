@@ -48,9 +48,10 @@ final class TabulkaPrehledPresenter extends Nette\Application\UI\Presenter
             $obsahID = $soucastAktivity->vzdelavaciObsah_vzdelavaciObsahID;
 
             $soucasti[$oborID][$obsahID][] = [
+                'soucastID' => $soucastAktivity->soucastAktivityID,
                 'jmenoSoucasti' => $soucastAktivity->jmenoSoucasti,
                 'popisSoucasti' => $soucastAktivity->popisSoucasti,
-                'idAktivity' => $soucastAktivity->vzdelavaciAktivita_vzdelavaciAktivitaID,
+                'aktivitaID' => $soucastAktivity->vzdelavaciAktivita_vzdelavaciAktivitaID,
                 'jmenoAktivity' => $this->ziskatJmenoAktivity($soucastAktivity->vzdelavaciAktivita_vzdelavaciAktivitaID),
             ];
         }

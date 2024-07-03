@@ -96,8 +96,7 @@ final class VzdelavaciObsahPresenter extends Nette\Application\UI\Presenter
 
 				foreach($soucastiAktivit as $soucastAktivity)
 				{
-					$soucastAktivity_akt = new SoucastAktivity($soucastAktivity->soucastAktivityID, $soucastAktivity->jmenoSoucasti, $soucastAktivity->popisSoucasti);
-					$aktivitaKOboru->soucastiAktivity[] = $soucastAktivity_akt;
+					$aktivitaKOboru->soucastiAktivity[] = $soucastAktivity;
 				}
 
 				$oborKObsahu->aktivity[] = $aktivitaKOboru;
@@ -276,19 +275,5 @@ class Aktivita
 		$this->aktivitaID = $aktivitaID;
 		$this->jmenoAktivity = $jmenoAktivity;
 		$this->soucastiAktivity = [];
-	}
-}
-
-class SoucastAktivity
-{
-	public int $soucastID;
-	public string $jmenoSoucasti;
-	public string $popisSoucasti;
-
-	public function __construct(int $soucastID, string $jmenoSoucasti, string $popisSoucasti)
-	{
-		$this->soucastID = $soucastID;
-		$this->jmenoSoucasti = $jmenoSoucasti;
-		$this->popisSoucasti = $popisSoucasti;
 	}
 }

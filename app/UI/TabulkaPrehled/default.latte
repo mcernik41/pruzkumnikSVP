@@ -71,10 +71,12 @@
     {if isset($soucastiAktivit[$oborID][$obsahID])}
         {foreach $soucastiAktivit[$oborID][$obsahID] as $soucast}
             <div>
-                {$soucast['jmenoSoucasti']}
-                <a n:href="VzdelavaciAktivita:default $soucast['idAktivity'], $svpID">
-                    {$soucast['jmenoAktivity']}
-                </a>
+				<strong>
+                    <a n:href="SoucastAktivity:default, $soucast['soucastID'], $soucast['aktivitaID'], $svpID">
+                        {$soucast['jmenoSoucasti']}
+                    </a>
+                </strong>
+                (<a n:href="VzdelavaciAktivita:default $soucast['aktivitaID'], $svpID">{$soucast['jmenoAktivity']}</a>)
             </div>
         {/foreach}
     {/if}

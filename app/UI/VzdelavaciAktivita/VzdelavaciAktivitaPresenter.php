@@ -21,6 +21,7 @@ final class VzdelavaciAktivitaPresenter extends Nette\Application\UI\Presenter
 	{
 		$aktivita = $this->explorer->table('vzdelavaciAktivita')->get($aktivitaID);
 		$this->template->jmenoAktivity = $aktivita->jmenoAktivity;
+		$this->template->aktivitaID = $aktivitaID;
 
 		$this->template->svpID = $svpID;
 

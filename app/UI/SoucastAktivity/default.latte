@@ -1,0 +1,23 @@
+{block content}
+	<h1>Součást {$jmenoSoucasti}</h1>
+	<h2>
+		Nadřazená aktivita: 
+		<a n:href="VzdelavaciAktivita:default, $aktivitaID, $svpID">
+			{$jmenoAktivity}
+		</a>
+	</h2>
+
+	<h2>
+		Vzdělávací obor: 
+		<a n:href="VzdelavaciObor:default, vzdelavaciOborID: $vzdelavaciObor->vzdelavaciOborID, svpID: $svpID">
+			{$vzdelavaciObor->jmenoOboru}
+		</a>
+	</h2>
+
+	<h2>
+		Vzdělávací obsah: 
+		<a n:href="VzdelavaciObsah:default, vzdelavaciObsahID: $vzdelavaciObsah->vzdelavaciObsahID, svpID: $svpID">
+			{$vzdelavaciObsah->jmenoObsahu}
+		</a>
+	</h2>
+{/block}

@@ -21,7 +21,11 @@
 			{foreach $obsah->aktivity as $aktivita}
 				<h4><a n:href="VzdelavaciAktivita:default $svpID, $aktivita->aktivitaID">{$aktivita->jmenoAktivity}</a></h4>
 				{foreach $aktivita->soucastiAktivity as $soucast}
-					<strong>{$soucast->jmenoSoucasti}</strong>
+					<strong>
+						<a n:href="SoucastAktivity:default, $soucast->soucastAktivityID, $aktivita->aktivitaID, $svpID">
+							{$soucast->jmenoSoucasti}
+						</a>
+					</strong>
 					<p>{$soucast->popisSoucasti}</p>
 				{/foreach}
 			{/foreach}
