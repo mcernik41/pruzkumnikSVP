@@ -1,12 +1,12 @@
 {block content}
 	<h1>Vzdělávací plán {$jmenoSVP}</h1>
 
-	<p><a n:href="SeznamCilu:default $svpID">Cíle</a></p>
-	<p><a n:href="VzdelavaciObor:default $svpID, -1">Obory</a></p>
-	<p><a n:href="VzdelavaciObsah:default $svpID, -1">Obsah</a></p>
-	<p><a n:href="SeznamAktivit:default $svpID">Aktivity</a></p>
+	<p><a n:href="SeznamCilu:default, svpID: $svpID">Cíle</a></p>
+	<p><a n:href="VzdelavaciObor:default, svpID: $svpID, vzdelavaciOborID: -1">Obory</a></p>
+	<p><a n:href="VzdelavaciObsah:default, svpID: $svpID, vzdelavaciObsahID: -1">Obsah</a></p>
+	<p><a n:href="SeznamAktivit:default, svpID: $svpID">Aktivity</a></p>
 
 	<br><br>
 
-	<p><a n:href="TabulkaPrehled:default $svpID">Tabulkový přehled ŠVP</a></p>
+	<p><a n:href="TabulkaPrehled:default, svpID: $svpID">Tabulkový přehled ŠVP</a></p>
 {/block}

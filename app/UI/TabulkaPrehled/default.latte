@@ -9,7 +9,7 @@
                 <th>Obsahy/Obory</th>
                 {foreach $obory as $obor}
                     <th>
-                        <a n:href="VzdelavaciObor:default $svpID, $obor->vzdelavaciOborID">
+                        <a n:href="VzdelavaciObor:default, svpID: $svpID, vzdelavaciOborID: $obor->vzdelavaciOborID">
                             {$obor->jmenoOboru}
                         </a>
                     </th>
@@ -21,7 +21,7 @@
             {foreach $obsahy as $obsah}
                 <tr>
                     <td>
-                        <a n:href="VzdelavaciObsah:default $svpID, $obsah->vzdelavaciObsahID">
+                        <a n:href="VzdelavaciObsah:default, svpID: $svpID, vzdelavaciObsahID: $obsah->vzdelavaciObsahID">
                             {$obsah->jmenoObsahu}
                         </a>
                     </td>
@@ -42,7 +42,7 @@
     {foreach $obsahy as $obsah}
         <tr>
             <td style="padding-left: {$uroven * 20}px">
-                <a n:href="VzdelavaciObsah:default $svpID, $obsah->vzdelavaciObsahID">
+                <a n:href="VzdelavaciObsah:default, svpID: $svpID, vzdelavaciObsahID: $obsah->vzdelavaciObsahID">
                     {$obsah->jmenoObsahu}
                 </a>
             </td>
@@ -59,7 +59,7 @@
 {block #rekurzivniObory}
     {foreach $obory as $obor}
         <th style="padding-top: {$uroven * 30}px">
-            <a n:href="VzdelavaciObor:default $svpID, $obor->vzdelavaciOborID">
+            <a n:href="VzdelavaciObor:default, svpID: $svpID, vzdelavaciOborID: $obor->vzdelavaciOborID">
                 {$obor->jmenoOboru}
             </a>
         </th>
@@ -72,11 +72,11 @@
         {foreach $soucastiAktivit[$oborID][$obsahID] as $soucast}
             <div>
 				<strong>
-                    <a n:href="SoucastAktivity:default, $soucast['soucastID'], $soucast['aktivitaID'], $svpID">
+                    <a n:href="SoucastAktivity:default, soucastID: $soucast['soucastID'], aktivitaID: $soucast['aktivitaID'], svpID: $svpID">
                         {$soucast['jmenoSoucasti']}
                     </a>
                 </strong>
-                (<a n:href="VzdelavaciAktivita:default $soucast['aktivitaID'], $svpID">{$soucast['jmenoAktivity']}</a>)
+                (<a n:href="VzdelavaciAktivita:default, aktivitaID: $soucast['aktivitaID'], svpID: $svpID">{$soucast['jmenoAktivity']}</a>)
             </div>
         {/foreach}
     {/if}

@@ -4,11 +4,11 @@
 
         {if isset($svpID) && $svpID !== null}
             <a n:href="SVP:default $svpID">Úvod plánu</a>
-            <a n:href="SeznamCilu:default $svpID">Cíle</a>
-            <a n:href="VzdelavaciObor:default $svpID, -1">Obory</a>
-            <a n:href="VzdelavaciObsah:default $svpID, -1">Obsah</a>
-            <a n:href="SeznamAktivit:default $svpID">Aktivity</a>
-            <a n:href="TabulkaPrehled:default $svpID">Tabulkový přehled ŠVP</a>
+            <a n:href="SeznamCilu:default, svpID: $svpID">Cíle</a>
+            <a n:href="VzdelavaciObor:default, svpID: $svpID, vzdelavaciOborID: -1">Obory</a>
+            <a n:href="VzdelavaciObsah:default, svpID: $svpID, vzdelavaciObsahID: -1">Obsah</a>
+            <a n:href="SeznamAktivit:default, svpID: $svpID">Aktivity</a>
+            <a n:href="TabulkaPrehled:default, svpID: $svpID">Tabulkový přehled ŠVP</a>
         {/if}
     </div>
 {/block}

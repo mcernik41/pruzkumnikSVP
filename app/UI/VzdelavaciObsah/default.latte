@@ -9,7 +9,7 @@
 	<div class="seznamOdkazu vzdelavaciObsahy">
 		{foreach $vzdelavaciObsahy as $vzdelavaciObsah}
 			<p>
-				<a n:href="VzdelavaciObsah:default $svpID, $vzdelavaciObsah->vzdelavaciObsahID">{$vzdelavaciObsah->jmenoObsahu}</a>
+				<a n:href="VzdelavaciObsah:default, svpID: $svpID, vzdelavaciObsahID: $vzdelavaciObsah->vzdelavaciObsahID">{$vzdelavaciObsah->jmenoObsahu}</a>
 			</p>
 		{/foreach}
 	</div>
@@ -17,12 +17,12 @@
 	<h2>Přidružené aktivity</h2>
 	<div class="pridruzeneAktivity">
 		{foreach $obory as $obor}
-			<h3><a n:href="VzdelavaciObor:default $svpID, $obor->oborID">{$obor->jmenoOboru}</a></h3>
+			<h3><a n:href="VzdelavaciObor:default, svpID: $svpID, vzdelavaciOborID: $obor->oborID">{$obor->jmenoOboru}</a></h3>
 			{foreach $obor->aktivity as $aktivita}
-				<h4><a n:href="VzdelavaciAktivita:default $svpID, $aktivita->aktivitaID">{$aktivita->jmenoAktivity}</a></h4>
+				<h4><a n:href="VzdelavaciAktivita:default, svpID: $svpID, aktivitaID: $aktivita->aktivitaID">{$aktivita->jmenoAktivity}</a></h4>
 				{foreach $aktivita->soucastiAktivity as $soucast}
 					<strong>
-						<a n:href="SoucastAktivity:default, $soucast->soucastAktivityID, $aktivita->aktivitaID, $svpID">
+						<a n:href="SoucastAktivity:default, soucastID: $soucast->soucastAktivityID, aktivitaID: $aktivita->aktivitaID, svpID: $svpID">
 							{$soucast->jmenoSoucasti}
 						</a>
 					</strong>

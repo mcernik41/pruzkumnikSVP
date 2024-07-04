@@ -11,7 +11,7 @@
 		<div class="seznamOdkazu skoly">
 			{foreach $skoly as $skola}
 				<p>
-					<a n:href="Skola:default $skola->skolaID">{$skola->jmenoSkoly}</a>
+					<a n:href="Skola:default, skolaID: $skola->skolaID">{$skola->jmenoSkoly}</a>
 				</p>
 			{/foreach}
 		</div>
