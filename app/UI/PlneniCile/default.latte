@@ -1,6 +1,9 @@
 {block content}
 	<h1>Plnění cíle {$jmenoCile}</h1>
 
+	<h2>Upravit plnění cíle</h2>
+	{control goalFulfillingForm}
+
 	<h2>
 		Vzdělávací obsah: 
 		<a n:href="VzdelavaciObsah:default, vzdelavaciObsahID: $vzdelavaciObsah->vzdelavaciObsahID, svpID: $svpID">

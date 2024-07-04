@@ -37,7 +37,7 @@ final class CilPresenter extends Nette\Application\UI\Presenter
 			->setPrompt('Vyberte vzdělávací obsah')
 			->setRequired();
 
-		$form->addTextarea('popisPlneni', 'Popis součásti vzdělávací aktivity:');
+		$form->addTextarea('popisPlneni', 'Popis plnění cíle:');
 
 		$form->addSubmit('send', 'Přidat plnění cíle');
 
@@ -56,7 +56,7 @@ final class CilPresenter extends Nette\Application\UI\Presenter
 			'vzdelavaciObsah_vzdelavaciObsahID' => $data->vzdelavaciObsah
 		]);
 
-		$this->flashMessage('Vzdělávací plán úspěšně přidán', 'success');
+		$this->flashMessage('Plnění vzdělávacího cíle úspěšně přidáno', 'success');
 		$this->redirect('this');
 	}
 
