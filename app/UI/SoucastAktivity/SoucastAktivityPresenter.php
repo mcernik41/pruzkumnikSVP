@@ -30,8 +30,6 @@ final class SoucastAktivityPresenter extends Nette\Application\UI\Presenter
 
 		$this->template->svpID = $svpID;
 
-		$this->template->soucastiAktivity = $aktivita->related('soucastAktivity');
-
 		//informace o oboru
 		$this->template->vzdelavaciObor = $this->explorer->table('vzdelavaciObor')->get($soucast->vzdelavaciObor_vzdelavaciOborID);
 

@@ -197,7 +197,7 @@ CREATE INDEX IF NOT EXISTS `fk_soucastAktivity_vzdelavaciObsah1_idx` ON `pruzkum
 -- Table `pruzkumnikSVP`.`plneniCile`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`plneniCile` (
-  `plneniCileID` INT NOT NULL,
+  `plneniCileID` INT NOT NULL AUTO_INCREMENT,
   `popisPlneniCile` LONGTEXT NULL,
   `cil_cilID` INT NOT NULL,
   `vzdelavaciObsah_vzdelavaciObsahID` INT NOT NULL,

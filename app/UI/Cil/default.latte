@@ -1,0 +1,18 @@
+{block content}
+	<h1>Cíl ŠVP {$jmenoCile}</h1>
+
+	<h2>Přidat plnění cíle</h2>
+	{control goalFulfillingForm}
+
+	<h2>Vzdělávací obsah vedoucí k plnění cíle ŠVP</h2>
+	<div class="seznamOdkazu plneniCile">
+		{foreach $plneniCile as $plneni}
+			<p>
+				<a n:href="VzdelavaciObsah:default, vzdelavaciObsahID: $vzdelavaciObsah[$plneni->vzdelavaciObsah_vzdelavaciObsahID]->vzdelavaciObsahID, svpID: $svpID">
+					{$vzdelavaciObsah[$plneni->vzdelavaciObsah_vzdelavaciObsahID]->jmenoObsahu}
+				</a>
+				(<a n:href="PlneniCile:default, plneniCileID: $plneni->plneniCileID, cilID: $cilID, svpID: $svpID">Plnění cíle</a>)
+			</p>
+		{/foreach}
+	</div>
+{/block}

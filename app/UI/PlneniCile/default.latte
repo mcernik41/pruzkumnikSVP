@@ -1,0 +1,10 @@
+{block content}
+	<h1>Plnění cíle {$jmenoCile}</h1>
+
+	<h2>
+		Vzdělávací obsah: 
+		<a n:href="VzdelavaciObsah:default, vzdelavaciObsahID: $vzdelavaciObsah->vzdelavaciObsahID, svpID: $svpID">
+			{$vzdelavaciObsah->jmenoObsahu}
+		</a>
+	</h2>
+{/block}

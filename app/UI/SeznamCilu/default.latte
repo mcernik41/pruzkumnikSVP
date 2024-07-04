@@ -8,7 +8,9 @@
 	<div class="seznamOdkazu cilePlanu">
 		{foreach $cile as $cil}
 			<p>
-				{$cil->jmenoCile}
+				<a n:href="Cil:default, cilID: $cil->cilID, svpID: $svpID">
+					{$cil->jmenoCile}
+				</a>
 			</p>
 		{/foreach}
 	</div>
