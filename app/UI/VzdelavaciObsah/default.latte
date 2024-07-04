@@ -2,8 +2,10 @@
 	<h1>Vzdělávací obsah plánu {$jmenoSVP}</h1>
 	<h2 n:if="$vzdelavaciObsahID != -1">Vzdělávací obsah {$jmenoObsahu}</h2>
 
-	<h2>Upravit vzdělávací obsah</h2>
-	{control contentModifyForm}
+	{if $vzdelavaciObsahID != -1}
+		<h2>Upravit vzdělávací obsah</h2>
+		{control contentModifyForm}
+	{/if}
 
 	<h2>Přidat vzdělávací obsah</h2>
 	{control contentForm}

@@ -140,6 +140,42 @@ final class VzdelavaciOborPresenter extends Nette\Application\UI\Presenter
 		$this->redirect('this');
 	}
 
+	protected function createComponentAreaModifyForm(): Form
+	{
+		$form = new Form; // means Nette\Application\UI\Form
+
+		$vzdelavaciOborID = $this->getParameter('vzdelavaciOborID');		
+		$obor = $this->explorer->table('vzdelavaciObor')->get($vzdelavaciOborID);
+
+		$form->addText('jmenoOboru', 'Jméno vzdělvávacího oboru:')
+			->setDefaultValue($obor->jmenoOboru)
+			->setRequired();
+
+		$form->addTextarea('popisOboru', 'Popis vzdělvávacího oboru:')
+			->setDefaultValue($obor->popisOboru);
+
+		$form->addSubmit('send', 'Upravit vzdělávací obor');
+
+		$form->onSuccess[] = $this->areaModifyFormSucceeded(...);
+
+		return $form;
+	}
+
+	private function areaModifyFormSucceeded(\stdClass $data): void
+	{
+		$vzdelavaciOborID = $this->getParameter('vzdelavaciOborID');
+
+		$this->database->table('vzdelavaciObor')
+			->where('vzdelavaciOborID', $vzdelavaciOborID)
+			->update([
+				'jmenoOboru' => $data->jmenoOboru,
+				'popisOboru' => $data->popisOboru,
+		]);
+
+		$this->flashMessage('Vzdělávací obor úspěšně upraven', 'success');
+		$this->redirect('this');
+	}
+
 	public function handleNahratOborySVP_NV(int $svpID)
 	{
 		$this->nahratVzdelavaciObory($svpID, $this->vzdelavaciStruktura);

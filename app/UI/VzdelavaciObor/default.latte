@@ -2,6 +2,11 @@
 	<h1>Vzdělávací obor plánu {$jmenoSVP}</h1>
 	<h2 n:if="$vzdelavaciOborID != -1">Vzdělávací obor {$jmenoOboru}</h2>
 
+	{if $vzdelavaciOborID != -1}
+		<h2>Upravit vzdělávací obor</h2>
+		{control areaModifyForm}
+	{/if}
+
 	<h2>Přidat vzdělávací obor</h2>
 	{control areaForm}
 
