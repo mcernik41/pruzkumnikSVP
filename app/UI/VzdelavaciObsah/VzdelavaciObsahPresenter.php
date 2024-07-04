@@ -140,6 +140,42 @@ final class VzdelavaciObsahPresenter extends Nette\Application\UI\Presenter
 		$this->redirect('this');
 	}
 
+	protected function createComponentContentModifyForm(): Form
+	{
+		$form = new Form; // means Nette\Application\UI\Form
+
+		$vzdelavaciObsahID = $this->getParameter('vzdelavaciObsahID');		
+		$obsah = $this->explorer->table('vzdelavaciObsah')->get($vzdelavaciObsahID);
+
+		$form->addText('jmenoObsahu', 'Jméno vzdělvávacího obsahu:')
+			->setDefaultValue($obsah->jmenoObsahu)
+			->setRequired();
+
+		$form->addTextarea('popisObsahu', 'Popis vzdělvávacího obsahu:')
+			->setDefaultValue($obsah->popisObsahu);
+
+		$form->addSubmit('send', 'Upravit vzdělávací obsah');
+
+		$form->onSuccess[] = $this->contentModifyFormSucceeded(...);
+
+		return $form;
+	}
+
+	private function contentModifyFormSucceeded(\stdClass $data): void
+	{
+		$vzdelavaciObsahID = $this->getParameter('vzdelavaciObsahID');
+
+		$this->database->table('vzdelavaciObsah')
+			->where('vzdelavaciObsahID', $vzdelavaciObsahID)
+			->update([
+				'jmenoObsahu' => $data->jmenoObsahu,
+				'popisObsahu' => $data->popisObsahu,
+		]);
+
+		$this->flashMessage('Vzdělávací obsah úspěšně upraven', 'success');
+		$this->redirect('this');
+	}
+
 	public function handleNahratObsahSVP_NV(int $svpID)
 	{
 		$this->nahratVzdelavaciObsah($svpID, $this->vzdelavaciStruktura);

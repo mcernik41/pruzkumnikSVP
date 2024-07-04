@@ -63,7 +63,7 @@ final class PlneniCilePresenter extends Nette\Application\UI\Presenter
 		$plneniCileID = $this->getParameter('plneniCileID');
 
 		$this->database->table('plneniCile')
-			->where('plneniCileID', $plneniCileID)	
+			->where('plneniCileID', $plneniCileID)
 			->update([
 				'popisPlneniCile' => $data->popisPlneni,
 				'vzdelavaciObsah_vzdelavaciObsahID' => $data->vzdelavaciObsah
