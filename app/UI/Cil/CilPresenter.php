@@ -19,13 +19,13 @@ final class CilPresenter extends Nette\Application\UI\Presenter
 
 	public function renderDefault(int $cilID, int $svpID): void
 	{
-		$aktivita = $this->explorer->table('cil')->get($cilID);
-		$this->template->jmenoCile = $aktivita->jmenoCile;
+		$cil = $this->explorer->table('cil')->get($cilID);
+		$this->template->jmenoCile = $cil->jmenoCile;
 		$this->template->cilID = $cilID;
 
 		$this->template->svpID = $svpID;
 
-		$this->template->plneniCile = $aktivita->related('plneniCile');
+		$this->template->plneniCile = $cil->related('plneniCile');
 		$this->template->vzdelavaciObsah = $this->explorer->table('vzdelavaciObsah')->fetchAll();
 	}
 
@@ -57,6 +57,42 @@ final class CilPresenter extends Nette\Application\UI\Presenter
 		]);
 
 		$this->flashMessage('Vzdělávací plán úspěšně přidán', 'success');
+		$this->redirect('this');
+	}
+
+	protected function createComponentGoalForm(): Form
+	{
+		$form = new Form; // means Nette\Application\UI\Form
+		
+		$cilID = $this->getParameter('cilID');
+		$cil = $this->explorer->table('cil')->get($cilID);
+
+		$form->addText('jmenoCile', 'Jméno cíle:')
+			->setDefaultValue($cil->jmenoCile)
+			->setRequired();
+
+		$form->addTextarea('popisCile', 'Popis cíle:')
+			->setDefaultValue($cil->popisCile);
+
+		$form->addSubmit('send', 'Upravit cíl');
+
+		$form->onSuccess[] = $this->goalFormSucceeded(...);
+
+		return $form;
+	}
+
+	private function goalFormSucceeded(\stdClass $data): void
+	{
+		$cilID = $this->getParameter('cilID');
+
+		$this->database->table('cil')
+			->where('cilID', $cilID)
+			->update([
+				'jmenoCile' => $data->jmenoCile,
+				'popisCile' => $data->popisCile,
+		]);
+
+		$this->flashMessage('Cíl úspěšně upraven', 'success');
 		$this->redirect('this');
 	}
 }
