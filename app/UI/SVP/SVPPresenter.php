@@ -18,7 +18,6 @@ final class SVPPresenter extends Nette\Application\UI\Presenter
 	}
 
 	protected $explorer;
-	protected $svpID;
 	protected $sqlRunner;
 
 	public function renderDefault(int $svpID): void
@@ -26,8 +25,42 @@ final class SVPPresenter extends Nette\Application\UI\Presenter
 		$plan = $this->explorer->table('svp')->get($svpID);
 		$this->template->jmenoSVP = $plan->jmenoSVP;
 		$this->template->svpID = $plan->svpID;
+	}
 
-		$this->svpID = $svpID;
+	protected function createComponentPlanForm(): Form
+	{
+		$form = new Form; // means Nette\Application\UI\Form
+		
+		$svpID = $this->getParameter('svpID');
+		$plan = $this->explorer->table('svp')->get($svpID);
+
+		$form->addText('jmenoPlanu', 'Jméno vzdělvávacího plánu:')
+			->setDefaultValue($plan->jmenoSVP)
+			->setRequired();
+
+		$form->addTextarea('popisSVP', 'Popis vzdělvávacího plánu:')
+			->setDefaultValue($plan->popisSVP);
+
+		$form->addSubmit('send', 'Upravit vzdělávací plán');
+
+		$form->onSuccess[] = $this->planFormSucceeded(...);
+
+		return $form;
+	}
+
+	private function planFormSucceeded(\stdClass $data): void
+	{
+		$svpID = $this->getParameter('svpID');
+
+		$this->database->table('svp')
+			->where('svpID', $svpID)
+			->update([
+				'jmenoSVP' => $data->jmenoPlanu,
+				'popisSVP' => $data->popisSVP,
+		]);
+
+		$this->flashMessage('Vzdělávací plán úspěšně upraven', 'success');
+		$this->redirect('this');
 	}
 
 }

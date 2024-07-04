@@ -1,6 +1,9 @@
 {block content}
 	<h1>Vzdělávací plán {$jmenoSVP}</h1>
 
+	<h2>Upravit vzdělávací plán</h2>
+	{control planForm}
+
 	<p><a n:href="SeznamCilu:default, svpID: $svpID">Cíle</a></p>
 	<p><a n:href="VzdelavaciObor:default, svpID: $svpID, vzdelavaciOborID: -1">Obory</a></p>
 	<p><a n:href="VzdelavaciObsah:default, svpID: $svpID, vzdelavaciObsahID: -1">Obsah</a></p>
