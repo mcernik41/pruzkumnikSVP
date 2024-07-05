@@ -64,7 +64,7 @@ final class VzdelavaciAktivitaPresenter extends Nette\Application\UI\Presenter
 			'vzdelavaciObsah_vzdelavaciObsahID' => $data->vzdelavaciObsah
 		]);
 
-		$this->flashMessage('Vzdělávací plán úspěšně přidán', 'success');
+		$this->flashMessage('Součást vzdělávací aktivity úspěšně přidána', 'success');
 		$this->redirect('this');
 	}
 

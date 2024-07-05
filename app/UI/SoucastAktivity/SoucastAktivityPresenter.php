@@ -36,4 +36,56 @@ final class SoucastAktivityPresenter extends Nette\Application\UI\Presenter
 		//informace o obsahu
 		$this->template->vzdelavaciObsah = $this->explorer->table('vzdelavaciObsah')->get($soucast->vzdelavaciObsah_vzdelavaciObsahID);
 	}
+
+	protected function createComponentActivityPartForm(): Form
+	{
+		$form = new Form; // means Nette\Application\UI\Form
+		
+		$soucastID = $this->getParameter('soucastID');
+		$soucast = $this->explorer->table('soucastAktivity')->get($soucastID);
+		$jmenoSoucasti = $soucast->jmenoSoucasti;
+		$popisSoucasti = $soucast->popisSoucasti;
+		$vzdelavaciObor_vzdelavaciOborID = $soucast->vzdelavaciObor_vzdelavaciOborID;
+		$vzdelavaciObsah_vzdelavaciObsahID = $soucast->vzdelavaciObsah_vzdelavaciObsahID;
+
+		$form->addText('jmenoSoucasti', 'Jméno součásti vzdělávací aktivity:')
+			->setDefaultValue($jmenoSoucasti)
+			->setRequired();
+
+		$form->addTextarea('popisSoucasti', 'Popis součásti vzdělávací aktivity:')
+			->setDefaultValue($popisSoucasti);
+
+		$form->addSelect('vzdelavaciObor', 'Vzdělávací obor:', $this->explorer->table('vzdelavaciObor')->fetchPairs('vzdelavaciOborID', 'jmenoOboru'))
+			->setDefaultValue($vzdelavaciObor_vzdelavaciOborID)
+			->setPrompt('Vyberte vzdělávací obor')
+			->setRequired();
+
+		$form->addSelect('vzdelavaciObsah', 'Vzdělávací obsah:', $this->explorer->table('vzdelavaciObsah')->fetchPairs('vzdelavaciObsahID', 'jmenoObsahu'))
+			->setDefaultValue($vzdelavaciObsah_vzdelavaciObsahID)
+			->setPrompt('Vyberte vzdělávací obsah')
+			->setRequired();
+
+		$form->addSubmit('send', 'Upravit součást vzdělávací aktivity');
+
+		$form->onSuccess[] = $this->activityPartFormSucceeded(...);
+
+		return $form;
+	}
+
+	private function activityPartFormSucceeded(\stdClass $data): void
+	{
+		$soucastID = $this->getParameter('soucastID');
+
+		$this->database->table('soucastAktivity')
+			->where('soucastAktivityID', $soucastID)
+			->update([
+				'jmenoSoucasti' => $data->jmenoSoucasti,
+				'popisSoucasti' => $data->popisSoucasti,
+				'vzdelavaciObor_vzdelavaciOborID' => $data->vzdelavaciObor,
+				'vzdelavaciObsah_vzdelavaciObsahID' => $data->vzdelavaciObsah
+		]);
+
+		$this->flashMessage('Součást vzdělávací aktivity úspěšně upravena', 'success');
+		$this->redirect('this');
+	}
 }
