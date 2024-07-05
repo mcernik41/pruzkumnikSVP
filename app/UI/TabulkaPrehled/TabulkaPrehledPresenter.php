@@ -18,8 +18,6 @@ final class TabulkaPrehledPresenter extends Nette\Application\UI\Presenter
 	protected $explorer;
 	protected $svpID;
 
-
-
 	public function renderDefault(int $svpID): void
 	{
 		$plan = $this->explorer->table('svp')->get($svpID);
@@ -49,23 +47,26 @@ final class TabulkaPrehledPresenter extends Nette\Application\UI\Presenter
             $oborID = $soucastAktivity->vzdelavaciObor_vzdelavaciOborID;
             $obsahID = $soucastAktivity->vzdelavaciObsah_vzdelavaciObsahID;
 
-            $soucasti[$oborID][$obsahID][] = [
+            $aktivita = $this->explorer->table('vzdelavaciAktivita')->get($soucastAktivity->vzdelavaciAktivita_vzdelavaciAktivitaID);
+
+            if(null !== $this->getParameter('typAktivity') && $aktivita->typAktivity_typAktivityID != $this->getParameter('typAktivity'))
+            {
+                continue;
+            }
+
+            $soucast = [
                 'soucastID' => $soucastAktivity->soucastAktivityID,
                 'jmenoSoucasti' => $soucastAktivity->jmenoSoucasti,
                 'popisSoucasti' => $soucastAktivity->popisSoucasti,
                 'aktivitaID' => $soucastAktivity->vzdelavaciAktivita_vzdelavaciAktivitaID,
-                'jmenoAktivity' => $this->ziskatJmenoAktivity($soucastAktivity->vzdelavaciAktivita_vzdelavaciAktivitaID),
+                'jmenoAktivity' => $aktivita->jmenoAktivity
             ];
+            
+            $soucasti[$oborID][$obsahID][] = $soucast;
         }
         
         $this->template->soucastiAktivit = $soucasti;
-	}    
-
-    private function ziskatJmenoAktivity(int $aktivitaID): string
-    {
-        $aktivita = $this->explorer->table('vzdelavaciAktivita')->get($aktivitaID);
-        return $aktivita->jmenoAktivity;
-    }
+	}
     
     private function getInfixIds(array $obory): array
     {
@@ -145,6 +146,24 @@ final class TabulkaPrehledPresenter extends Nette\Application\UI\Presenter
 
         return $obsahyArray;
     }
+
+	protected function createComponentFilterForm(): Form
+	{
+		$form = new Form; // means Nette\Application\UI\Form
+
+        $form->addSelect('typAktivity', 'Typ aktivity:', $this->explorer->table('typAktivity')->fetchPairs('typAktivityID', 'jmenoTypu'))
+            ->setPrompt('Vyberte typ aktivity')
+            ->setDefaultValue($this->getParameter('typAktivity'));
+
+		$form->addSubmit('send', 'Filtrovat');
+
+        $form->onSuccess[] = function (Form $form, \stdClass $values): void
+        {
+            $this->redirect('this', ['typAktivity' => $values->typAktivity]);
+        };
+
+		return $form;
+	}
 }
     
 class VzdelavaciObor
