@@ -67,4 +67,49 @@ final class VzdelavaciAktivitaPresenter extends Nette\Application\UI\Presenter
 		$this->flashMessage('Vzdělávací plán úspěšně přidán', 'success');
 		$this->redirect('this');
 	}
+
+	protected function createComponentActivityForm(): Form
+	{
+		$form = new Form; // means Nette\Application\UI\Form
+		
+		$aktivitaID = $this->getParameter('aktivitaID');
+		$aktivita = $this->explorer->table('vzdelavaciAktivita')->get($aktivitaID);
+		$jmenoAktivity = $aktivita->jmenoAktivity;
+		$popisAktivity = $aktivita->popisAktivity;
+		$typAktivity = $aktivita->typAktivity;
+
+		$form->addText('jmenoAktivity', 'Jméno vzdělvávací aktivity:')
+			->setDefaultValue($jmenoAktivity)
+			->setRequired();
+
+		$form->addTextarea('popisAktivity', 'Popis vzdělvávací aktivity:')
+			->setDefaultValue($popisAktivity);
+
+		$form->addSelect('typAktivity', 'Typ aktivity:', $this->explorer->table('typAktivity')->fetchPairs('typAktivityID', 'jmenoTypu'))
+			->setDefaultValue($typAktivity)
+			->setPrompt('Vyberte typ aktivity')
+			->setRequired();
+
+		$form->addSubmit('send', 'Upravit vzdělávací aktivitu');
+
+		$form->onSuccess[] = $this->activityFormSucceeded(...);
+
+		return $form;
+	}
+
+	private function activityFormSucceeded(\stdClass $data): void
+	{
+		$aktivitaID = $this->getParameter('aktivitaID');
+
+		$this->database->table('vzdelavaciAktivita')
+			->where('vzdelavaciAktivitaID = ?', $aktivitaID)
+			->update([
+				'jmenoAktivity' => $data->jmenoAktivity,
+				'popisAktivity' => $data->popisAktivity,
+				'typAktivity_typAktivityID' => $data->typAktivity
+		]);
+
+		$this->flashMessage('Vzdělávací aktivita úspěšně upravena', 'success');
+		$this->redirect('this');
+	}
 }

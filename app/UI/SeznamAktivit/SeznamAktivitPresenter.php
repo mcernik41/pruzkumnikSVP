@@ -60,7 +60,7 @@ final class SeznamAktivitPresenter extends Nette\Application\UI\Presenter
 			'typAktivity_typAktivityID' => $data->typAktivity
 		]);
 
-		$this->flashMessage('Vzdělávací obor úspěšně přidán', 'success');
+		$this->flashMessage('Vzdělávací aktivita úspěšně přidána', 'success');
 		$this->redirect('this');
 	}
 }
