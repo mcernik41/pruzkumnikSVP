@@ -84,6 +84,14 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 		$this->redirect('this');
 	}
 
+	public function handleDeleteActivityType(int $id): void
+	{
+		$this->database->table('typAktivity')->where('typAktivityID', $id)->delete();
+
+		$this->flashMessage('Typ aktivity úspěšně odebrán', 'success');
+		$this->redirect('this');
+	}
+
 	/* ROČNÍKY */
 	protected function createComponentGradeForm(): Form
 	{
@@ -112,6 +120,14 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 		$this->redirect('this');
 	}
 
+	public function handleDeleteGrade(int $id): void
+	{
+		$this->database->table('rocnik')->where('rocnikID', $id)->delete();
+
+		$this->flashMessage('Ročník úspěšně odebrán', 'success');
+		$this->redirect('this');
+	}
+
 	/* POMŮCKY */
 	protected function createComponentToolForm(): Form
 	{
@@ -137,6 +153,14 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 		]);
 
 		$this->flashMessage('Pomůcka úspěšně přidána', 'success');
+		$this->redirect('this');
+	}
+
+	public function handleDeleteTool(int $id): void
+	{
+		$this->database->table('pomucka')->where('pomuckaID', $id)->delete();
+
+		$this->flashMessage('Pomůcka úspěšně odebrána', 'success');
 		$this->redirect('this');
 	}
 }
