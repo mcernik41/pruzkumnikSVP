@@ -7,7 +7,6 @@ use Nette\Application\UI\Form;
 
 use Nette;
 
-
 final class SoucastAktivityPresenter extends Nette\Application\UI\Presenter
 {
     public function __construct(private Nette\Database\Explorer $database) 
@@ -47,6 +46,8 @@ final class SoucastAktivityPresenter extends Nette\Application\UI\Presenter
 		$popisSoucasti = $soucast->popisSoucasti;
 		$vzdelavaciObor_vzdelavaciOborID = $soucast->vzdelavaciObor_vzdelavaciOborID;
 		$vzdelavaciObsah_vzdelavaciObsahID = $soucast->vzdelavaciObsah_vzdelavaciObsahID;
+		$rocnikID = $soucast->rocnik_rocnikID;
+		$pomuckaID = $soucast->pomucka_pomuckaID;
 
 		$form->addText('jmenoSoucasti', 'Jméno součásti vzdělávací aktivity:')
 			->setDefaultValue($jmenoSoucasti)
@@ -65,6 +66,14 @@ final class SoucastAktivityPresenter extends Nette\Application\UI\Presenter
 			->setPrompt('Vyberte vzdělávací obsah')
 			->setRequired();
 
+		$form->addSelect('rocnik', 'Ročník:', $this->explorer->table('rocnik')->fetchPairs('rocnikID', 'nazevRocniku'))
+			->setDefaultValue($rocnikID)
+			->setPrompt('Vyberte ročník');
+
+		$form->addSelect('pomucka', 'Pomůcka:', $this->explorer->table('pomucka')->fetchPairs('pomuckaID', 'nazevPomucky'))
+			->setDefaultValue($pomuckaID)
+			->setPrompt('Vyberte pomůcku');
+
 		$form->addSubmit('send', 'Upravit součást vzdělávací aktivity');
 
 		$form->onSuccess[] = $this->activityPartFormSucceeded(...);
@@ -82,7 +91,9 @@ final class SoucastAktivityPresenter extends Nette\Application\UI\Presenter
 				'jmenoSoucasti' => $data->jmenoSoucasti,
 				'popisSoucasti' => $data->popisSoucasti,
 				'vzdelavaciObor_vzdelavaciOborID' => $data->vzdelavaciObor,
-				'vzdelavaciObsah_vzdelavaciObsahID' => $data->vzdelavaciObsah
+				'vzdelavaciObsah_vzdelavaciObsahID' => $data->vzdelavaciObsah,
+				'rocnik_rocnikID' => $data->rocnik,
+				'pomucka_pomuckaID' => $data->pomucka
 		]);
 
 		$this->flashMessage('Součást vzdělávací aktivity úspěšně upravena', 'success');

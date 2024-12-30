@@ -45,6 +45,12 @@ final class VzdelavaciAktivitaPresenter extends Nette\Application\UI\Presenter
 			->setPrompt('Vyberte vzdělávací obsah')
 			->setRequired();
 
+		$form->addSelect('rocnik', 'Ročník:', $this->explorer->table('rocnik')->fetchPairs('rocnikID', 'nazevRocniku'))
+			->setPrompt('Vyberte ročník');
+	
+		$form->addSelect('pomucka', 'Pomůcka:', $this->explorer->table('pomucka')->fetchPairs('pomuckaID', 'nazevPomucky'))
+			->setPrompt('Vyberte pomůcku');
+
 		$form->addSubmit('send', 'Přidat součást vzdělávací aktivity');
 
 		$form->onSuccess[] = $this->activityPartFormSucceeded(...);
@@ -61,7 +67,9 @@ final class VzdelavaciAktivitaPresenter extends Nette\Application\UI\Presenter
 			'jmenoSoucasti' => $data->jmenoSoucasti,
 			'popisSoucasti' => $data->popisSoucasti,
 			'vzdelavaciObor_vzdelavaciOborID' => $data->vzdelavaciObor,
-			'vzdelavaciObsah_vzdelavaciObsahID' => $data->vzdelavaciObsah
+			'vzdelavaciObsah_vzdelavaciObsahID' => $data->vzdelavaciObsah,
+			'rocnik_rocnikID' => $data->rocnik,
+			'pomucka_pomuckaID' => $data->pomucka
 		]);
 
 		$this->flashMessage('Součást vzdělávací aktivity úspěšně přidána', 'success');
