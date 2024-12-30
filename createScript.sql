@@ -190,7 +190,7 @@ CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`soucastAktivity` (
   `vzdelavaciObor_vzdelavaciOborID` INT NOT NULL,
   `vzdelavaciObsah_vzdelavaciObsahID` INT NOT NULL,
   `rocnik_rocnikID` INT NOT NULL,
-  `pomucka_pomuckaID` INT NOT NULL,
+  `pomucka_pomuckaID` INT NULL,
   PRIMARY KEY (`soucastAktivityID`),
   CONSTRAINT `fk_soucastAktivity_vzdelavaciAktivita1`
     FOREIGN KEY (`vzdelavaciAktivita_vzdelavaciAktivitaID`)
