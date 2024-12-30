@@ -27,7 +27,7 @@
 		<div class="seznamOdkazu skoly">
 			{foreach $typyAktivit as $typ}
 				<p>
-					{$typ->jmenoTypu}
+					<a n:href="TypAktivity:default, typAktivityID: $typ->typAktivityID">{$typ->jmenoTypu}</a>
 					(<a n:href="deleteActivityType! $typ->typAktivityID">smazat</a>)
 				</p>
 			{/foreach}
