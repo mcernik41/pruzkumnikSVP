@@ -28,14 +28,14 @@ final class TabulkaPrehledPresenter extends Nette\Application\UI\Presenter
 		$this->svpID = $svpID;
 
         $recursiveGetters = new RecursiveGetters($this->explorer);
-        
+
         //načtení vzdělávacích oborů
         $this->template->obory = $recursiveGetters->getRecursiveObory($svpID, null);
 
         //načtení vzdělávacích obsahů
         $this->template->obsahy = $recursiveGetters->getRecursiveObsahy($svpID, null);
 
-        $oboryIds = $this->getInfixIds($this->template->obory);
+        $oboryIds = $this->getFieldIds($this->template->obory);
         $this->template->oboryIds = $oboryIds;
 
         //načtení součástí vzdělávacích aktivit
@@ -71,7 +71,7 @@ final class TabulkaPrehledPresenter extends Nette\Application\UI\Presenter
         $this->template->soucastiAktivit = $soucasti;
 	}
     
-    private function getInfixIds(array $obory): array
+    private function getFieldIds(array $obory): array
     {
         $oboryIds = [];
 
@@ -81,7 +81,7 @@ final class TabulkaPrehledPresenter extends Nette\Application\UI\Presenter
 
             if (!empty($obor->children)) 
             {
-                $oboryIds = array_merge($oboryIds, $this->getInfixIds($obor->children));
+                $oboryIds = array_merge($oboryIds, $this->getFieldIds($obor->children));
             }
         }
 
