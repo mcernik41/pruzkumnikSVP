@@ -32,4 +32,36 @@
 			{/foreach}
 		</div>
 	</div>
+
+	<div>
+        <h2>Ročníky</h2>
+
+        <h3>Přidat ročník</h3>
+        {control gradeForm}
+
+        <h3>Ročníky</h3>
+        <div class="seznamOdkazu rocniky">
+            {foreach $rocniky as $rocnik}
+                <p>
+                    {$rocnik->nazevRocniku}
+                </p>
+            {/foreach}
+        </div>
+    </div>
+
+    <div>
+        <h2>Pomůcky</h2>
+
+        <h3>Přidat pomůcku</h3>
+        {control toolForm}
+
+        <h3>Pomůcky</h3>
+        <div class="seznamOdkazu pomucky">
+            {foreach $pomucky as $pomucka}
+                <p>
+                    {$pomucka->nazevPomucky}
+                </p>
+            {/foreach}
+        </div>
+    </div>
 {/block}

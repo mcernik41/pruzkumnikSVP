@@ -24,6 +24,12 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 		
 		$typyAktivit = $this->explorer->table('typAktivity');
 		$this->template->typyAktivit = $typyAktivit;
+
+		$rocniky = $this->explorer->table('rocnik');
+		$this->template->rocniky = $rocniky;
+	
+		$pomucky = $this->explorer->table('pomucka');
+		$this->template->pomucky = $pomucky;
 	}
 
 	protected function createComponentSchoolForm(): Form
@@ -50,6 +56,7 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 		$this->redirect('this');
 	}
 
+	/* TYPY AKTIVIT */
 	protected function createComponentActivityTypeForm(): Form
 	{
 		$form = new Form; // means Nette\Application\UI\Form
@@ -74,6 +81,62 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 		]);
 
 		$this->flashMessage('Typ aktivity úspěšně přidán', 'success');
+		$this->redirect('this');
+	}
+
+	/* ROČNÍKY */
+	protected function createComponentGradeForm(): Form
+	{
+		$form = new Form; // means Nette\Application\UI\Form
+
+		$form->addText('nazevRocniku', 'Název ročníku:')
+			->setRequired();
+
+		$form->addTextarea('popisRocniku', 'Popis ročníku:');
+
+		$form->addSubmit('send', 'Přidat ročník');
+
+		$form->onSuccess[] = $this->gradeFormSucceeded(...);
+
+		return $form;
+	}
+
+	private function gradeFormSucceeded(\stdClass $data): void
+	{
+		$this->database->table('rocnik')->insert([
+			'nazevRocniku' => $data->nazevRocniku,
+			'popisRocniku' => $data->popisRocniku
+		]);
+
+		$this->flashMessage('Ročník úspěšně přidán', 'success');
+		$this->redirect('this');
+	}
+
+	/* POMŮCKY */
+	protected function createComponentToolForm(): Form
+	{
+		$form = new Form; // means Nette\Application\UI\Form
+
+		$form->addText('nazevPomucky', 'Název pomůcky:')
+			->setRequired();
+
+		$form->addTextarea('popisPomucky', 'Popis pomůcky:');
+
+		$form->addSubmit('send', 'Přidat pomůcku');
+
+		$form->onSuccess[] = $this->toolFormSucceeded(...);
+
+		return $form;
+	}
+
+	private function toolFormSucceeded(\stdClass $data): void
+	{
+		$this->database->table('pomucka')->insert([
+			'nazevPomucky' => $data->nazevPomucky,
+			'popisPomucky' => $data->popisPomucky
+		]);
+
+		$this->flashMessage('Pomůcka úspěšně přidána', 'success');
 		$this->redirect('this');
 	}
 }
