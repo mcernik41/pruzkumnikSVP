@@ -20,7 +20,7 @@ final class PomuckaPresenter extends Nette\Application\UI\Presenter
 	public function renderDefault(int $pomuckaID): void
 	{
 		$pomucka = $this->explorer->table('pomucka')->get($pomuckaID);
-		$this->template->nazevPomucky = $pomucka->nazevPomucky;
+		$this->template->jmenoPomucky = $pomucka->jmenoPomucky;
 	}
 
 	protected function createComponentToolForm(): Form
@@ -30,8 +30,8 @@ final class PomuckaPresenter extends Nette\Application\UI\Presenter
 		$pomuckaID = $this->getParameter('pomuckaID');
 		$pomucka = $this->explorer->table('pomucka')->get($pomuckaID);
 
-		$form->addText('nazevPomucky', 'Jméno pomůcky:')
-			->setDefaultValue($pomucka->nazevPomucky)
+		$form->addText('jmenoPomucky', 'Jméno pomůcky:')
+			->setDefaultValue($pomucka->jmenoPomucky)
 			->setRequired();
 
 		$form->addTextarea('popisPomucky', 'Popis pomůcky:')
@@ -51,7 +51,7 @@ final class PomuckaPresenter extends Nette\Application\UI\Presenter
 		$this->database->table('pomucka')
 			->where('pomuckaID', $pomuckaID)
 			->update([
-				'nazevPomucky' => $data->nazevPomucky,
+				'jmenoPomucky' => $data->jmenoPomucky,
 				'popisPomucky' => $data->popisPomucky,
 		]);
 

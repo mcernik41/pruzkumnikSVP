@@ -20,7 +20,7 @@ final class RocnikPresenter extends Nette\Application\UI\Presenter
 	public function renderDefault(int $rocnikID): void
 	{
 		$rocnik = $this->explorer->table('rocnik')->get($rocnikID);
-		$this->template->nazevRocniku = $rocnik->nazevRocniku;
+		$this->template->jmenoRocniku = $rocnik->jmenoRocniku;
 	}
 
 	protected function createComponentGradeForm(): Form
@@ -30,8 +30,8 @@ final class RocnikPresenter extends Nette\Application\UI\Presenter
 		$rocnikID = $this->getParameter('rocnikID');
 		$rocnik = $this->explorer->table('rocnik')->get($rocnikID);
 
-		$form->addText('nazevRocniku', 'Jméno ročníku:')
-			->setDefaultValue($rocnik->nazevRocniku)
+		$form->addText('jmenoRocniku', 'Jméno ročníku:')
+			->setDefaultValue($rocnik->jmenoRocniku)
 			->setRequired();
 
 		$form->addTextarea('popisRocniku', 'Popis ročníku:')
@@ -51,7 +51,7 @@ final class RocnikPresenter extends Nette\Application\UI\Presenter
 		$this->database->table('rocnik')
 			->where('rocnikID', $rocnikID)
 			->update([
-				'nazevRocniku' => $data->nazevRocniku,
+				'jmenoRocniku' => $data->jmenoRocniku,
 				'popisRocniku' => $data->popisRocniku,
 		]);
 

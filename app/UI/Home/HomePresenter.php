@@ -97,7 +97,7 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	{
 		$form = new Form; // means Nette\Application\UI\Form
 
-		$form->addText('nazevRocniku', 'Název ročníku:')
+		$form->addText('jmenoRocniku', 'Jméno ročníku:')
 			->setRequired();
 
 		$form->addTextarea('popisRocniku', 'Popis ročníku:');
@@ -112,7 +112,7 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	private function gradeFormSucceeded(\stdClass $data): void
 	{
 		$this->database->table('rocnik')->insert([
-			'nazevRocniku' => $data->nazevRocniku,
+			'jmenoRocniku' => $data->jmenoRocniku,
 			'popisRocniku' => $data->popisRocniku
 		]);
 
@@ -123,14 +123,14 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	public function handleCreateGrades(): void
 	{
 		$grades = [
-			['nazevRocniku' => 'prima', 'popisRocniku' => '6. ročník osmiletého gymnázia - 6. ročník základní školy'],
-			['nazevRocniku' => 'sekunda', 'popisRocniku' => '7. ročník osmiletého gymnázia - 7. ročník základní školy'],
-			['nazevRocniku' => 'tercie', 'popisRocniku' => '8. ročník osmiletého gymnázia - 8. ročník základní školy'],
-			['nazevRocniku' => 'kvarta', 'popisRocniku' => '9. ročník osmiletého gymnázia - 9. ročník základní školy'],
-			['nazevRocniku' => 'kvinta', 'popisRocniku' => '1. ročník osmiletého gymnázia - 1. ročník střední školy'],
-			['nazevRocniku' => 'sexta', 'popisRocniku' => '2. ročník osmiletého gymnázia - 2. ročník střední školy'],
-			['nazevRocniku' => 'septima', 'popisRocniku' => '3. ročník osmiletého gymnázia - 3. ročník střední školy'],
-			['nazevRocniku' => 'oktáva', 'popisRocniku' => '4. ročník osmiletého gymnázia - 4. ročník střední školy']
+			['jmenoRocniku' => 'prima', 'popisRocniku' => '1. ročník osmiletého gymnázia - 6. ročník základní školy'],
+			['jmenoRocniku' => 'sekunda', 'popisRocniku' => '2. ročník osmiletého gymnázia - 7. ročník základní školy'],
+			['jmenoRocniku' => 'tercie', 'popisRocniku' => '3. ročník osmiletého gymnázia - 8. ročník základní školy'],
+			['jmenoRocniku' => 'kvarta', 'popisRocniku' => '4. ročník osmiletého gymnázia - 9. ročník základní školy'],
+			['jmenoRocniku' => 'kvinta', 'popisRocniku' => '5. ročník osmiletého gymnázia - 1. ročník střední školy'],
+			['jmenoRocniku' => 'sexta', 'popisRocniku' => '6. ročník osmiletého gymnázia - 2. ročník střední školy'],
+			['jmenoRocniku' => 'septima', 'popisRocniku' => '7. ročník osmiletého gymnázia - 3. ročník střední školy'],
+			['jmenoRocniku' => 'oktáva', 'popisRocniku' => '8. ročník osmiletého gymnázia - 4. ročník střední školy']
 		];
 	
 		$this->database->table('rocnik')->insert($grades);
@@ -152,7 +152,7 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	{
 		$form = new Form; // means Nette\Application\UI\Form
 
-		$form->addText('nazevPomucky', 'Název pomůcky:')
+		$form->addText('jmenoPomucky', 'Jméno pomůcky:')
 			->setRequired();
 
 		$form->addTextarea('popisPomucky', 'Popis pomůcky:');
@@ -167,7 +167,7 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	private function toolFormSucceeded(\stdClass $data): void
 	{
 		$this->database->table('pomucka')->insert([
-			'nazevPomucky' => $data->nazevPomucky,
+			'jmenoPomucky' => $data->jmenoPomucky,
 			'popisPomucky' => $data->popisPomucky
 		]);
 

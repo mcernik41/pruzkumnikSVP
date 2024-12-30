@@ -46,7 +46,7 @@
         <div class="seznamOdkazu rocniky">
             {foreach $rocniky as $rocnik}
                 <p>
-					<a n:href="Rocnik:default, rocnikID: $rocnik->rocnikID">{$rocnik->nazevRocniku}</a>
+					<a n:href="Rocnik:default, rocnikID: $rocnik->rocnikID">{$rocnik->jmenoRocniku}</a>
 					(<a n:href="deleteGrade! $rocnik->rocnikID">smazat</a>)
                 </p>
             {/foreach}
@@ -63,7 +63,7 @@
         <div class="seznamOdkazu pomucky">
             {foreach $pomucky as $pomucka}
                 <p>
-					<a n:href="Pomucka:default, pomuckaID: $pomucka->pomuckaID">{$pomucka->nazevPomucky}</a>
+					<a n:href="Pomucka:default, pomuckaID: $pomucka->pomuckaID">{$pomucka->jmenoPomucky}</a>
 					(<a n:href="deleteTool! $pomucka->pomuckaID">smazat</a>)
                 </p>
             {/foreach}

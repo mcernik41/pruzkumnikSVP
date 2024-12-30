@@ -45,10 +45,10 @@ final class VzdelavaciAktivitaPresenter extends Nette\Application\UI\Presenter
 			->setPrompt('Vyberte vzdělávací obsah')
 			->setRequired();
 
-		$form->addSelect('rocnik', 'Ročník:', $this->explorer->table('rocnik')->fetchPairs('rocnikID', 'nazevRocniku'))
+		$form->addSelect('rocnik', 'Ročník:', $this->explorer->table('rocnik')->fetchPairs('rocnikID', 'jmenoRocniku'))
 			->setPrompt('Vyberte ročník');
 	
-		$form->addSelect('pomucka', 'Pomůcka:', $this->explorer->table('pomucka')->fetchPairs('pomuckaID', 'nazevPomucky'))
+		$form->addSelect('pomucka', 'Pomůcka:', $this->explorer->table('pomucka')->fetchPairs('pomuckaID', 'jmenoPomucky'))
 			->setPrompt('Vyberte pomůcku');
 
 		$form->addSubmit('send', 'Přidat součást vzdělávací aktivity');
