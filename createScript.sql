@@ -161,7 +161,7 @@ CREATE INDEX IF NOT EXISTS `fk_vzdelavaciAktivita_svp1_idx` ON `pruzkumnikSVP`.`
 -- Table `pruzkumnikSVP`.`rocnik`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`rocnik` (
-  `rocnikID` INT NOT NULL,
+  `rocnikID` INT NOT NULL AUTO_INCREMENT,
   `nazevRocniku` VARCHAR(45) NULL,
   `popisRocniku` LONGTEXT NULL,
   PRIMARY KEY (`rocnikID`))
@@ -172,7 +172,7 @@ ENGINE = InnoDB;
 -- Table `pruzkumnikSVP`.`pomucka`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`pomucka` (
-  `pomuckaID` INT NOT NULL,
+  `pomuckaID` INT NOT NULL AUTO_INCREMENT,
   `nazevPomucky` VARCHAR(45) NULL,
   `popisPomucky` LONGTEXT NULL,
   PRIMARY KEY (`pomuckaID`))
