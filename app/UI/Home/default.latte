@@ -46,7 +46,7 @@
         <div class="seznamOdkazu rocniky">
             {foreach $rocniky as $rocnik}
                 <p>
-                    {$rocnik->nazevRocniku}
+					<a n:href="Rocnik:default, rocnikID: $rocnik->rocnikID">{$rocnik->nazevRocniku}</a>
 					(<a n:href="deleteGrade! $rocnik->rocnikID">smazat</a>)
                 </p>
             {/foreach}
