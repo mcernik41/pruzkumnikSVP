@@ -62,21 +62,9 @@ class Bootstrap
  
 			if ($count == 0) 
 			{
-				$months = [
-					['jmenoMesice' => 'září'],
-					['jmenoMesice' => 'říjen'],
-					['jmenoMesice' => 'listopad'],
-					['jmenoMesice' => 'prosinec'],
-					['jmenoMesice' => 'leden'],
-					['jmenoMesice' => 'únor'],
-					['jmenoMesice' => 'březen'],
-					['jmenoMesice' => 'duben'],
-					['jmenoMesice' => 'květen'],
-					['jmenoMesice' => 'červen']
-				];
-			
 				$database = $container->getByType(\Nette\Database\Explorer::class);
-				$database->table('mesic')->insert($months);
+				$dataInsetrer = new \App\Services\DataInserter($database);
+				$dataInsetrer->insertMonths();
 			}
         } 
 		catch (\PDOException $e) 

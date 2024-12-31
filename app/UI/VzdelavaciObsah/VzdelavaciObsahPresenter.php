@@ -178,112 +178,11 @@ final class VzdelavaciObsahPresenter extends Nette\Application\UI\Presenter
 
 	public function handleNahratObsahSVP_NV(int $svpID)
 	{
-		$this->nahratVzdelavaciObsah($svpID, $this->vzdelavaciStruktura);
+		$dataInsetrer = new \App\Services\DataInserter($this->explorer);
+		$dataInsetrer->insertContents($svpID);
 
 		$this->redirect('this');
-	}	
-
-	public function nahratVzdelavaciObsah(int $svpID, array $vzdelavaciStruktura)
-    {
-        foreach ($vzdelavaciStruktura as $oblast => $obory) {
-            $oblastID = $this->explorer->table('vzdelavaciObsah')->insert([
-                'jmenoObsahu' => $oblast,
-                'svp_svpID' => $svpID
-            ])->getPrimary();
-
-            foreach ($obory as $obor => $tematickeOkruhy) {
-                $oborID = $this->explorer->table('vzdelavaciObsah')->insert([
-                    'jmenoObsahu' => $obor,
-                    'rodicovskyVzdelavaciObsahID' => $oblastID,
-                    'svp_svpID' => $svpID
-                ])->getPrimary();
-
-                foreach ($tematickeOkruhy as $okruh) {
-                    $this->explorer->table('vzdelavaciObsah')->insert([
-                        'jmenoObsahu' => $okruh,
-                        'rodicovskyVzdelavaciObsahID' => $oborID,
-                        'svp_svpID' => $svpID
-                    ]);
-                }
-            }
-        }
-    }
-
-	private array $vzdelavaciStruktura = [
-		'Klíčové kompetence' => [
-			'Klíčová kompetence k učení' => [
-				'Umění se učit',
-				'Smysl a cíl učení',
-				'Celoživotní učení'
-			],
-			'Klíčová kompetence komunikační' => [
-				'Porozumění a vyjádření',
-				'Komunikace v různých kontextech'
-			],
-			'Klíčová kompetence osobnostní a sociální' => [
-				'Vlastní wellbeing',
-				'Resilience',
-				'Identita',
-				'Empatie a porozumění druhým',
-				'Budování a udržování zdravých vztahů'
-			],
-			'Klíčová kompetence k občanství a udržitelnosti' => [
-				'Aktivní občanství a participace',
-				'Udržitelný rozvoj'
-			],
-			'Klíčová kompetence k podnikavosti a pracovní' => [
-				'Nápady, příležitosti a výzvy',
-				'Mobilizování zdrojů',
-				'Realizace akcí, aktivit, projektů',
-				'Spolupráce a týmová práce'
-			],
-			'Klíčová kompetence k řešení problémů' => [
-				'Řešení běžných problematických situací',
-				'Kritické hodnocení a využití vědeckého poznání',
-				'Badatelství'
-			],
-			'Klíčová kompetence kulturní' => [
-				'Kulturní povědomí a vyjadřování',
-				'Interpretace a hodnocení kulturních a uměleckých projevů'
-			],
-			'Klíčová kompetence digitální' => [
-				'Digitální gramotnost a bezpečnost',
-				'Kritické myšlení a práce s informacemi'
-			]
-		],
-		'Základní gramotnosti' => [
-			'Čtenářská a pisatelská gramotnost' => [
-				'Čtenářská nezávislost',
-				'Vztah ke čtení a čtenářství',
-				'Psaní a pisatelství',
-				'Syntéza a tvorba'
-			],
-			'Logicko-matematická gramotnost' => [
-				'Matematická reflexe',
-				'Řešení matematických situací',
-				'Aplikace matematiky v různých kontextech'
-			]
-		],
-		'Průřezová témata' => [
-			'Péče o wellbeing' => [
-				'Fyzická pohoda',
-				'Duševní pohoda',
-				'Sociální zdraví',
-				'Emocionální zdraví'
-			],
-			'Společnost pro všechny' => [
-				'Inkluze',
-				'Rovné příležitosti',
-				'Aktivní občanství',
-				'Demokracie'
-			],
-			'Udržitelné prostředí' => [
-				'Ekologická výchova',
-				'Ochrana životního prostředí',
-				'Udržitelné technologie'
-			]
-		]
-	];
+	}
 }
 
 class Obor

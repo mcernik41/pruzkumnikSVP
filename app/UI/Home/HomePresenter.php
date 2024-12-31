@@ -13,6 +13,15 @@ final class HomePresenter extends Nette\Application\UI\Presenter
     public function __construct(private Nette\Database\Explorer $database) 
 	{
 		$this->explorer = $database;
+	}	
+
+	public function handleCreateTestData(): void
+	{
+		$dataInsetrer = new \App\Services\DataInserter($this->explorer);
+		$dataInsetrer->insertTestData();
+	
+		$this->flashMessage('Testovací data úspěšně vložena', 'success');
+		$this->redirect('this');
 	}
 
 	protected $explorer;
@@ -122,18 +131,8 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 
 	public function handleCreateGrades(): void
 	{
-		$grades = [
-			['jmenoRocniku' => 'prima', 'popisRocniku' => '1. ročník osmiletého gymnázia - 6. ročník základní školy'],
-			['jmenoRocniku' => 'sekunda', 'popisRocniku' => '2. ročník osmiletého gymnázia - 7. ročník základní školy'],
-			['jmenoRocniku' => 'tercie', 'popisRocniku' => '3. ročník osmiletého gymnázia - 8. ročník základní školy'],
-			['jmenoRocniku' => 'kvarta', 'popisRocniku' => '4. ročník osmiletého gymnázia - 9. ročník základní školy'],
-			['jmenoRocniku' => 'kvinta', 'popisRocniku' => '5. ročník osmiletého gymnázia - 1. ročník střední školy'],
-			['jmenoRocniku' => 'sexta', 'popisRocniku' => '6. ročník osmiletého gymnázia - 2. ročník střední školy'],
-			['jmenoRocniku' => 'septima', 'popisRocniku' => '7. ročník osmiletého gymnázia - 3. ročník střední školy'],
-			['jmenoRocniku' => 'oktáva', 'popisRocniku' => '8. ročník osmiletého gymnázia - 4. ročník střední školy']
-		];
-	
-		$this->database->table('rocnik')->insert($grades);
+		$dataInsetrer = new \App\Services\DataInserter($this->explorer);
+		$dataInsetrer->insertGrades();
 	
 		$this->flashMessage('Ročníky úspěšně vytvořeny', 'success');
 		$this->redirect('this');
