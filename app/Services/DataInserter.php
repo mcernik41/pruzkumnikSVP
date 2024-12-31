@@ -51,13 +51,9 @@ class DataInserter
 
         $skolaID = $this->explorer->table('skola')->insert(['jmenoSkoly' => 'Gymnázium Nad Kavalírkou'])->getPrimary();
 
-		$svpNG_ID = $this->explorer->table('svp')->insert(['skola_skolaID' => $skolaID, 'jmenoSVP' => "Vzdělávací plán pro nižší gymnázium"])->getPrimary();
 		$svpVG_ID = $this->explorer->table('svp')->insert(['skola_skolaID' => $skolaID, 'jmenoSVP' => "Vzdělávací plán pro vyšší gymnázium"])->getPrimary();
 
-        $this->insertFields($svpNG_ID);
         $this->insertFields($svpVG_ID);
-
-        $this->insertContents($svpNG_ID);
         $this->insertContents($svpVG_ID);
 
         $chatGPTID = $this->database->table('pomucka')->insert(['jmenoPomucky' => 'ChatGPT'])->getPrimary();
