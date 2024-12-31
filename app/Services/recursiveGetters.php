@@ -72,6 +72,34 @@ class RecursiveGetters
 
         return $obsahyArray;
     }
+
+    public function createRecArray_content_breaks(array $items, int $level = 0): array
+    {
+        $options = [];
+        foreach ($items as $item) 
+        {
+            $options[$item->vzdelavaciObsahID] = html_entity_decode(str_repeat('&nbsp;', $level * 4)) . $item->jmenoObsahu;
+            if (!empty($item->children)) 
+            {
+                $options += $this->createRecArray_content_breaks($item->children, $level + 1);
+            }
+        }
+        return $options;
+    }
+
+    public function createRecArray_field_breaks(array $items, int $level = 0): array
+    {
+        $options = [];
+        foreach ($items as $item) 
+        {
+            $options[$item->vzdelavaciOborID] = html_entity_decode(str_repeat('&nbsp;', $level * 4)) . $item->jmenoOboru;
+            if (!empty($item->children)) 
+            {
+                $options += $this->createRecArray_field_breaks($item->children, $level + 1);
+            }
+        }
+        return $options;
+    }
 }
     
 class VzdelavaciObor

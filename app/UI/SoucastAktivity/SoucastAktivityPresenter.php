@@ -41,6 +41,7 @@ final class SoucastAktivityPresenter extends Nette\Application\UI\Presenter
 		$form = new Form; // means Nette\Application\UI\Form
 		
 		$soucastID = $this->getParameter('soucastID');
+		$svpID = (int)$this->getParameter('svpID');
 		$soucast = $this->explorer->table('soucastAktivity')->get($soucastID);
 		$jmenoSoucasti = $soucast->jmenoSoucasti;
 		$popisSoucasti = $soucast->popisSoucasti;
@@ -56,12 +57,19 @@ final class SoucastAktivityPresenter extends Nette\Application\UI\Presenter
 		$form->addTextarea('popisSoucasti', 'Popis součásti vzdělávací aktivity:')
 			->setDefaultValue($popisSoucasti);
 
-		$form->addSelect('vzdelavaciObor', 'Vzdělávací obor:', $this->explorer->table('vzdelavaciObor')->fetchPairs('vzdelavaciOborID', 'jmenoOboru'))
+		$recursiveGetters = new \App\Services\RecursiveGetters($this->explorer);
+		$vzdelavaciObsahy = $recursiveGetters->getRecursiveObsahy($svpID, null);
+		$vzdelavaciObory = $recursiveGetters->getRecursiveObory($svpID, null);
+
+		$obsahy_mezery = $recursiveGetters->createRecArray_content_breaks($vzdelavaciObsahy);
+		$obory_mezery = $recursiveGetters->createRecArray_field_breaks($vzdelavaciObory);
+
+		$form->addSelect('vzdelavaciObor', 'Vzdělávací obor:', $obory_mezery)
 			->setDefaultValue($vzdelavaciObor_vzdelavaciOborID)
 			->setPrompt('Vyberte vzdělávací obor')
 			->setRequired();
 
-		$form->addSelect('vzdelavaciObsah', 'Vzdělávací obsah:', $this->explorer->table('vzdelavaciObsah')->fetchPairs('vzdelavaciObsahID', 'jmenoObsahu'))
+		$form->addSelect('vzdelavaciObsah', 'Vzdělávací obsah:', $obsahy_mezery)
 			->setDefaultValue($vzdelavaciObsah_vzdelavaciObsahID)
 			->setPrompt('Vyberte vzdělávací obsah')
 			->setRequired();
