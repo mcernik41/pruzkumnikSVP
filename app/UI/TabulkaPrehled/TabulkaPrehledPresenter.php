@@ -57,6 +57,16 @@ final class TabulkaPrehledPresenter extends Nette\Application\UI\Presenter
                 continue;
             }
 
+            if(null !== $this->getParameter('pomucka') && $soucastAktivity->pomucka_pomuckaID != $this->getParameter('pomucka'))
+            {
+                continue;
+            }
+
+            if(null !== $this->getParameter('rocnik') && $soucastAktivity->rocnik_rocnikID != $this->getParameter('rocnik'))
+            {
+                continue;
+            }
+
             $soucast = [
                 'soucastID' => $soucastAktivity->soucastAktivityID,
                 'jmenoSoucasti' => $soucastAktivity->jmenoSoucasti,
@@ -88,7 +98,7 @@ final class TabulkaPrehledPresenter extends Nette\Application\UI\Presenter
         return $oboryIds;
     }
 
-	protected function createComponentFilterForm(): Form
+	protected function createComponentFilterByTypeForm(): Form
 	{
 		$form = new Form; // means Nette\Application\UI\Form
 
@@ -102,6 +112,48 @@ final class TabulkaPrehledPresenter extends Nette\Application\UI\Presenter
         {
             $this->redirect('this', ['typAktivity' => $values->typAktivity]);
         };
+
+        $form->setHtmlAttribute('class', 'filterForm');
+
+		return $form;
+	}
+
+	protected function createComponentFilterByToolForm(): Form
+	{
+		$form = new Form; // means Nette\Application\UI\Form
+
+        $form->addSelect('pomucka', 'Pomůcka:', $this->explorer->table('pomucka')->fetchPairs('pomuckaID', 'jmenoPomucky'))
+            ->setPrompt('Vyberte pomůcku')
+            ->setDefaultValue($this->getParameter('pomucka'));
+
+		$form->addSubmit('send', 'Filtrovat');
+
+        $form->onSuccess[] = function (Form $form, \stdClass $values): void
+        {
+            $this->redirect('this', ['pomucka' => $values->pomucka]);
+        };
+
+        $form->setHtmlAttribute('class', 'filterForm');
+
+		return $form;
+	}
+
+	protected function createComponentFilterByGradeForm(): Form
+	{
+		$form = new Form; // means Nette\Application\UI\Form
+
+        $form->addSelect('rocnik', 'Ročník:', $this->explorer->table('rocnik')->fetchPairs('rocnikID', 'jmenoRocniku'))
+            ->setPrompt('Vyberte ročník')
+            ->setDefaultValue($this->getParameter('rocnik'));
+
+		$form->addSubmit('send', 'Filtrovat');
+
+        $form->onSuccess[] = function (Form $form, \stdClass $values): void
+        {
+            $this->redirect('this', ['rocnik' => $values->rocnik]);
+        };
+
+        $form->setHtmlAttribute('class', 'filterForm');
 
 		return $form;
 	}

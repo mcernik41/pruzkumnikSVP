@@ -64,15 +64,21 @@ tr:nth-child(odd) td:first-child { background-color: rgb(198, 198, 198); }
     z-index: 3 !important;
 }
 
-.icoButton img
-{
+.icoButton img {
     height: 1rem;
 }
 
-.icoButton
-{
+.icoButton {
     border: none;
     border-radius: 10%;
     display: block;
     margin-top: 8px;
+}
+
+.filterForm {
+    display: inline;
+}
+
+.filterForm table {
+    display: inline;
 }
