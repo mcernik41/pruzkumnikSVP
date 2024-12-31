@@ -40,7 +40,7 @@ tr:nth-child(odd) td:first-child { background-color: rgb(198, 198, 198); }
     overflow: auto;
     overflow-y: visible;
     width: 100%;
-    height: calc(100vh - 10rem);
+    height: calc(100vh - 2rem);
 }
 
 .scrollTable table {
