@@ -31,17 +31,26 @@ final class VzdelavaciAktivitaPresenter extends Nette\Application\UI\Presenter
 	protected function createComponentActivityPartForm(): Form
 	{
 		$form = new Form; // means Nette\Application\UI\Form
+		
+		$svpID = (int)$this->getParameter('svpID');
 
 		$form->addText('jmenoSoucasti', 'Jméno součásti vzdělávací aktivity:')
 			->setRequired();
 
 		$form->addTextarea('popisSoucasti', 'Popis součásti vzdělávací aktivity:');
 
-		$form->addSelect('vzdelavaciObor', 'Vzdělávací obor:', $this->explorer->table('vzdelavaciObor')->fetchPairs('vzdelavaciOborID', 'jmenoOboru'))
+		$recursiveGetters = new \App\Services\RecursiveGetters($this->explorer);
+		$vzdelavaciObsahy = $recursiveGetters->getRecursiveObsahy($svpID, null);
+		$vzdelavaciObory = $recursiveGetters->getRecursiveObory($svpID, null);
+
+		$obsahy_mezery = $recursiveGetters->createRecArray_content_breaks($vzdelavaciObsahy);
+		$obory_mezery = $recursiveGetters->createRecArray_field_breaks($vzdelavaciObory);
+
+		$form->addSelect('vzdelavaciObor', 'Vzdělávací obor:', $obory_mezery)
 			->setPrompt('Vyberte vzdělávací obor')
 			->setRequired();
 
-		$form->addSelect('vzdelavaciObsah', 'Vzdělávací obsah:', $this->explorer->table('vzdelavaciObsah')->fetchPairs('vzdelavaciObsahID', 'jmenoObsahu'))
+		$form->addSelect('vzdelavaciObsah', 'Vzdělávací obsah:', $obsahy_mezery)
 			->setPrompt('Vyberte vzdělávací obsah')
 			->setRequired();
 
