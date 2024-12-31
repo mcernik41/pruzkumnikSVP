@@ -55,6 +55,28 @@ class Bootstrap
 			$runner = $container->getByType(Services\sqlRunner::class);
 			$runner->runSQLFile(__DIR__ . '/../createScript.sql');
 
+			//pokud se vytváří databáze, vloží se měsíce
+			$pdo->exec("USE `$dbName`");
+			$stmt = $pdo->query("SELECT COUNT(*) FROM mesice");
+			$count = $stmt->fetchColumn();
+ 
+			if ($count == 0) 
+			{
+				$months = [
+					['jmenoMesice' => 'září'],
+					['jmenoMesice' => 'říjen'],
+					['jmenoMesice' => 'listopad'],
+					['jmenoMesice' => 'prosinec'],
+					['jmenoMesice' => 'leden'],
+					['jmenoMesice' => 'únor'],
+					['jmenoMesice' => 'březen'],
+					['jmenoMesice' => 'duben'],
+					['jmenoMesice' => 'květen'],
+					['jmenoMesice' => 'červen']
+				];
+			
+				$this->database->table('mesic')->insert($months);
+			}
         } 
 		catch (\PDOException $e) 
 		{
