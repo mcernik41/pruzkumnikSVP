@@ -57,7 +57,7 @@ class Bootstrap
 
 			//pokud se vytváří databáze, vloží se měsíce
 			$pdo->exec("USE `$dbName`");
-			$stmt = $pdo->query("SELECT COUNT(*) FROM mesice");
+			$stmt = $pdo->query("SELECT COUNT(*) FROM mesic");
 			$count = $stmt->fetchColumn();
  
 			if ($count == 0) 
@@ -75,7 +75,8 @@ class Bootstrap
 					['jmenoMesice' => 'červen']
 				];
 			
-				$this->database->table('mesic')->insert($months);
+				$database = $container->getByType(\Nette\Database\Explorer::class);
+				$database->table('mesic')->insert($months);
 			}
         } 
 		catch (\PDOException $e) 
