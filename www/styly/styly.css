@@ -63,3 +63,16 @@ tr:nth-child(odd) td:first-child { background-color: rgb(198, 198, 198); }
 .scrollTable th:first-child {
     z-index: 3 !important;
 }
+
+.icoButton img
+{
+    height: 1rem;
+}
+
+.icoButton
+{
+    border: none;
+    border-radius: 10%;
+    display: block;
+    margin-top: 8px;
+}

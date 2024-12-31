@@ -6,6 +6,9 @@
 
 <br>
 
+<button onclick="showAll()" class="icoButton"><img src="{$basePath}/images/show.png"></button>
+<br>
+
 {* Latte šablona pro vykreslení tabulky s obory a obsahy *}
 <div class="scrollTable">
     <table>
@@ -17,6 +20,7 @@
                         <a n:href="VzdelavaciObor:default, svpID: $svpID, vzdelavaciOborID: $obor->vzdelavaciOborID">
                             {$obor->jmenoOboru}
                         </a>
+                        <button onclick="hideColumn(this)" class="icoButton"><img src="{$basePath}/images/hide.png"></button>
                     </th>
                     {include #rekurzivniObory, obory => $obor->children, uroven => 1}
                 {/foreach}
@@ -29,6 +33,7 @@
                         <a n:href="VzdelavaciObsah:default, svpID: $svpID, vzdelavaciObsahID: $obsah->vzdelavaciObsahID">
                             {$obsah->jmenoObsahu}
                         </a>
+                        <button onclick="hideRow(this)" class="icoButton"><img src="{$basePath}/images/hide.png"></button>
                     </td>
                     {foreach $oboryIds as $obor}
                         <td>
@@ -41,6 +46,40 @@
         </tbody>
     </table>
 </div>
+
+<script>
+function hideRow(button) 
+{
+    var row = button.closest('tr');
+    row.style.display = 'none';
+}
+
+function hideColumn(button) 
+{
+    var th = button.closest('th');
+    var index = th.cellIndex;
+    var table = th.closest('table');
+    for (var i = 0; i < table.rows.length; i++) 
+    {
+        table.rows[i].cells[index].style.display = 'none';
+    }
+}
+
+function showAll() 
+{
+    var rows = document.querySelectorAll('tr');
+    for (var i = 0; i < rows.length; i++) 
+    {
+        rows[i].style.display = '';
+    }
+
+    var cells = document.querySelectorAll('td, th');
+    for (var i = 0; i < cells.length; i++) 
+    {
+        cells[i].style.display = '';
+    }
+}
+</script>
 {/block}
 
 {block #rekurzivniObsahy}
@@ -50,6 +89,7 @@
                 <a n:href="VzdelavaciObsah:default, svpID: $svpID, vzdelavaciObsahID: $obsah->vzdelavaciObsahID">
                     {$obsah->jmenoObsahu}
                 </a>
+                <button onclick="hideRow(this)" class="icoButton"><img src="{$basePath}/images/hide.png"></button>
             </td>
             {foreach $oboryIds as $obor}
                 <td>
@@ -67,6 +107,7 @@
             <a n:href="VzdelavaciObor:default, svpID: $svpID, vzdelavaciOborID: $obor->vzdelavaciOborID">
                 {$obor->jmenoOboru}
             </a>
+            <button onclick="hideColumn(this)" class="icoButton"><img src="{$basePath}/images/hide.png"></button>
         </th>
         {include #rekurzivniObory, obory => $obor->children, uroven => $uroven + 1}
     {/foreach}
