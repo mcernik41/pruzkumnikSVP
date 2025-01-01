@@ -3,19 +3,22 @@
 declare(strict_types=1);
 
 namespace App\UI\Skola;
+
+use App\Forms\SchoolFormFactory;
 use Nette\Application\UI\Form;
-
 use Nette;
-
 
 final class SkolaPresenter extends Nette\Application\UI\Presenter
 {
-    public function __construct(private Nette\Database\Explorer $database) 
+	public function __construct(Nette\Database\Explorer $database, SchoolFormFactory $schoolFormFactory)
 	{
+		parent::__construct();
 		$this->explorer = $database;
+		$this->schoolFormFactory = $schoolFormFactory;
 	}
 
 	protected $explorer;
+	private SchoolFormFactory $schoolFormFactory;
 
 	public function renderDefault(int $skolaID): void
 	{
@@ -57,34 +60,20 @@ final class SkolaPresenter extends Nette\Application\UI\Presenter
 
 	protected function createComponentSchoolForm(): Form
 	{
-		$form = new Form; // means Nette\Application\UI\Form
-
-		$skolaID = $this->getParameter('skolaID');
+		$skolaID = (int)$this->getParameter('skolaID');
 		$skola = $this->explorer->table('skola')->get($skolaID);
-		$this->template->jmenoSkoly = $skola->jmenoSkoly;
 
-		$form->addText('name', 'Jméno školy:')
-			->setRequired()
-			->setDefaultValue($skola->jmenoSkoly);
+		$defaultValues = [
+			'name' => $skola->jmenoSkoly
+		];
 
-		$form->addSubmit('send', 'Upravit školu');
-
-		$form->onSuccess[] = $this->schoolFormSucceeded(...);
+		$form = $this->schoolFormFactory->create($defaultValues);
+		$form->onSuccess[] = function (\stdClass $data) use ($skolaID) {
+			$this->schoolFormFactory->process($data, $this->explorer, $skolaID);
+			$this->flashMessage('Škola úspěšně upravena', 'success');
+			$this->redirect('this');
+		};
 
 		return $form;
-	}
-
-	private function schoolFormSucceeded(\stdClass $data): void
-	{
-		$skolaID = $this->getParameter('skolaID');
-
-		$this->database->table('skola')
-			->where('skolaID', $skolaID)
-			->update([
-				'jmenoSkoly' => $data->name
-		]);
-
-		$this->flashMessage('Škola úspěšně upravena', 'success');
-		$this->redirect('this');
 	}
 }

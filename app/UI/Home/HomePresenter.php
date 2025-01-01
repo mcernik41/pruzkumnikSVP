@@ -3,17 +3,22 @@
 declare(strict_types=1);
 
 namespace App\UI\Home;
+
+use App\Forms\SchoolFormFactory;
 use Nette\Application\UI\Form;
-
 use Nette;
-
 
 final class HomePresenter extends Nette\Application\UI\Presenter
 {
-    public function __construct(private Nette\Database\Explorer $database) 
+	public function __construct(Nette\Database\Explorer $database, SchoolFormFactory $schoolFormFactory)
 	{
+		parent::__construct();
 		$this->explorer = $database;
-	}	
+		$this->schoolFormFactory = $schoolFormFactory;
+	}
+
+	protected $explorer;
+	private SchoolFormFactory $schoolFormFactory;
 
 	public function handleCreateTestData(): void
 	{
@@ -23,8 +28,6 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 		$this->flashMessage('Testovací data úspěšně vložena', 'success');
 		$this->redirect('this');
 	}
-
-	protected $explorer;
 
 	public function renderDefault(): void
 	{
@@ -43,26 +46,14 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 
 	protected function createComponentSchoolForm(): Form
 	{
-		$form = new Form; // means Nette\Application\UI\Form
-
-		$form->addText('name', 'Jméno školy:')
-			->setRequired();
-
-		$form->addSubmit('send', 'Přidat školu');
-
-		$form->onSuccess[] = $this->schoolFormSucceeded(...);
+		$form = $this->schoolFormFactory->create();
+		$form->onSuccess[] = function (\stdClass $data) {
+			$this->schoolFormFactory->process($data, $this->explorer);
+			$this->flashMessage('Škola úspěšně přidána', 'success');
+			$this->redirect('this');
+		};
 
 		return $form;
-	}
-
-	private function schoolFormSucceeded(\stdClass $data): void
-	{
-		$this->database->table('skola')->insert([
-			'jmenoSkoly' => $data->name
-		]);
-
-		$this->flashMessage('Škola úspěšně přidána', 'success');
-		$this->redirect('this');
 	}
 
 	/* TYPY AKTIVIT */
