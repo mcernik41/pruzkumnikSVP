@@ -38,6 +38,9 @@ final class SoucastAktivityPresenter extends Nette\Application\UI\Presenter
 
 		//informace o obsahu
 		$this->template->vzdelavaciObsah = $this->explorer->table('vzdelavaciObsah')->get($soucast->vzdelavaciObsah_vzdelavaciObsahID);
+
+		//informace o tématu
+		$this->template->tema = $this->explorer->table('tema')->get($soucast->tema_temaID);
 	}
 
 	protected function createComponentActivityPartForm(): Form
