@@ -3,19 +3,22 @@
 declare(strict_types=1);
 
 namespace App\UI\Pomucka;
+
+use App\Forms\ToolFormFactory;
 use Nette\Application\UI\Form;
-
 use Nette;
-
 
 final class PomuckaPresenter extends Nette\Application\UI\Presenter
 {
-    public function __construct(private Nette\Database\Explorer $database) 
+	public function __construct(Nette\Database\Explorer $database, ToolFormFactory $toolFormFactory)
 	{
+		parent::__construct();
 		$this->explorer = $database;
+		$this->toolFormFactory = $toolFormFactory;
 	}
 
 	protected $explorer;
+	private ToolFormFactory $toolFormFactory;
 
 	public function renderDefault(int $pomuckaID): void
 	{
@@ -25,37 +28,28 @@ final class PomuckaPresenter extends Nette\Application\UI\Presenter
 
 	protected function createComponentToolForm(): Form
 	{
-		$form = new Form; // means Nette\Application\UI\Form
-		
-		$pomuckaID = $this->getParameter('pomuckaID');
+		$pomuckaID = (int)$this->getParameter('pomuckaID');
 		$pomucka = $this->explorer->table('pomucka')->get($pomuckaID);
 
-		$form->addText('jmenoPomucky', 'Jméno pomůcky:')
-			->setDefaultValue($pomucka->jmenoPomucky)
-			->setRequired();
+		$defaultValues = [
+			'jmenoPomucky' => $pomucka->jmenoPomucky,
+			'popisPomucky' => $pomucka->popisPomucky
+		];
 
-		$form->addTextarea('popisPomucky', 'Popis pomůcky:')
-			->setDefaultValue($pomucka->popisPomucky);
-
-		$form->addSubmit('send', 'Upravit pomůcku');
-
-		$form->onSuccess[] = $this->toolFormSucceeded(...);
+		$form = $this->toolFormFactory->create($defaultValues);
+		$form->onSuccess[] = function (\stdClass $data) use ($pomuckaID) {
+			$this->toolFormFactory->process($data, $this->explorer, $pomuckaID);
+			$this->flashMessage('Pomůcka úspěšně upravena', 'success');
+			$this->redirect('this');
+		};
 
 		return $form;
 	}
 
-	private function toolFormSucceeded(\stdClass $data): void
+	public function handleDeleteTool(int $id): void
 	{
-		$pomuckaID = $this->getParameter('pomuckaID');
-
-		$this->database->table('pomucka')
-			->where('pomuckaID', $pomuckaID)
-			->update([
-				'jmenoPomucky' => $data->jmenoPomucky,
-				'popisPomucky' => $data->popisPomucky,
-		]);
-
-		$this->flashMessage('Pomůcka úspěšně upravena', 'success');
+		$this->toolFormFactory->delete($this->explorer, $id);
+		$this->flashMessage('Pomůcka úspěšně odebrána', 'success');
 		$this->redirect('this');
 	}
 }

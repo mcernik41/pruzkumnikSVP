@@ -5,20 +5,23 @@ declare(strict_types=1);
 namespace App\UI\Home;
 
 use App\Forms\SchoolFormFactory;
+use App\Forms\ToolFormFactory;
 use Nette\Application\UI\Form;
 use Nette;
 
 final class HomePresenter extends Nette\Application\UI\Presenter
 {
-	public function __construct(Nette\Database\Explorer $database, SchoolFormFactory $schoolFormFactory)
+	public function __construct(Nette\Database\Explorer $database, SchoolFormFactory $schoolFormFactory, ToolFormFactory $toolFormFactory)
 	{
 		parent::__construct();
 		$this->explorer = $database;
 		$this->schoolFormFactory = $schoolFormFactory;
+		$this->toolFormFactory = $toolFormFactory;
 	}
 
 	protected $explorer;
 	private SchoolFormFactory $schoolFormFactory;
+	private ToolFormFactory $toolFormFactory;
 
 	public function handleCreateTestData(): void
 	{
@@ -140,35 +143,19 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	/* POMŮCKY */
 	protected function createComponentToolForm(): Form
 	{
-		$form = new Form; // means Nette\Application\UI\Form
-
-		$form->addText('jmenoPomucky', 'Jméno pomůcky:')
-			->setRequired();
-
-		$form->addTextarea('popisPomucky', 'Popis pomůcky:');
-
-		$form->addSubmit('send', 'Přidat pomůcku');
-
-		$form->onSuccess[] = $this->toolFormSucceeded(...);
+		$form = $this->toolFormFactory->create();
+		$form->onSuccess[] = function (\stdClass $data) {
+			$this->toolFormFactory->process($data, $this->explorer);
+			$this->flashMessage('Pomůcka úspěšně přidána', 'success');
+			$this->redirect('this');
+		};
 
 		return $form;
 	}
 
-	private function toolFormSucceeded(\stdClass $data): void
-	{
-		$this->database->table('pomucka')->insert([
-			'jmenoPomucky' => $data->jmenoPomucky,
-			'popisPomucky' => $data->popisPomucky
-		]);
-
-		$this->flashMessage('Pomůcka úspěšně přidána', 'success');
-		$this->redirect('this');
-	}
-
 	public function handleDeleteTool(int $id): void
 	{
-		$this->database->table('pomucka')->where('pomuckaID', $id)->delete();
-
+		$this->toolFormFactory->delete($this->explorer, $id);
 		$this->flashMessage('Pomůcka úspěšně odebrána', 'success');
 		$this->redirect('this');
 	}
