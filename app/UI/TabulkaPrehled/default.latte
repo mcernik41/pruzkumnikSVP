@@ -13,7 +13,7 @@
 
 {* Latte šablona pro vykreslení tabulky s obory a obsahy *}
 <div class="scrollTable">
-    <table>
+    <table id="mainTable">
         <thead>
             <tr>
                 <th>Obsahy/Obory</th>
@@ -81,6 +81,59 @@ function showAll()
         cells[i].style.display = '';
     }
 }
+
+function hideEmptyRowsAndColumns() 
+{
+    var table = document.getElementById('mainTable');
+    var rows = table.rows;
+    var colsToHide = new Set();
+
+    // Check rows
+    for (var i = 1; i < rows.length; i++) 
+    {
+        var empty = true;
+        for (var j = 1; j < rows[i].cells.length; j++) 
+        {
+            if (rows[i].cells[j].innerHTML.trim() !== '') 
+            {
+                empty = false;
+                break;
+            }
+        }
+        if (empty) 
+        {
+            rows[i].style.display = 'none';
+        }
+    }
+
+    // Check columns
+    for (var j = 1; j < rows[0].cells.length; j++) 
+    {
+        var empty = true;
+        for (var i = 1; i < rows.length; i++) 
+        {
+            if (rows[i].cells[j].innerHTML.trim() !== '') 
+            {
+                empty = false;
+                break;
+            }
+        }
+        if (empty) 
+        {
+            colsToHide.add(j);
+        }
+    }
+
+    colsToHide.forEach(function(index) 
+    {
+        for (var i = 0; i < rows.length; i++) 
+        {
+            rows[i].cells[index].style.display = 'none';
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', hideEmptyRowsAndColumns);
 </script>
 {/block}
 
