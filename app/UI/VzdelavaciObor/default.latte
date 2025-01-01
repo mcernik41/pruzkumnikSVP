@@ -10,11 +10,23 @@
 	<h2>Přidat vzdělávací obor</h2>
 	{control areaForm}
 
-	<h2>Vzdělávací obor</h2>
+	<h2>Vzdělávací obory</h2>
 	<div class="seznamOdkazu vzdelavaciObory">
 		{foreach $vzdelavaciObory as $vzdelavaciObor}
 			<p>
 				<a n:href="VzdelavaciObor:default, svpID: $svpID, vzdelavaciOborID: $vzdelavaciObor->vzdelavaciOborID">{$vzdelavaciObor->jmenoOboru}</a>
+			</p>
+		{/foreach}
+	</div>
+
+	<h2>Přidat téma</h2>
+	{control topicForm}
+
+	<h2>Témata</h2>
+	<div class="seznamOdkazu temata">
+		{foreach $temata as $tema}
+			<p>
+				{$tema->jmenoTematu}
 			</p>
 		{/foreach}
 	</div>

@@ -279,7 +279,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`tema` (
   `temaID` INT NOT NULL AUTO_INCREMENT,
-  `jmenoTematu` VARCHAR(45) NOT NULL,
+  `jmenoTematu` VARCHAR(200) NOT NULL,
   `popisTematu` LONGTEXT NULL,
   `pocetHodin` INT NOT NULL,
   `rocnik_rocnikID` INT NOT NULL,
