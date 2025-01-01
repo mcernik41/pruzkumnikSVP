@@ -70,9 +70,11 @@ final class VzdelavaciOborPresenter extends Nette\Application\UI\Presenter
 
 	protected function createComponentAreaForm(): Form
 	{
+		$vzdelavaciOborID = ((int)$this->getParameter('vzdelavaciOborID') == -1) ? null : (int)$this->getParameter('vzdelavaciOborID');
+
 		$form = $this->areaFormFactory->create();
-		$form->onSuccess[] = function (\stdClass $data) {
-			$this->areaFormFactory->process($data, $this->explorer, null, (int)$this->getParameter('svpID'), ((int)$this->getParameter('vzdelavaciOborID') == -1) ? null : (int)$this->getParameter('vzdelavaciOborID'));
+		$form->onSuccess[] = function (\stdClass $data) use ($vzdelavaciOborID) {
+			$this->areaFormFactory->process($data, $this->explorer, null, (int)$this->getParameter('svpID'), $vzdelavaciOborID);
 			$this->flashMessage('Vzdělávací obor úspěšně přidán', 'success');
 			$this->redirect('this');
 		};
@@ -91,8 +93,8 @@ final class VzdelavaciOborPresenter extends Nette\Application\UI\Presenter
 		];
 
 		$form = $this->areaFormFactory->create($defaultValues);
-		$form->onSuccess[] = function (\stdClass $data) use ($vzdelavaciOborID) {
-			$this->areaFormFactory->process($data, $this->explorer, $vzdelavaciOborID, (int)$this->getParameter('svpID'), ((int)$this->getParameter('vzdelavaciOborID') == -1) ? null : (int)$this->getParameter('vzdelavaciOborID'));
+		$form->onSuccess[] = function (\stdClass $data) use ($vzdelavaciOborID, $obor) {
+			$this->areaFormFactory->process($data, $this->explorer, $vzdelavaciOborID, (int)$this->getParameter('svpID'), $obor->rodicovskyVzdelavaciOborID);
 			$this->flashMessage('Vzdělávací obor úspěšně upraven', 'success');
 			$this->redirect('this');
 		};
