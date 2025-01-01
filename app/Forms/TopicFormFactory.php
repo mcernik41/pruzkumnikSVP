@@ -26,18 +26,22 @@ class TopicFormFactory
 
         $form->addSelect('rocnik', 'Ročník:', $this->explorer->table('rocnik')->fetchPairs('rocnikID', 'jmenoRocniku'))
             ->setDefaultValue($defaultValues['rocnik'] ?? null)
+            ->setRequired()
             ->setPrompt('Vyberte ročník');
 
         $form->addSelect('mesicZacatek', 'Měsíc začátku:', $this->explorer->table('mesic')->fetchPairs('mesicID', 'jmenoMesice'))
             ->setDefaultValue($defaultValues['mesicZacatek'] ?? null)
+            ->setRequired()
             ->setPrompt('Vyberte měsíc začátku');
 
         $form->addSelect('mesicKonec', 'Měsíc konce:', $this->explorer->table('mesic')->fetchPairs('mesicID', 'jmenoMesice'))
             ->setDefaultValue($defaultValues['mesicKonec'] ?? null)
+            ->setRequired()
             ->setPrompt('Vyberte měsíc konce');
 
         $form->addInteger('pocetHodin', 'Počet hodin:')
             ->setDefaultValue($defaultValues['pocetHodin'] ?? null)
+            ->setRequired()
             ->setRequired();
 
         $form->addTextarea('popisTematu', 'Popis tématu:')
