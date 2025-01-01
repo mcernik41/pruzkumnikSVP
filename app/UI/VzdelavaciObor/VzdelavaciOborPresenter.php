@@ -3,19 +3,23 @@
 declare(strict_types=1);
 
 namespace App\UI\VzdelavaciObor;
-use Nette\Application\UI\Form;
 
+use App\Forms\TopicFormFactory;
+use Nette\Application\UI\Form;
 use Nette;
 
 
 final class VzdelavaciOborPresenter extends Nette\Application\UI\Presenter
 {
-    public function __construct(private Nette\Database\Explorer $database) 
+    public function __construct(private Nette\Database\Explorer $database, TopicFormFactory $topicFormFactory) 
 	{
+        parent::__construct();
 		$this->explorer = $database;
+        $this->topicFormFactory = $topicFormFactory;
 	}
 
 	protected $explorer;
+    private TopicFormFactory $topicFormFactory;
 
 	public function renderDefault(int $svpID, int $vzdelavaciOborID): void
 	{
@@ -93,53 +97,6 @@ final class VzdelavaciOborPresenter extends Nette\Application\UI\Presenter
 		$this->redirect('this');
 	}
 
-	protected function createComponentTopicForm(): Form
-	{
-		$form = new Form; // means Nette\Application\UI\Form
-
-		$form->addText('jmenoTematu', 'Jméno tématu:')
-			->setRequired();
-
-		$form->addSelect('rocnik', 'Ročník:', $this->explorer->table('rocnik')->fetchPairs('rocnikID', 'jmenoRocniku'))
-			->setPrompt('Vyberte ročník');
-
-		$form->addSelect('mesicZacatek', 'Měsíc začátku:', $this->explorer->table('mesic')->fetchPairs('mesicID', 'jmenoMesice'))
-			->setPrompt('Vyberte měsíc začátku');
-
-		$form->addSelect('mesicKonec', 'Měsíc konce:', $this->explorer->table('mesic')->fetchPairs('mesicID', 'jmenoMesice'))
-			->setPrompt('Vyberte měsíc konce');
-
-		$form->addInteger('pocetHodin', 'Počet hodin:')
-			->setRequired();
-
-		$form->addTextarea('popisTematu', 'Popis tématu:');
-
-		$form->addSubmit('send', 'Přidat téma');
-
-		$form->onSuccess[] = $this->topicFormSucceeded(...);
-
-		return $form;
-	}
-
-	private function topicFormSucceeded(\stdClass $data): void
-	{
-		$svpID = $this->getParameter('svpID');
-		$vzdelavaciOborID = $this->getParameter('vzdelavaciOborID');
-
-		$this->database->table('tema')->insert([
-			'vzdelavaciObor_vzdelavaciOborID' => ($vzdelavaciOborID == -1) ? null : $vzdelavaciOborID,
-			'jmenoTematu' => $data->jmenoTematu,
-			'popisTematu' => $data->popisTematu,
-			'rocnik_rocnikID' => $data->rocnik,
-			'mesicID_zacatek' => $data->mesicZacatek,
-			'mesicID_konec' => $data->mesicKonec,
-			'pocetHodin' => $data->pocetHodin
-		]);
-
-		$this->flashMessage('Téma úspěšně přidáno', 'success');
-		$this->redirect('this');
-	}
-
 	protected function createComponentAreaModifyForm(): Form
 	{
 		$form = new Form; // means Nette\Application\UI\Form
@@ -175,6 +132,18 @@ final class VzdelavaciOborPresenter extends Nette\Application\UI\Presenter
 		$this->flashMessage('Vzdělávací obor úspěšně upraven', 'success');
 		$this->redirect('this');
 	}
+
+	protected function createComponentTopicForm(): Form
+    {
+        $form = $this->topicFormFactory->create();
+        $form->onSuccess[] = function (\stdClass $data) {
+            $this->topicFormFactory->process($data, $this->explorer, null, (int)$this->getParameter('vzdelavaciOborID'));
+            $this->flashMessage('Téma úspěšně přidáno', 'success');
+            $this->redirect('this');
+        };
+
+        return $form;
+    }
 
 	public function handleNahratOborySVP_NV(int $svpID)
 	{

@@ -3,19 +3,23 @@
 declare(strict_types=1);
 
 namespace App\UI\Tema;
-use Nette\Application\UI\Form;
 
+use App\Forms\TopicFormFactory;
+use Nette\Application\UI\Form;
 use Nette;
 
 
 final class TemaPresenter extends Nette\Application\UI\Presenter
 {
-    public function __construct(private Nette\Database\Explorer $database) 
+    public function __construct(private Nette\Database\Explorer $database, TopicFormFactory $topicFormFactory) 
 	{
+        parent::__construct();
 		$this->explorer = $database;
+        $this->topicFormFactory = $topicFormFactory;
 	}
 
 	protected $explorer;
+    private TopicFormFactory $topicFormFactory;
 
 	public function renderDefault(int $vzdelavaciOborID, int $temaID): void
 	{
@@ -36,57 +40,25 @@ final class TemaPresenter extends Nette\Application\UI\Presenter
 
 	protected function createComponentTopicModifyForm(): Form
 	{
-		$temaID = $this->getParameter('temaID');
+		$temaID = (int)$this->getParameter('temaID');
+        $tema = $this->explorer->table('tema')->get($temaID);
 
-		$form = new Form; // means Nette\Application\UI\Form
-		$tema = $this->explorer->table('tema')->get($temaID);
+        $defaultValues = [
+            'jmenoTematu' => $tema->jmenoTematu,
+            'rocnik' => $tema->rocnik_rocnikID,
+            'mesicZacatek' => $tema->mesicID_zacatek,
+            'mesicKonec' => $tema->mesicID_konec,
+            'pocetHodin' => $tema->pocetHodin,
+            'popisTematu' => $tema->popisTematu
+        ];
 
-		$form->addText('jmenoTematu', 'Jméno tématu:')
-			->setDefaultValue($tema->jmenoTematu)
-			->setRequired();
+        $form = $this->topicFormFactory->create($defaultValues);
+        $form->onSuccess[] = function (\stdClass $data) use ($temaID) {
+            $this->topicFormFactory->process($data, $this->explorer, $temaID);
+            $this->flashMessage('Téma úspěšně upraveno', 'success');
+            $this->redirect('this');
+        };
 
-		$form->addSelect('rocnik', 'Ročník:', $this->explorer->table('rocnik')->fetchPairs('rocnikID', 'jmenoRocniku'))
-			->setDefaultValue($tema->rocnik_rocnikID)
-			->setPrompt('Vyberte ročník');
-
-		$form->addSelect('mesicZacatek', 'Měsíc začátku:', $this->explorer->table('mesic')->fetchPairs('mesicID', 'jmenoMesice'))
-			->setDefaultValue($tema->mesicID_zacatek)
-			->setPrompt('Vyberte měsíc začátku');
-
-		$form->addSelect('mesicKonec', 'Měsíc konce:', $this->explorer->table('mesic')->fetchPairs('mesicID', 'jmenoMesice'))
-			->setDefaultValue($tema->mesicID_konec)
-			->setPrompt('Vyberte měsíc konce');
-
-		$form->addInteger('pocetHodin', 'Počet hodin:')
-			->setDefaultValue($tema->pocetHodin)
-			->setRequired();
-
-		$form->addTextarea('popisTematu', 'Popis tématu:')
-			->setDefaultValue($tema->popisTematu);
-
-		$form->addSubmit('send', 'Upravit téma');
-
-		$form->onSuccess[] = $this->topicModifyFormSucceeded(...);
-
-		return $form;
-	}
-
-	private function topicModifyFormSucceeded(\stdClass $data): void
-	{
-		$temaID = $this->getParameter('temaID');
-
-		$this->database->table('tema')
-			->where('temaID', $temaID)
-			->update([
-				'jmenoTematu' => $data->jmenoTematu,
-				'popisTematu' => $data->popisTematu,
-				'rocnik_rocnikID' => $data->rocnik,
-				'mesicID_zacatek' => $data->mesicZacatek,
-				'mesicID_konec' => $data->mesicKonec,
-				'pocetHodin' => $data->pocetHodin
-			]);
-
-		$this->flashMessage('Téma úspěšně upraveno', 'success');
-		$this->redirect('this');
+        return $form;
 	}
 }
