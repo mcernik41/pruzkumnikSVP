@@ -49,4 +49,9 @@ class ContentFormFactory
 			$database->table('vzdelavaciObsah')->insert($values);
 		}
 	}
+
+    public function delete(Explorer $database, int $vzdelavaciObsahID): void
+    {
+        $database->table('vzdelavaciObsah')->where('vzdelavaciObsahID', $vzdelavaciObsahID)->delete();
+    }
 }

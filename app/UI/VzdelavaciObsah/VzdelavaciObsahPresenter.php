@@ -87,6 +87,13 @@ final class VzdelavaciObsahPresenter extends Nette\Application\UI\Presenter
 		return $form;
 	}
 
+	public function handleDeleteContent(int $id): void
+	{
+		$this->contentFormFactory->delete($this->explorer, $id);
+		$this->flashMessage('Vzdělávací obsah úspěšně odebrán', 'success');
+		$this->redirect('this');
+	}
+
 	public function handleNahratObsahSVP_NV(int $svpID)
 	{
 		$dataInsetrer = new \App\Services\DataInserter($this->explorer);

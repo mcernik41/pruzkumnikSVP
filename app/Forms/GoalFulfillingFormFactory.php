@@ -54,4 +54,9 @@ class GoalFulfillingFormFactory
 			$database->table('plneniCile')->insert($values);
 		}
 	}
+
+    public function delete(Explorer $database, int $plneniCileID): void
+    {
+        $database->table('plneniCile')->where('plneniCileID', $plneniCileID)->delete();
+    }
 }

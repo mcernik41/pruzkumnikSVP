@@ -11,10 +11,9 @@
 	<div class="seznamOdkazu plneniCile">
 		{foreach $plneniCile as $plneni}
 			<p>
-				<a n:href="VzdelavaciObsah:default, vzdelavaciObsahID: $vzdelavaciObsah[$plneni->vzdelavaciObsah_vzdelavaciObsahID]->vzdelavaciObsahID, svpID: $svpID">
-					{$vzdelavaciObsah[$plneni->vzdelavaciObsah_vzdelavaciObsahID]->jmenoObsahu}
-				</a>
+				<a n:href="VzdelavaciObsah:default, vzdelavaciObsahID: $vzdelavaciObsah[$plneni->vzdelavaciObsah_vzdelavaciObsahID]->vzdelavaciObsahID, svpID: $svpID">{$vzdelavaciObsah[$plneni->vzdelavaciObsah_vzdelavaciObsahID]->jmenoObsahu}</a>
 				(<a n:href="PlneniCile:default, plneniCileID: $plneni->plneniCileID, cilID: $cilID, svpID: $svpID">Plnění cíle</a>)
+				(<a n:href="deleteGoalFulfilling! $plneni->plneniCileID">smazat</a>)
 			</p>
 		{/foreach}
 	</div>

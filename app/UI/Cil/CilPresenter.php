@@ -67,4 +67,11 @@ final class CilPresenter extends Nette\Application\UI\Presenter
 
 		return $form;
 	}
+
+	public function handleDeleteGoalFulfilling(int $id): void
+	{
+		$this->goalFulfillingFormFactory->delete($this->explorer, $id);
+		$this->flashMessage('Plnění cíle úspěšně odebráno', 'success');
+		$this->redirect('this');
+	}
 }

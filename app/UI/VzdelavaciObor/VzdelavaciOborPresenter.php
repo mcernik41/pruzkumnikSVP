@@ -102,6 +102,13 @@ final class VzdelavaciOborPresenter extends Nette\Application\UI\Presenter
 		return $form;
 	}
 
+	public function handleDeleteArea(int $id): void
+	{
+		$this->areaFormFactory->delete($this->explorer, $id);
+		$this->flashMessage('Vzdělávací obor úspěšně odebrán', 'success');
+		$this->redirect('this');
+	}
+
 	protected function createComponentTopicForm(): Form
 	{
 		$form = $this->topicFormFactory->create();
@@ -112,6 +119,13 @@ final class VzdelavaciOborPresenter extends Nette\Application\UI\Presenter
 		};
 
 		return $form;
+	}
+
+	public function handleDeleteTopic(int $id): void
+	{
+		$this->topicFormFactory->delete($this->explorer, $id);
+		$this->flashMessage('Téma úspěšně odebráno', 'success');
+		$this->redirect('this');
 	}
 
 	public function handleNahratOborySVP_NV(int $svpID)

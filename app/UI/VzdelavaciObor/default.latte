@@ -15,6 +15,7 @@
 		{foreach $vzdelavaciObory as $vzdelavaciObor}
 			<p>
 				<a n:href="VzdelavaciObor:default, svpID: $svpID, vzdelavaciOborID: $vzdelavaciObor->vzdelavaciOborID">{$vzdelavaciObor->jmenoOboru}</a>
+				(<a n:href="deleteArea! $vzdelavaciObor->vzdelavaciOborID">smazat</a>)
 			</p>
 		{/foreach}
 	</div>
@@ -27,6 +28,7 @@
 		{foreach $temata as $tema}
 			<p>
 				<a n:href="Tema:default, temaID: $tema->temaID, vzdelavaciOborID: $vzdelavaciObor->vzdelavaciOborID">{$tema->jmenoTematu}</a>
+				(<a n:href="deleteTopic! $tema->temaID">smazat</a>)
 			</p>
 		{/foreach}
 	</div>

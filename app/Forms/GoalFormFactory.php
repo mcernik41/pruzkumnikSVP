@@ -48,4 +48,9 @@ class GoalFormFactory
 			$database->table('cil')->insert($values);
 		}
 	}
+
+    public function delete(Explorer $database, int $cilID): void
+    {
+        $database->table('cil')->where('cilID', $cilID)->delete();
+    }
 }

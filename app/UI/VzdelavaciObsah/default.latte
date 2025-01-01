@@ -15,6 +15,7 @@
 		{foreach $vzdelavaciObsahy as $vzdelavaciObsah}
 			<p>
 				<a n:href="VzdelavaciObsah:default, svpID: $svpID, vzdelavaciObsahID: $vzdelavaciObsah->vzdelavaciObsahID">{$vzdelavaciObsah->jmenoObsahu}</a>
+				(<a n:href="deleteContent! $vzdelavaciObsah->vzdelavaciObsahID">smazat</a>)
 			</p>
 		{/foreach}
 	</div>

@@ -46,4 +46,11 @@ final class SeznamCiluPresenter extends Nette\Application\UI\Presenter
 
 		return $form;
 	}
+
+	public function handleDeleteGoal(int $id): void
+	{
+		$this->goalFormFactory->delete($this->explorer, $id);
+		$this->flashMessage('Cíl úspěšně odebrán', 'success');
+		$this->redirect('this');
+	}
 }

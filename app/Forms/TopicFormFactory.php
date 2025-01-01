@@ -68,4 +68,9 @@ class TopicFormFactory
             $database->table('tema')->insert($values);
         }
     }
+
+    public function delete(Explorer $database, int $temaID): void
+    {
+        $database->table('tema')->where('temaID', $temaID)->delete();
+    }
 }

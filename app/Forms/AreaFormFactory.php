@@ -49,4 +49,9 @@ class AreaFormFactory
 			$database->table('vzdelavaciObor')->insert($values);
 		}
 	}
+
+    public function delete(Explorer $database, int $vzdelavaciOborID): void
+    {
+        $database->table('vzdelavaciObor')->where('vzdelavaciOborID', $vzdelavaciOborID)->delete();
+    }
 }
