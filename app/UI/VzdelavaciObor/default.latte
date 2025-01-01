@@ -12,9 +12,9 @@
 
 	<h2>
 		Vzdělávací obory
-		<button id="toggleObory" onclick="toggleTemata('oboryContent', 'toggleObory')">+</button>
+		<button id="toggleObory" onclick="toggleTemata('oboryContent', 'toggleObory')">-</button>
 	</h2>
-	<div class="seznamOdkazu vzdelavaciObory" id="oboryContent" style="display: none;">
+	<div class="seznamOdkazu vzdelavaciObory" id="oboryContent">
 		{foreach $vzdelavaciObory as $vzdelavaciObor}
 			<p>
 				<a n:href="VzdelavaciObor:default, svpID: $svpID, vzdelavaciOborID: $vzdelavaciObor->vzdelavaciOborID">{$vzdelavaciObor->jmenoOboru}</a>
@@ -28,9 +28,9 @@
 
 	<h2>
 		Témata
-		<button id="toggleTemata" onclick="toggleTemata('temataContent', 'toggleTemata')">+</button>
+		<button id="toggleTemata" onclick="toggleTemata('temataContent', 'toggleTemata')">-</button>
 	</h2>
-	<div id="temataContent" class="seznamOdkazu temata" style="display: none;">
+	<div id="temataContent" class="seznamOdkazu temata">
 		{foreach $rocniky as $rocnik}
 			<h3>{$rocnik->jmenoRocniku|firstUpper}</h3>
 			{foreach $temata[$rocnik->rocnikID] as $tema}
@@ -44,9 +44,9 @@
 
 	<h2>
 		Přidružené aktivity
-		<button id="toggleAktivity" onclick="toggleTemata('aktivityContent', 'toggleAktivity')">+</button>
+		<button id="toggleAktivity" onclick="toggleTemata('aktivityContent', 'toggleAktivity')">-</button>
 	</h2>
-	<div class="pridruzeneAktivity" id="aktivityContent" style="display: none;">
+	<div class="pridruzeneAktivity" id="aktivityContent">
 		{foreach $obsahy as $obsah}
 			<h3><a n:href="VzdelavaciObsah:default, svpID: $svpID, vzdelavaciObsahID: $obsah->obsahID">{$obsah->jmenoObsahu}</a></h3>
 			{foreach $obsah->aktivity as $aktivita}

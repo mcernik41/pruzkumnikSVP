@@ -12,9 +12,9 @@
 
 	<h2>
 		Vzdělávací obsah
-		<button id="toggleObsahy" onclick="toggleTemata('obsahyContent', 'toggleObsahy')">+</button>
+		<button id="toggleObsahy" onclick="toggleTemata('obsahyContent', 'toggleObsahy')">-</button>
 	</h2>
-	<div class="seznamOdkazu vzdelavaciObsahy" id="obsahyContent" style="display: none;">
+	<div class="seznamOdkazu vzdelavaciObsahy" id="obsahyContent">
 		{foreach $vzdelavaciObsahy as $vzdelavaciObsah}
 			<p>
 				<a n:href="VzdelavaciObsah:default, svpID: $svpID, vzdelavaciObsahID: $vzdelavaciObsah->vzdelavaciObsahID">{$vzdelavaciObsah->jmenoObsahu}</a>
@@ -25,9 +25,9 @@
 
 	<h2>
 		Přidružené aktivity
-		<button id="toggleAktivity" onclick="toggleTemata('aktivityContent', 'toggleAktivity')">+</button>
+		<button id="toggleAktivity" onclick="toggleTemata('aktivityContent', 'toggleAktivity')">-</button>
 	</h2>
-	<div class="pridruzeneAktivity" id="aktivityContent" style="display: none;">
+	<div class="pridruzeneAktivity" id="aktivityContent">
 		{foreach $obory as $obor}
 			<h3><a n:href="VzdelavaciObor:default, svpID: $svpID, vzdelavaciOborID: $obor->oborID">{$obor->jmenoOboru}</a></h3>
 			{foreach $obor->aktivity as $aktivita}
