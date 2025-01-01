@@ -48,11 +48,11 @@ class ActivityPartFormFactory
 			->setDefaultValue($defaultValues['rocnik'] ?? null)
 			->setPrompt('Vyberte ročník');
 
-		$form->addSelect('pomucka', 'Pomůcka:', $this->explorer->table('pomucka')->fetchPairs('pomuckaID', 'jmenoPomucky'))
+		$form->addSelect('pomucka', 'Pomůcka:', $this->explorer->table('pomucka')->order('jmenoPomucky ASC')->fetchPairs('pomuckaID', 'jmenoPomucky'))
 			->setDefaultValue($defaultValues['pomucka'] ?? null)
 			->setPrompt('Vyberte pomůcku');
 
-		$form->addSelect('tema', 'Téma:', $this->explorer->table('tema')->fetchPairs('temaID', 'jmenoTematu'))
+		$form->addSelect('tema', 'Téma:', $this->explorer->table('tema')->order('jmenoTematu ASC')->fetchPairs('temaID', 'jmenoTematu'))
 			->setDefaultValue($defaultValues['tema'] ?? null)
 			->setPrompt('Vyberte téma');
 
