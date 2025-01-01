@@ -73,8 +73,25 @@ class DataInserter
         $digiGramID = $this->explorer->table('vzdelavaciObsah')->where('jmenoObsahu', 'Digitální gramotnost a bezpečnost')->fetch();
 
         $rijenbID = $this->explorer->table('mesic')->where('jmenoMesice', 'říjen')->fetch();
+		$zariID = $this->explorer->table('mesic')->where('jmenoMesice', 'září')->fetch();
+		$rijenID = $this->explorer->table('mesic')->where('jmenoMesice', 'říjen')->fetch();
+		$listopadID = $this->explorer->table('mesic')->where('jmenoMesice', 'listopad')->fetch();
+		$prosinecID = $this->explorer->table('mesic')->where('jmenoMesice', 'prosinec')->fetch();
+		$ledenID = $this->explorer->table('mesic')->where('jmenoMesice', 'leden')->fetch();
+		$unorID = $this->explorer->table('mesic')->where('jmenoMesice', 'únor')->fetch();
+		$brezenID = $this->explorer->table('mesic')->where('jmenoMesice', 'březen')->fetch();
+		$dubenID = $this->explorer->table('mesic')->where('jmenoMesice', 'duben')->fetch();
+		$kvetenID = $this->explorer->table('mesic')->where('jmenoMesice', 'květen')->fetch();
+		$cervenID = $this->explorer->table('mesic')->where('jmenoMesice', 'červen')->fetch();
 
-        $kvintaID = $this->explorer->table('rocnik')->where('jmenoRocniku', 'kvinta')->fetch();
+		$primaID = $this->explorer->table('rocnik')->where('jmenoRocniku', 'prima')->fetch();
+		$sekundaID = $this->explorer->table('rocnik')->where('jmenoRocniku', 'sekunda')->fetch();
+		$tercieID = $this->explorer->table('rocnik')->where('jmenoRocniku', 'tercie')->fetch();
+		$kvartaID = $this->explorer->table('rocnik')->where('jmenoRocniku', 'kvarta')->fetch();
+		$kvintaID = $this->explorer->table('rocnik')->where('jmenoRocniku', 'kvinta')->fetch();
+		$sextaID = $this->explorer->table('rocnik')->where('jmenoRocniku', 'sexta')->fetch();
+		$septimaID = $this->explorer->table('rocnik')->where('jmenoRocniku', 'septima')->fetch();
+		$oktavaID = $this->explorer->table('rocnik')->where('jmenoRocniku', 'oktava')->fetch();
 
         $this->database->table('soucastAktivity')->insert([
 			'vzdelavaciAktivita_vzdelavaciAktivitaID' => $esejID,
@@ -94,14 +111,61 @@ class DataInserter
 			'pomucka_pomuckaID' => $wordID
 		]);
 
+		//vložení témat
 		$this->database->table('tema')->insert([
 			'vzdelavaciObor_vzdelavaciOborID' => $infID,
 			'jmenoTematu' => 'Základní konstrukce jazyka C# (proměnné, podmínky, cykly, vstup a výstup)',
 			'rocnik_rocnikID' => $kvintaID,
-			'mesicID_zacatek' => $rijenbID,
-			'mesicID_konec' => $rijenbID,
+			'mesicID_zacatek' => $rijenID, // říjen
+			'mesicID_konec' => $rijenID, // říjen
 			'pocetHodin' => 6
 		]);
+		
+		$this->database->table('tema')->insert([
+			'vzdelavaciObor_vzdelavaciOborID' => $infID,
+			'jmenoTematu' => 'Data, informace, modelování',
+			'rocnik_rocnikID' => $primaID,
+			'mesicID_zacatek' => $zariID, // září
+			'mesicID_konec' => $listopadID, // listopad
+			'pocetHodin' => 12
+		]);
+		
+		$this->database->table('tema')->insert([
+			'vzdelavaciObor_vzdelavaciOborID' => $infID,
+			'jmenoTematu' => 'Scratch',
+			'rocnik_rocnikID' => $sekundaID,
+			'mesicID_zacatek' => $zariID, // září
+			'mesicID_konec' => $listopadID, // listopad
+			'pocetHodin' => 10
+		]);
+		
+		$this->database->table('tema')->insert([
+			'vzdelavaciObor_vzdelavaciOborID' => $infID,
+			'jmenoTematu' => '3D grafika',
+			'rocnik_rocnikID' => $tercieID,
+			'mesicID_zacatek' => $kvetenID, // květen
+			'mesicID_konec' => $cervenID, // červen
+			'pocetHodin' => 5
+		]);
+		
+		$this->database->table('tema')->insert([
+			'vzdelavaciObor_vzdelavaciOborID' => $infID,
+			'jmenoTematu' => 'Blokově orientované programování',
+			'rocnik_rocnikID' => $kvartaID,
+			'mesicID_zacatek' => $zariID, // září
+			'mesicID_konec' => $listopadID, // listopad
+			'pocetHodin' => 6
+		]);
+		
+		$this->database->table('tema')->insert([
+			'vzdelavaciObor_vzdelavaciOborID' => $infID,
+			'jmenoTematu' => 'Objektově orientované programování',
+			'rocnik_rocnikID' => $kvintaID,
+			'mesicID_zacatek' => $brezenID, // březen
+			'mesicID_konec' => $kvetenID, // květen
+			'pocetHodin' => 18
+		]);
+		
     }
 
     public function insertFields(int $svpID)
