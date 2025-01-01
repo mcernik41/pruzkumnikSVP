@@ -38,7 +38,7 @@ final class CilPresenter extends Nette\Application\UI\Presenter
 	protected function createComponentGoalFulfillingForm(): Form
 	{
 		$cilID = (int)$this->getParameter('cilID');
-		$form = $this->goalFulfillingFormFactory->create();
+		$form = $this->goalFulfillingFormFactory->create((int)$this->getParameter('svpID'));
 		$form->onSuccess[] = function (\stdClass $data) use ($cilID) {
 			$this->goalFulfillingFormFactory->process($data, $this->explorer, null, $cilID);
 			$this->flashMessage('Plnění vzdělávacího cíle úspěšně přidáno', 'success');

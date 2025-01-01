@@ -47,7 +47,7 @@ final class PlneniCilePresenter extends Nette\Application\UI\Presenter
 			'vzdelavaciObsah' => $plneniCile->vzdelavaciObsah_vzdelavaciObsahID
 		];
 
-		$form = $this->goalFulfillingFormFactory->create($defaultValues);
+		$form = $this->goalFulfillingFormFactory->create((int)$this->getParameter('svpID'), $defaultValues);
 		$form->onSuccess[] = function (\stdClass $data) use ($plneniCileID) {
 			$this->goalFulfillingFormFactory->process($data, $this->explorer, $plneniCileID);
 			$this->flashMessage('Plnění vzdělávacího cíle úspěšně upraveno', 'success');

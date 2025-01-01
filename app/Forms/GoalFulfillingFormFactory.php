@@ -16,17 +16,22 @@ class GoalFulfillingFormFactory
 		$this->explorer = $explorer;
 	}
 
-	public function create(?array $defaultValues = null): Form
+	public function create(int $svpID, ?array $defaultValues = null): Form
 	{
 		$form = new Form; // means Nette\Application\UI\Form
+		
+		$recursiveGetters = new \App\Services\RecursiveGetters($this->explorer);
+		$vzdelavaciObsahy = $recursiveGetters->getRecursiveObsahy($svpID, null);
+		$obsahy_mezery = $recursiveGetters->createRecArray_content_breaks($vzdelavaciObsahy);
 
 		$form->addTextarea('popisPlneni', 'Popis plnění:')
 			->setDefaultValue($defaultValues['popisPlneni'] ?? '')
 			->setRequired();
 
-		$form->addSelect('vzdelavaciObsah', 'Vzdělávací obsah:', $this->explorer->table('vzdelavaciObsah')->fetchPairs('vzdelavaciObsahID', 'jmenoObsahu'))
+		$form->addSelect('vzdelavaciObsah', 'Vzdělávací obsah:', $obsahy_mezery)
 			->setDefaultValue($defaultValues['vzdelavaciObsah'] ?? null)
-			->setPrompt('Vyberte vzdělávací obsah');
+			->setPrompt('Vyberte vzdělávací obsah')
+			->setRequired();
 
 		$form->addSubmit('send', $defaultValues ? 'Upravit plnění' : 'Přidat plnění');
 
