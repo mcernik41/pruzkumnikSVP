@@ -13,9 +13,8 @@
 	<div class="seznamOdkazu vzdelavaciAktivity">
 		{foreach $soucastiAktivity as $soucast}
 			<p>
-				<a n:href="SoucastAktivity:default, soucastID: $soucast->soucastAktivityID, aktivitaID: $aktivitaID, svpID: $svpID">
-					{$soucast->jmenoSoucasti}
-				</a>
+				<a n:href="SoucastAktivity:default, soucastID: $soucast->soucastAktivityID, aktivitaID: $aktivitaID, svpID: $svpID">{$soucast->jmenoSoucasti}</a>
+				(<a n:href="deleteActivityPart! $soucast->soucastAktivityID">smazat</a>)
 			</p>
 		{/foreach}
 	</div>
