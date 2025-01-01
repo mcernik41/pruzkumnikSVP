@@ -24,6 +24,7 @@ td, th {
     padding: 8px;
     vertical-align: top;
     text-align: left;
+    border: 1px solid rgb(170, 170, 170);
 }
 
 th:nth-child(even) { background-color: rgb(191, 191, 191); }
