@@ -9,6 +9,7 @@
 		{foreach $aktivity as $aktivita}
 			<p>
 				<a n:href="VzdelavaciAktivita:default, aktivitaID: $aktivita->vzdelavaciAktivitaID, svpID: $svpID">{$aktivita->jmenoAktivity}</a>
+				(<a n:href="deleteActivity! $aktivita->vzdelavaciAktivitaID">smazat</a>)
 			</p>
 		{/foreach}
 	</div>
