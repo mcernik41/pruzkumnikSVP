@@ -191,6 +191,7 @@ CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`soucastAktivity` (
   `vzdelavaciObsah_vzdelavaciObsahID` INT NOT NULL,
   `rocnik_rocnikID` INT NOT NULL,
   `pomucka_pomuckaID` INT NULL,
+  `tema_temaID` INT NULL,
   PRIMARY KEY (`soucastAktivityID`),
   CONSTRAINT `fk_soucastAktivity_vzdelavaciAktivita1`
     FOREIGN KEY (`vzdelavaciAktivita_vzdelavaciAktivitaID`)
@@ -216,6 +217,11 @@ CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`soucastAktivity` (
     FOREIGN KEY (`pomucka_pomuckaID`)
     REFERENCES `pruzkumnikSVP`.`pomucka` (`pomuckaID`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+    CONSTRAINT `fk_soucastAktivity_tema1`
+    FOREIGN KEY (`tema_temaID`)
+    REFERENCES `pruzkumnikSVP`.`tema` (`temaID`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -228,6 +234,8 @@ CREATE INDEX IF NOT EXISTS `fk_soucastAktivity_vzdelavaciObsah1_idx` ON `pruzkum
 CREATE INDEX IF NOT EXISTS `fk_soucastAktivity_rocnik1_idx` ON `pruzkumnikSVP`.`soucastAktivity` (`rocnik_rocnikID` ASC);
 
 CREATE INDEX IF NOT EXISTS `fk_soucastAktivity_pomucka1_idx` ON `pruzkumnikSVP`.`soucastAktivity` (`pomucka_pomuckaID` ASC);
+
+CREATE INDEX IF NOT EXISTS `fk_soucastAktivity_tema1_idx` ON `pruzkumnikSVP`.`soucastAktivity` (`tema_temaID` ASC);
 
 
 -- -----------------------------------------------------
