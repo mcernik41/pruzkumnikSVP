@@ -46,66 +46,7 @@ final class VzdelavaciObsahPresenter extends Nette\Application\UI\Presenter
 		$this->template->vzdelavaciObsahy = $obsahy;
 
 		//nalezení součástí vzdělávacích aktivit - podle oboru a aktivity
-		$this->nacistAktivity($vzdelavaciObsahID);
-	}
-
-	private function nacistAktivity($vzdelavaciObsahID)
-	{
-		//najdu všechny aktivity, které se váží k tomuto obsahu
-		$soucastiAktivit = $this->explorer->table('soucastAktivity')
-			->where('vzdelavaciObsah_vzdelavaciObsahID = ?', $vzdelavaciObsahID)
-			->fetchAll();
-
-		//najdu ID oborů, do kterých patří nalezené aktivity
-		$vzdelavaciOboryID = [];
-		foreach ($soucastiAktivit as $soucastAktivity) { $vzdelavaciOboryID[] = $soucastAktivity->vzdelavaciObor_vzdelavaciOborID; }
-		$vzdelavaciOboryID = array_unique($vzdelavaciOboryID);
-
-		$obory = $this->explorer->table('vzdelavaciObor')
-			->where('vzdelavaciOborID', $vzdelavaciOboryID)
-			->fetchAll();
-
-		$oboryKObsahu = [];
-
-		foreach($obory as $obor)
-		{
-			$soucastiAktivit = $this->explorer->table('soucastAktivity')
-				->where('vzdelavaciObsah_vzdelavaciObsahID = ?', $vzdelavaciObsahID)
-				->where('vzdelavaciObor_vzdelavaciOborID = ?', $obor)
-				->fetchAll();
-
-			$vzdelavaciAktivityID = [];
-			foreach ($soucastiAktivit as $soucastAktivity) { $vzdelavaciAktivityID[] = $soucastAktivity->vzdelavaciAktivita_vzdelavaciAktivitaID; }
-			$vzdelavaciAktivityID = array_unique($vzdelavaciAktivityID);
-
-			$aktivity = $this->explorer->table('vzdelavaciAktivita')
-				->where('vzdelavaciAktivitaID', $vzdelavaciAktivityID)
-				->fetchAll();
-
-			$oborKObsahu = new \App\Services\Obor($obor->vzdelavaciOborID, $obor->jmenoOboru);
-
-			foreach($aktivity as $aktivita)
-			{
-				$aktivitaKOboru = new \App\Services\Aktivita($aktivita->vzdelavaciAktivitaID, $aktivita->jmenoAktivity);
-
-				$soucastiAktivit = $this->explorer->table('soucastAktivity')
-					->where('vzdelavaciObsah_vzdelavaciObsahID = ?', $vzdelavaciObsahID)
-					->where('vzdelavaciObor_vzdelavaciOborID = ?', $obor)
-					->where('vzdelavaciAktivita_vzdelavaciAktivitaID = ?', $aktivita)
-					->fetchAll();
-
-				foreach($soucastiAktivit as $soucastAktivity)
-				{
-					$aktivitaKOboru->soucastiAktivity[] = $soucastAktivity;
-				}
-
-				$oborKObsahu->aktivity[] = $aktivitaKOboru;
-			}
-
-			$oboryKObsahu[] = $oborKObsahu;
-		}
-
-		$this->template->obory = $oboryKObsahu;
+		$this->template->obory = \App\Services\ActivityLoader::nacistAktivity($this->explorer, $vzdelavaciObsahID, 'vzdelavaciObsah');
 	}
 
 	protected function createComponentContentForm(): Form
