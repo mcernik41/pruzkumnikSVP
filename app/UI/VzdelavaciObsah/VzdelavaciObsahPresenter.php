@@ -82,11 +82,11 @@ final class VzdelavaciObsahPresenter extends Nette\Application\UI\Presenter
 				->where('vzdelavaciAktivitaID', $vzdelavaciAktivityID)
 				->fetchAll();
 
-			$oborKObsahu = new Obor($obor->vzdelavaciOborID, $obor->jmenoOboru);
+			$oborKObsahu = new \App\Services\Obor($obor->vzdelavaciOborID, $obor->jmenoOboru);
 
 			foreach($aktivity as $aktivita)
 			{
-				$aktivitaKOboru = new Aktivita($aktivita->vzdelavaciAktivitaID, $aktivita->jmenoAktivity);
+				$aktivitaKOboru = new \App\Services\Aktivita($aktivita->vzdelavaciAktivitaID, $aktivita->jmenoAktivity);
 
 				$soucastiAktivit = $this->explorer->table('soucastAktivity')
 					->where('vzdelavaciObsah_vzdelavaciObsahID = ?', $vzdelavaciObsahID)
@@ -182,33 +182,5 @@ final class VzdelavaciObsahPresenter extends Nette\Application\UI\Presenter
 		$dataInsetrer->insertContents($svpID);
 
 		$this->redirect('this');
-	}
-}
-
-class Obor
-{
-	public int $oborID;
-	public string $jmenoOboru;
-	public array $aktivity;
-	
-	public function __construct(int $oborID, string $jmenoOboru)
-	{
-		$this->oborID = $oborID;
-		$this->jmenoOboru = $jmenoOboru;
-		$this->aktivity = [];
-	}
-}
-
-class Aktivita
-{
-	public int $aktivitaID;
-	public string $jmenoAktivity;
-	public array $soucastiAktivity;
-	
-	public function __construct(int $aktivitaID, string $jmenoAktivity)
-	{
-		$this->aktivitaID = $aktivitaID;
-		$this->jmenoAktivity = $jmenoAktivity;
-		$this->soucastiAktivity = [];
 	}
 }

@@ -16,6 +16,20 @@ class Obsah
 	}
 }
 
+class Obor
+{
+	public int $oborID;
+	public string $jmenoOboru;
+	public array $aktivity;
+	
+	public function __construct(int $oborID, string $jmenoOboru)
+	{
+		$this->oborID = $oborID;
+		$this->jmenoOboru = $jmenoOboru;
+		$this->aktivity = [];
+	}
+}
+
 class Aktivita
 {
 	public int $aktivitaID;
