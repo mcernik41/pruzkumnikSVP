@@ -3,22 +3,22 @@
 declare(strict_types=1);
 
 namespace App\UI\SVP;
-use Nette\Application\UI\Form;
-use App\Services\sqlRunner;
-use Nette\Database\Explorer;
 
+use App\Forms\PlanFormFactory;
+use Nette\Application\UI\Form;
 use Nette;
 
 final class SVPPresenter extends Nette\Application\UI\Presenter
 {
-    public function __construct(private Explorer $database, sqlRunner $runner) 
+	public function __construct(Nette\Database\Explorer $database, PlanFormFactory $planFormFactory) 
 	{
+		parent::__construct();
 		$this->explorer = $database;
-		$this->sqlRunner = $runner;
+		$this->planFormFactory = $planFormFactory;
 	}
 
 	protected $explorer;
-	protected $sqlRunner;
+	private PlanFormFactory $planFormFactory;
 
 	public function renderDefault(int $svpID): void
 	{
@@ -29,38 +29,21 @@ final class SVPPresenter extends Nette\Application\UI\Presenter
 
 	protected function createComponentPlanForm(): Form
 	{
-		$form = new Form; // means Nette\Application\UI\Form
-		
-		$svpID = $this->getParameter('svpID');
-		$plan = $this->explorer->table('svp')->get($svpID);
+		$planID = (int)$this->getParameter('svpID');
+		$plan = $this->explorer->table('svp')->get($planID);
 
-		$form->addText('jmenoPlanu', 'Jméno vzdělvávacího plánu:')
-			->setDefaultValue($plan->jmenoSVP)
-			->setRequired();
+		$defaultValues = [
+			'jmenoPlanu' => $plan->jmenoSVP,
+			'popisSVP' => $plan->popisSVP
+		];
 
-		$form->addTextarea('popisSVP', 'Popis vzdělvávacího plánu:')
-			->setDefaultValue($plan->popisSVP);
-
-		$form->addSubmit('send', 'Upravit vzdělávací plán');
-
-		$form->onSuccess[] = $this->planFormSucceeded(...);
+		$form = $this->planFormFactory->create($defaultValues);
+		$form->onSuccess[] = function (\stdClass $data) use ($planID) {
+			$this->planFormFactory->process($data, $this->explorer, $planID);
+			$this->flashMessage('Vzdělávací plán úspěšně upraven', 'success');
+			$this->redirect('this');
+		};
 
 		return $form;
 	}
-
-	private function planFormSucceeded(\stdClass $data): void
-	{
-		$svpID = $this->getParameter('svpID');
-
-		$this->database->table('svp')
-			->where('svpID', $svpID)
-			->update([
-				'jmenoSVP' => $data->jmenoPlanu,
-				'popisSVP' => $data->popisSVP,
-		]);
-
-		$this->flashMessage('Vzdělávací plán úspěšně upraven', 'success');
-		$this->redirect('this');
-	}
-
 }

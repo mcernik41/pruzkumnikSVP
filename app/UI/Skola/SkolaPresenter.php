@@ -5,20 +5,23 @@ declare(strict_types=1);
 namespace App\UI\Skola;
 
 use App\Forms\SchoolFormFactory;
+use App\Forms\PlanFormFactory;
 use Nette\Application\UI\Form;
 use Nette;
 
 final class SkolaPresenter extends Nette\Application\UI\Presenter
 {
-	public function __construct(Nette\Database\Explorer $database, SchoolFormFactory $schoolFormFactory)
+	public function __construct(Nette\Database\Explorer $database, PlanFormFactory $planFormFactory, SchoolFormFactory $schoolFormFactory)
 	{
 		parent::__construct();
 		$this->explorer = $database;
+		$this->planFormFactory = $planFormFactory;
 		$this->schoolFormFactory = $schoolFormFactory;
 	}
 
 	protected $explorer;
 	private SchoolFormFactory $schoolFormFactory;
+	private PlanFormFactory $planFormFactory;
 
 	public function renderDefault(int $skolaID): void
 	{
@@ -30,32 +33,15 @@ final class SkolaPresenter extends Nette\Application\UI\Presenter
 
 	protected function createComponentPlanForm(): Form
 	{
-		$form = new Form; // means Nette\Application\UI\Form
-
-		$form->addText('jmenoPlanu', 'Jméno vzdělvávacího plánu:')
-			->setRequired();
-
-		$form->addTextarea('popisSVP', 'Popis vzdělvávacího plánu:');
-
-		$form->addSubmit('send', 'Přidat vzdělávací plán');
-
-		$form->onSuccess[] = $this->planFormSucceeded(...);
+		$form = $this->planFormFactory->create();
+		$form->onSuccess[] = function (\stdClass $data) {
+			$skolaID = (int)$this->getParameter('skolaID');
+			$this->planFormFactory->process($data, $this->explorer, null, $skolaID);
+			$this->flashMessage('Vzdělávací plán úspěšně přidán', 'success');
+			$this->redirect('this');
+		};
 
 		return $form;
-	}
-
-	private function planFormSucceeded(\stdClass $data): void
-	{
-		$skolaID = $this->getParameter('skolaID');
-
-		$this->database->table('svp')->insert([
-			'skola_skolaID' => $skolaID,
-			'jmenoSVP' => $data->jmenoPlanu,
-			'popisSVP' => $data->popisSVP,
-		]);
-
-		$this->flashMessage('Vzdělávací plán úspěšně přidán', 'success');
-		$this->redirect('this');
 	}
 
 	protected function createComponentSchoolForm(): Form
