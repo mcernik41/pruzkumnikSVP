@@ -6,11 +6,14 @@
 
 	<h2>Aktivity</h2>
 	<div class="seznamOdkazu vzdelavaciObory">
-		{foreach $aktivity as $aktivita}
-			<p>
-				<a n:href="VzdelavaciAktivita:default, aktivitaID: $aktivita->vzdelavaciAktivitaID, svpID: $svpID">{$aktivita->jmenoAktivity}</a>
-				(<a n:href="deleteActivity! $aktivita->vzdelavaciAktivitaID">smazat</a>)
-			</p>
+		{foreach $typyAktivit as $typAktivity}
+			<h3><a n:href="TypAktivity:default, typAktivityID: $typAktivity->typAktivityID">{$typAktivity->jmenoTypu|firstUpper}</a></h3>
+			{foreach $aktivity[$typAktivity->typAktivityID] as $aktivita}
+				<p>
+					<a n:href="VzdelavaciAktivita:default, aktivitaID: $aktivita->vzdelavaciAktivitaID, svpID: $svpID">{$aktivita->jmenoAktivity}</a>
+					(<a n:href="deleteActivity! $aktivita->vzdelavaciAktivitaID">smazat</a>)
+				</p>
+			{/foreach}
 		{/foreach}
 	</div>
 {/block}

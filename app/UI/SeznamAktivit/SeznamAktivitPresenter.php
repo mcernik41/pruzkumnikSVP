@@ -27,8 +27,25 @@ final class SeznamAktivitPresenter extends Nette\Application\UI\Presenter
 
 		$this->template->svpID = $svpID;
 
+		//načtení typů vzdělávacích aktivit
+		$this->template->typyAktivit = $this->explorer->table('typAktivity')->order('jmenoTypu')->fetchAll();
+
 		//načtení vzdělávacích aktivit
-		$aktivity = $this->explorer->table('vzdelavaciAktivita')->where('svp_svpID = ?', $svpID)->fetchAll();
+		$rows = $this->explorer->table('vzdelavaciAktivita')->where('svp_svpID = ?', $svpID)->order('jmenoAktivity ASC')->fetchAll();
+
+		//získání nejvyššího ID vzdělávací aktivity
+		$maxID = $this->explorer->table('vzdelavaciAktivita')->max('vzdelavaciAktivitaID');
+		
+		$aktivity = [];
+		for($i = 1; $i <= $maxID; $i++)
+		{
+			$aktivity[$i] = [];
+		}		
+
+		foreach ($rows as $row) 
+		{
+			$aktivity[$row->typAktivity_typAktivityID][] = $row;
+		}
 		$this->template->aktivity = $aktivity;
 	}
 
