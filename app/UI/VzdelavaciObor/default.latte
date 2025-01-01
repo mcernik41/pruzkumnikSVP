@@ -26,7 +26,7 @@
 	<div class="seznamOdkazu temata">
 		{foreach $temata as $tema}
 			<p>
-				{$tema->jmenoTematu}
+				<a n:href="Tema:default, temaID: $tema->temaID, vzdelavaciOborID: $vzdelavaciObor->vzdelavaciOborID">{$tema->jmenoTematu}</a>
 			</p>
 		{/foreach}
 	</div>

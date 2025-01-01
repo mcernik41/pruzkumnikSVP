@@ -1,0 +1,26 @@
+{block content}
+	<h1>Vzdělávací téma {$jmenoTematu}</h1>
+
+	{if $vzdelavaciOborID != -1}
+		<h2>Upravit téma</h2>
+		{control topicModifyForm}
+	{/if}
+
+	<h2>Přidružené aktivity</h2>
+	<div class="pridruzeneAktivity">
+		{foreach $obsahy as $obsah}
+			<h3><a n:href="VzdelavaciObsah:default, svpID: $svpID, vzdelavaciObsahID: $obsah->obsahID">{$obsah->jmenoObsahu}</a></h3>
+			{foreach $obsah->aktivity as $aktivita}
+				<h4><a n:href="VzdelavaciAktivita:default, svpID: $svpID, aktivitaID: $aktivita->aktivitaID">{$aktivita->jmenoAktivity}</a></h4>
+				{foreach $aktivita->soucastiAktivity as $soucast}
+					<strong>
+						<a n:href="SoucastAktivity:default, $soucast->soucastAktivityID, aktivitaID: $aktivita->aktivitaID, svpID: $svpID">
+							{$soucast->jmenoSoucasti}
+						</a>
+					</strong>
+					<p>{$soucast->popisSoucasti}</p>
+				{/foreach}
+			{/foreach}
+		{/foreach}
+	</div>
+{/block}
