@@ -3,16 +3,20 @@
 declare(strict_types=1);
 
 namespace App\UI\TypAktivity;
+
+use App\Forms\ActivityTypeFormFactory;
 use Nette\Application\UI\Form;
-
 use Nette;
-
 
 final class TypAktivityPresenter extends Nette\Application\UI\Presenter
 {
-    public function __construct(private Nette\Database\Explorer $database) 
+	private ActivityTypeFormFactory $activityTypeFormFactory;
+
+	public function __construct(Nette\Database\Explorer $database, ActivityTypeFormFactory $activityTypeFormFactory)
 	{
+		parent::__construct();
 		$this->explorer = $database;
+		$this->activityTypeFormFactory = $activityTypeFormFactory;
 	}
 
 	protected $explorer;
@@ -23,39 +27,30 @@ final class TypAktivityPresenter extends Nette\Application\UI\Presenter
 		$this->template->jmenoTypu = $typAktivity->jmenoTypu;
 	}
 
-	protected function createComponentTypeForm(): Form
+	protected function createComponentActivityTypeForm(): Form
 	{
-		$form = new Form; // means Nette\Application\UI\Form
-		
-		$typAktivityID = $this->getParameter('typAktivityID');
+		$typAktivityID = (int)$this->getParameter('typAktivityID');
 		$typAktivity = $this->explorer->table('typAktivity')->get($typAktivityID);
 
-		$form->addText('jmenoTypu', 'Jméno typu aktivity:')
-			->setDefaultValue($typAktivity->jmenoTypu)
-			->setRequired();
+		$defaultValues = [
+			'jmenoTypu' => $typAktivity->jmenoTypu,
+			'popisTypu' => $typAktivity->popisTypu
+		];
 
-		$form->addTextarea('popisTypu', 'Popis typu aktivity:')
-			->setDefaultValue($typAktivity->popisTypu);
-
-		$form->addSubmit('send', 'Upravit typ aktivity');
-
-		$form->onSuccess[] = $this->typeFormSucceeded(...);
+		$form = $this->activityTypeFormFactory->create($defaultValues);
+		$form->onSuccess[] = function (\stdClass $data) use ($typAktivityID) {
+			$this->activityTypeFormFactory->process($data, $this->explorer, $typAktivityID);
+			$this->flashMessage('Typ aktivity úspěšně upraven', 'success');
+			$this->redirect('this');
+		};
 
 		return $form;
 	}
 
-	private function typeFormSucceeded(\stdClass $data): void
+	public function handleDeleteActivityType(int $id): void
 	{
-		$typAktivityID = $this->getParameter('typAktivityID');
-
-		$this->database->table('typAktivity')
-			->where('typAktivityID', $typAktivityID)
-			->update([
-				'jmenoTypu' => $data->jmenoTypu,
-				'popisTypu' => $data->popisTypu,
-		]);
-
-		$this->flashMessage('Typ aktivity úspěšně upraven', 'success');
+		$this->activityTypeFormFactory->delete($this->explorer, $id);
+		$this->flashMessage('Typ aktivity úspěšně odebrán', 'success');
 		$this->redirect('this');
 	}
 }
