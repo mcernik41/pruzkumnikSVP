@@ -25,11 +25,14 @@
 
 	<h2>Témata</h2>
 	<div class="seznamOdkazu temata">
-		{foreach $temata as $tema}
+		{foreach $rocniky as $rocnik}
+			<h3>{$rocnik->jmenoRocniku|firstUpper}</h3>
+			{foreach $temata[$rocnik->rocnikID] as $tema}
 			<p>
 				<a n:href="Tema:default, temaID: $tema->temaID, vzdelavaciOborID: $vzdelavaciObor->vzdelavaciOborID">{$tema->jmenoTematu}</a>
 				(<a n:href="deleteTopic! $tema->temaID">smazat</a>)
 			</p>
+		{/foreach}
 		{/foreach}
 	</div>
 

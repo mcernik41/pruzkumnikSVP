@@ -56,14 +56,29 @@ final class VzdelavaciOborPresenter extends Nette\Application\UI\Presenter
 
 		//nalezení témat
 		$this->nacistTemata($vzdelavaciOborID);
+
+		//nalezení ročníků		
+		$this->template->rocniky = $this->explorer->table('rocnik')->fetchAll();
 	}
 
 	private function nacistTemata($vzdelavaciOborID)
 	{
 		//najdu všechny témata, které se váží k tomuto oboru
-		$temata = $this->explorer->table('tema')
+		$temata = [];
+		$rows = $this->explorer->table('tema')
 			->where('vzdelavaciObor_vzdelavaciOborID = ?', $vzdelavaciOborID)
+			->order('mesicID_zacatek ASC')
 			->fetchAll();
+
+		for($i = 1; $i <= 10; $i++)
+		{
+			$temata[$i] = [];
+		}
+
+		foreach ($rows as $row) 
+		{
+			$temata[$row->rocnik_rocnikID][] = $row;
+		}
 
 		$this->template->temata = $temata;
 	}
