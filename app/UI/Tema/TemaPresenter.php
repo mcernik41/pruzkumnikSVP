@@ -21,6 +21,8 @@ final class TemaPresenter extends Nette\Application\UI\Presenter
 	{
 		$vzdelavaciObor = $this->explorer->table('vzdelavaciObor')->get($vzdelavaciOborID);
 		$this->template->jmenoOboru = $vzdelavaciObor->jmenoOboru;
+
+		$this->template->svpID = $vzdelavaciObor->svp_svpID;
 		
 		$tema = $this->explorer->table('tema')->get($temaID);
 		$this->template->jmenoTematu = $tema->jmenoTematu;
@@ -70,7 +72,7 @@ final class TemaPresenter extends Nette\Application\UI\Presenter
 
 			foreach($aktivity as $aktivita)
 			{
-				$aktivitaKObsahu = new \App\Services\Aktivity($aktivita->vzdelavaciAktivitaID, $aktivita->jmenoAktivity);
+				$aktivitaKObsahu = new \App\Services\Aktivita($aktivita->vzdelavaciAktivitaID, $aktivita->jmenoAktivity);
 
 				$soucastiAktivit = $this->explorer->table('soucastAktivity')
 					->where('tema_temaID = ?', $temaID)

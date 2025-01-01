@@ -27,9 +27,7 @@
 				<h4><a n:href="VzdelavaciAktivita:default, svpID: $svpID, aktivitaID: $aktivita->aktivitaID">{$aktivita->jmenoAktivity}</a></h4>
 				{foreach $aktivita->soucastiAktivity as $soucast}
 					<strong>
-						<a n:href="SoucastAktivity:default, soucastID: $soucast->soucastAktivityID, aktivitaID: $aktivita->aktivitaID, svpID: $svpID">
-							{$soucast->jmenoSoucasti}
-						</a>
+						&nbsp;&nbsp;&nbsp;&nbsp;<a n:href="SoucastAktivity:default, soucastID: $soucast->soucastAktivityID, aktivitaID: $aktivita->aktivitaID, svpID: $svpID">{$soucast->jmenoSoucasti}</a>
 					</strong>
 					<p>{$soucast->popisSoucasti}</p>
 				{/foreach}

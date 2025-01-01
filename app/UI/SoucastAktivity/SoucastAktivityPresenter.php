@@ -49,6 +49,7 @@ final class SoucastAktivityPresenter extends Nette\Application\UI\Presenter
 		$vzdelavaciObsah_vzdelavaciObsahID = $soucast->vzdelavaciObsah_vzdelavaciObsahID;
 		$rocnikID = $soucast->rocnik_rocnikID;
 		$pomuckaID = $soucast->pomucka_pomuckaID;
+		$temaID = $soucast->tema_temaID;
 
 		$form->addText('jmenoSoucasti', 'Jméno součásti vzdělávací aktivity:')
 			->setDefaultValue($jmenoSoucasti)
@@ -82,6 +83,13 @@ final class SoucastAktivityPresenter extends Nette\Application\UI\Presenter
 			->setDefaultValue($pomuckaID)
 			->setPrompt('Vyberte pomůcku');
 
+		$form->addSelect('tema', 'Téma:', $this->explorer->table('tema')
+			->where('vzdelavaciObor_vzdelavaciOborID', $vzdelavaciObor_vzdelavaciOborID)
+			->where('rocnik_rocnikID', $rocnikID)
+			->fetchPairs('temaID', 'jmenoTematu'))
+			->setDefaultValue($temaID)
+			->setPrompt('Vyberte téma');
+
 		$form->addSubmit('send', 'Upravit součást vzdělávací aktivity');
 
 		$form->onSuccess[] = $this->activityPartFormSucceeded(...);
@@ -101,7 +109,8 @@ final class SoucastAktivityPresenter extends Nette\Application\UI\Presenter
 				'vzdelavaciObor_vzdelavaciOborID' => $data->vzdelavaciObor,
 				'vzdelavaciObsah_vzdelavaciObsahID' => $data->vzdelavaciObsah,
 				'rocnik_rocnikID' => $data->rocnik,
-				'pomucka_pomuckaID' => $data->pomucka
+				'pomucka_pomuckaID' => $data->pomucka,
+				'tema_temaID' => $data->tema
 		]);
 
 		$this->flashMessage('Součást vzdělávací aktivity úspěšně upravena', 'success');
