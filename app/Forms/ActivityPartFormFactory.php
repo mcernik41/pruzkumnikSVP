@@ -39,7 +39,7 @@ class ActivityPartFormFactory
 			->setPrompt('Vyberte vzdělávací obor')
 			->setRequired();
 
-		$form->addSelect('vzdelavaciObsah', 'Vzdělávací obsah:', $obory_mezery)
+		$form->addSelect('vzdelavaciObsah', 'Vzdělávací obsah:', $obsahy_mezery)
 			->setDefaultValue($defaultValues['vzdelavaciObsah'] ?? null)
 			->setPrompt('Vyberte vzdělávací obsah')
 			->setRequired();
