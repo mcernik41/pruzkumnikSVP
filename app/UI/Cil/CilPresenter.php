@@ -3,19 +3,22 @@
 declare(strict_types=1);
 
 namespace App\UI\Cil;
+
+use App\Forms\GoalFormFactory;
 use Nette\Application\UI\Form;
-
 use Nette;
-
 
 final class CilPresenter extends Nette\Application\UI\Presenter
 {
-    public function __construct(private Nette\Database\Explorer $database) 
+	public function __construct(Nette\Database\Explorer $database, GoalFormFactory $goalFormFactory)
 	{
+		parent::__construct();
 		$this->explorer = $database;
+		$this->goalFormFactory = $goalFormFactory;
 	}
 
 	protected $explorer;
+	private GoalFormFactory $goalFormFactory;
 
 	public function renderDefault(int $cilID, int $svpID): void
 	{
@@ -62,37 +65,21 @@ final class CilPresenter extends Nette\Application\UI\Presenter
 
 	protected function createComponentGoalForm(): Form
 	{
-		$form = new Form; // means Nette\Application\UI\Form
-		
-		$cilID = $this->getParameter('cilID');
+		$cilID = (int)$this->getParameter('cilID');
 		$cil = $this->explorer->table('cil')->get($cilID);
 
-		$form->addText('jmenoCile', 'Jméno cíle:')
-			->setDefaultValue($cil->jmenoCile)
-			->setRequired();
+		$defaultValues = [
+			'jmenoCile' => $cil->jmenoCile,
+			'popisCile' => $cil->popisCile
+		];
 
-		$form->addTextarea('popisCile', 'Popis cíle:')
-			->setDefaultValue($cil->popisCile);
-
-		$form->addSubmit('send', 'Upravit cíl');
-
-		$form->onSuccess[] = $this->goalFormSucceeded(...);
+		$form = $this->goalFormFactory->create($defaultValues);
+		$form->onSuccess[] = function (\stdClass $data) use ($cilID) {
+			$this->goalFormFactory->process($data, $this->explorer, $cilID, (int)$this->getParameter('svpID'));
+			$this->flashMessage('Cíl úspěšně upraven', 'success');
+			$this->redirect('this');
+		};
 
 		return $form;
-	}
-
-	private function goalFormSucceeded(\stdClass $data): void
-	{
-		$cilID = $this->getParameter('cilID');
-
-		$this->database->table('cil')
-			->where('cilID', $cilID)
-			->update([
-				'jmenoCile' => $data->jmenoCile,
-				'popisCile' => $data->popisCile,
-		]);
-
-		$this->flashMessage('Cíl úspěšně upraven', 'success');
-		$this->redirect('this');
 	}
 }

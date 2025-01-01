@@ -3,20 +3,24 @@
 declare(strict_types=1);
 
 namespace App\UI\SeznamCilu;
+
+use App\Forms\GoalFormFactory;
 use Nette\Application\UI\Form;
-
 use Nette;
-
 
 final class SeznamCiluPresenter extends Nette\Application\UI\Presenter
 {
-    public function __construct(private Nette\Database\Explorer $database) 
+
+	public function __construct(Nette\Database\Explorer $database, GoalFormFactory $goalFormFactory)
 	{
+		parent::__construct();
 		$this->explorer = $database;
+		$this->goalFormFactory = $goalFormFactory;
 	}
 
 	protected $explorer;
 	protected $svpID;
+	private GoalFormFactory $goalFormFactory;
 
 	public function renderDefault(int $svpID): void
 	{
@@ -33,31 +37,13 @@ final class SeznamCiluPresenter extends Nette\Application\UI\Presenter
 
 	protected function createComponentGoalForm(): Form
 	{
-		$form = new Form; // means Nette\Application\UI\Form
-
-		$form->addText('jmenoCile', 'Jméno cíle:')
-			->setRequired();
-
-		$form->addTextarea('popisCile', 'Popis cíle:');
-
-		$form->addSubmit('send', 'Přidat cíl');
-
-		$form->onSuccess[] = $this->goalFormSucceeded(...);
+		$form = $this->goalFormFactory->create();
+		$form->onSuccess[] = function (\stdClass $data) {
+			$this->goalFormFactory->process($data, $this->explorer, null, (int)$this->getParameter('svpID'));
+			$this->flashMessage('Cíl úspěšně přidán', 'success');
+			$this->redirect('this');
+		};
 
 		return $form;
-	}
-
-	private function goalFormSucceeded(\stdClass $data): void
-	{
-		$svpID = $this->getParameter('svpID');
-
-		$this->database->table('cil')->insert([
-			'svp_svpID' => $svpID,
-			'jmenoCile' => $data->jmenoCile,
-			'popisCile' => $data->popisCile,
-		]);
-
-		$this->flashMessage('Cíl úspěšně přidán', 'success');
-		$this->redirect('this');
 	}
 }
