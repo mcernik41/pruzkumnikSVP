@@ -70,7 +70,7 @@ CREATE INDEX IF NOT EXISTS `fk_cil_svp1_idx` ON `pruzkumnikSVP`.`cil` (`svp_svpI
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `pruzkumnikSVP`.`vzdelavaciObor` (
   `vzdelavaciOborID` INT NOT NULL AUTO_INCREMENT,
-  `jmenoOboru` VARCHAR(200) NULL,
+  `jmenoOboru` VARCHAR(200) NOT NULL,
   `popisOboru` LONGTEXT NULL,
   `rodicovskyVzdelavaciOborID` INT NULL,
   `svp_svpID` INT NOT NULL,
