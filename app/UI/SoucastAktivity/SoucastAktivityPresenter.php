@@ -3,18 +3,22 @@
 declare(strict_types=1);
 
 namespace App\UI\SoucastAktivity;
-use Nette\Application\UI\Form;
 
+use App\Forms\ActivityPartFormFactory;
+use Nette\Application\UI\Form;
 use Nette;
 
 final class SoucastAktivityPresenter extends Nette\Application\UI\Presenter
 {
-    public function __construct(private Nette\Database\Explorer $database) 
+	public function __construct(Nette\Database\Explorer $database, ActivityPartFormFactory $activityPartFormFactory)
 	{
+		parent::__construct();
 		$this->explorer = $database;
+		$this->activityPartFormFactory = $activityPartFormFactory;
 	}
 
 	protected $explorer;
+	private ActivityPartFormFactory $activityPartFormFactory;
 
 	public function renderDefault(int $soucastID, int $aktivitaID, int $svpID): void
 	{
@@ -38,82 +42,34 @@ final class SoucastAktivityPresenter extends Nette\Application\UI\Presenter
 
 	protected function createComponentActivityPartForm(): Form
 	{
-		$form = new Form; // means Nette\Application\UI\Form
-		
-		$soucastID = $this->getParameter('soucastID');
+		$soucastID = (int)$this->getParameter('soucastID');
 		$svpID = (int)$this->getParameter('svpID');
 		$soucast = $this->explorer->table('soucastAktivity')->get($soucastID);
-		$jmenoSoucasti = $soucast->jmenoSoucasti;
-		$popisSoucasti = $soucast->popisSoucasti;
-		$vzdelavaciObor_vzdelavaciOborID = $soucast->vzdelavaciObor_vzdelavaciOborID;
-		$vzdelavaciObsah_vzdelavaciObsahID = $soucast->vzdelavaciObsah_vzdelavaciObsahID;
-		$rocnikID = $soucast->rocnik_rocnikID;
-		$pomuckaID = $soucast->pomucka_pomuckaID;
-		$temaID = $soucast->tema_temaID;
 
-		$form->addText('jmenoSoucasti', 'Jméno součásti vzdělávací aktivity:')
-			->setDefaultValue($jmenoSoucasti)
-			->setRequired();
+		$defaultValues = [
+			'jmenoSoucasti' => $soucast->jmenoSoucasti,
+			'popisSoucasti' => $soucast->popisSoucasti,
+			'vzdelavaciObor' => $soucast->vzdelavaciObor_vzdelavaciOborID,
+			'vzdelavaciObsah' => $soucast->vzdelavaciObsah_vzdelavaciObsahID,
+			'rocnik' => $soucast->rocnik_rocnikID,
+			'pomucka' => $soucast->pomucka_pomuckaID,
+			'tema' => $soucast->tema_temaID
+		];
 
-		$form->addTextarea('popisSoucasti', 'Popis součásti vzdělávací aktivity:')
-			->setDefaultValue($popisSoucasti);
-
-		$recursiveGetters = new \App\Services\RecursiveGetters($this->explorer);
-		$vzdelavaciObsahy = $recursiveGetters->getRecursiveObsahy($svpID, null);
-		$vzdelavaciObory = $recursiveGetters->getRecursiveObory($svpID, null);
-
-		$obsahy_mezery = $recursiveGetters->createRecArray_content_breaks($vzdelavaciObsahy);
-		$obory_mezery = $recursiveGetters->createRecArray_field_breaks($vzdelavaciObory);
-
-		$form->addSelect('vzdelavaciObor', 'Vzdělávací obor:', $obory_mezery)
-			->setDefaultValue($vzdelavaciObor_vzdelavaciOborID)
-			->setPrompt('Vyberte vzdělávací obor')
-			->setRequired();
-
-		$form->addSelect('vzdelavaciObsah', 'Vzdělávací obsah:', $obsahy_mezery)
-			->setDefaultValue($vzdelavaciObsah_vzdelavaciObsahID)
-			->setPrompt('Vyberte vzdělávací obsah')
-			->setRequired();
-
-		$form->addSelect('rocnik', 'Ročník:', $this->explorer->table('rocnik')->fetchPairs('rocnikID', 'jmenoRocniku'))
-			->setDefaultValue($rocnikID)
-			->setPrompt('Vyberte ročník');
-
-		$form->addSelect('pomucka', 'Pomůcka:', $this->explorer->table('pomucka')->fetchPairs('pomuckaID', 'jmenoPomucky'))
-			->setDefaultValue($pomuckaID)
-			->setPrompt('Vyberte pomůcku');
-
-		$form->addSelect('tema', 'Téma:', $this->explorer->table('tema')
-			->where('vzdelavaciObor_vzdelavaciOborID', $vzdelavaciObor_vzdelavaciOborID)
-			->where('rocnik_rocnikID', $rocnikID)
-			->fetchPairs('temaID', 'jmenoTematu'))
-			->setDefaultValue($temaID)
-			->setPrompt('Vyberte téma');
-
-		$form->addSubmit('send', 'Upravit součást vzdělávací aktivity');
-
-		$form->onSuccess[] = $this->activityPartFormSucceeded(...);
+		$form = $this->activityPartFormFactory->create($svpID, $defaultValues);
+		$form->onSuccess[] = function (\stdClass $data) use ($soucastID) {
+			$this->activityPartFormFactory->process($data, $this->explorer, $soucastID);
+			$this->flashMessage('Součást vzdělávací aktivity úspěšně upravena', 'success');
+			$this->redirect('this');
+		};
 
 		return $form;
 	}
 
-	private function activityPartFormSucceeded(\stdClass $data): void
+	public function handleDeleteActivityPart(int $id): void
 	{
-		$soucastID = $this->getParameter('soucastID');
-
-		$this->database->table('soucastAktivity')
-			->where('soucastAktivityID', $soucastID)
-			->update([
-				'jmenoSoucasti' => $data->jmenoSoucasti,
-				'popisSoucasti' => $data->popisSoucasti,
-				'vzdelavaciObor_vzdelavaciOborID' => $data->vzdelavaciObor,
-				'vzdelavaciObsah_vzdelavaciObsahID' => $data->vzdelavaciObsah,
-				'rocnik_rocnikID' => $data->rocnik,
-				'pomucka_pomuckaID' => $data->pomucka,
-				'tema_temaID' => $data->tema
-		]);
-
-		$this->flashMessage('Součást vzdělávací aktivity úspěšně upravena', 'success');
+		$this->activityPartFormFactory->delete($this->explorer, $id);
+		$this->flashMessage('Součást vzdělávací aktivity úspěšně odebrána', 'success');
 		$this->redirect('this');
 	}
 }
