@@ -72,6 +72,8 @@ class DataInserter
         $praceSInfoID = $this->explorer->table('vzdelavaciObsah')->where('jmenoObsahu', 'Kritické myšlení a práce s informacemi')->fetch();
         $digiGramID = $this->explorer->table('vzdelavaciObsah')->where('jmenoObsahu', 'Digitální gramotnost a bezpečnost')->fetch();
 
+        $rijenbID = $this->explorer->table('mesic')->where('jmenoMesice', 'říjen')->fetch();
+
         $kvintaID = $this->explorer->table('rocnik')->where('jmenoRocniku', 'kvinta')->fetch();
 
         $this->database->table('soucastAktivity')->insert([
@@ -90,6 +92,15 @@ class DataInserter
 			'vzdelavaciObsah_vzdelavaciObsahID' => $digiGramID,
 			'rocnik_rocnikID' => $kvintaID,
 			'pomucka_pomuckaID' => $wordID
+		]);
+
+		$this->database->table('tema')->insert([
+			'vzdelavaciObor_vzdelavaciOborID' => $infID,
+			'jmenoTematu' => 'Základní konstrukce jazyka C# (proměnné, podmínky, cykly, vstup a výstup)',
+			'rocnik_rocnikID' => $kvintaID,
+			'mesicID_zacatek' => $rijenbID,
+			'mesicID_konec' => $rijenbID,
+			'pocetHodin' => 6
 		]);
     }
 
