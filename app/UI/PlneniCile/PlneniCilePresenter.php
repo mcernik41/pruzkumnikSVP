@@ -3,19 +3,22 @@
 declare(strict_types=1);
 
 namespace App\UI\PlneniCile;
+
+use App\Forms\GoalFulfillingFormFactory;
 use Nette\Application\UI\Form;
-
 use Nette;
-
 
 final class PlneniCilePresenter extends Nette\Application\UI\Presenter
 {
-    public function __construct(private Nette\Database\Explorer $database) 
+	public function __construct(Nette\Database\Explorer $database, GoalFulfillingFormFactory $goalFulfillingFormFactory)
 	{
+		parent::__construct();
 		$this->explorer = $database;
+		$this->goalFulfillingFormFactory = $goalFulfillingFormFactory;
 	}
 
 	protected $explorer;
+	private GoalFulfillingFormFactory $goalFulfillingFormFactory;
 
 	public function renderDefault(int $plneniCileID, int $cilID, int $svpID): void
 	{
@@ -36,40 +39,21 @@ final class PlneniCilePresenter extends Nette\Application\UI\Presenter
 
 	protected function createComponentGoalFulfillingForm(): Form
 	{
-		$form = new Form; // means Nette\Application\UI\Form
-		
-		$plneniCileID = $this->getParameter('plneniCileID');
-		$plneni = $this->explorer->table('plneniCile')->get($plneniCileID);
-		$popisPlneni = $plneni->popisPlneniCile;
-		$vzdelavaciObsah = $this->explorer->table('vzdelavaciObsah')->get($plneni->vzdelavaciObsah_vzdelavaciObsahID);
+		$plneniCileID = (int)$this->getParameter('plneniCileID');
+		$plneniCile = $this->explorer->table('plneniCile')->get($plneniCileID);
 
-		$form->addSelect('vzdelavaciObsah', 'Obsah vedoucí k plnění cíle:', $this->explorer->table('vzdelavaciObsah')->fetchPairs('vzdelavaciObsahID', 'jmenoObsahu'))
-			->setDefaultValue($vzdelavaciObsah->vzdelavaciObsahID)
-			->setPrompt('Vyberte vzdělávací obsah')
-			->setRequired();
+		$defaultValues = [
+			'popisPlneni' => $plneniCile->popisPlneniCile,
+			'vzdelavaciObsah' => $plneniCile->vzdelavaciObsah_vzdelavaciObsahID
+		];
 
-		$form->addTextarea('popisPlneni', 'Popis plnění cíle:')
-			->setDefaultValue($popisPlneni);
-
-		$form->addSubmit('send', 'Upravit plnění cíle');
-
-		$form->onSuccess[] = $this->goalFulfillingFormSucceeded(...);
+		$form = $this->goalFulfillingFormFactory->create($defaultValues);
+		$form->onSuccess[] = function (\stdClass $data) use ($plneniCileID) {
+			$this->goalFulfillingFormFactory->process($data, $this->explorer, $plneniCileID);
+			$this->flashMessage('Plnění vzdělávacího cíle úspěšně upraveno', 'success');
+			$this->redirect('this');
+		};
 
 		return $form;
-	}
-
-	private function goalFulfillingFormSucceeded(\stdClass $data): void
-	{
-		$plneniCileID = $this->getParameter('plneniCileID');
-
-		$this->database->table('plneniCile')
-			->where('plneniCileID', $plneniCileID)
-			->update([
-				'popisPlneniCile' => $data->popisPlneni,
-				'vzdelavaciObsah_vzdelavaciObsahID' => $data->vzdelavaciObsah
-		]);
-
-		$this->flashMessage('Plnění vzdělávacího cíle úspěšně upraveno', 'success');
-		$this->redirect('this');
 	}
 }

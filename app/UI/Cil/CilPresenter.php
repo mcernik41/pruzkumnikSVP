@@ -5,20 +5,23 @@ declare(strict_types=1);
 namespace App\UI\Cil;
 
 use App\Forms\GoalFormFactory;
+use App\Forms\GoalFulfillingFormFactory;
 use Nette\Application\UI\Form;
 use Nette;
 
 final class CilPresenter extends Nette\Application\UI\Presenter
 {
-	public function __construct(Nette\Database\Explorer $database, GoalFormFactory $goalFormFactory)
+	public function __construct(Nette\Database\Explorer $database, GoalFulfillingFormFactory $goalFulfillingFormFactory, GoalFormFactory $goalFormFactory)
 	{
 		parent::__construct();
 		$this->explorer = $database;
+		$this->goalFulfillingFormFactory = $goalFulfillingFormFactory;
 		$this->goalFormFactory = $goalFormFactory;
 	}
 
 	protected $explorer;
 	private GoalFormFactory $goalFormFactory;
+	private GoalFulfillingFormFactory $goalFulfillingFormFactory;
 
 	public function renderDefault(int $cilID, int $svpID): void
 	{
@@ -34,33 +37,15 @@ final class CilPresenter extends Nette\Application\UI\Presenter
 
 	protected function createComponentGoalFulfillingForm(): Form
 	{
-		$form = new Form; // means Nette\Application\UI\Form
-
-		$form->addSelect('vzdelavaciObsah', 'Obsah vedoucí k plnění cíle:', $this->explorer->table('vzdelavaciObsah')->fetchPairs('vzdelavaciObsahID', 'jmenoObsahu'))
-			->setPrompt('Vyberte vzdělávací obsah')
-			->setRequired();
-
-		$form->addTextarea('popisPlneni', 'Popis plnění cíle:');
-
-		$form->addSubmit('send', 'Přidat plnění cíle');
-
-		$form->onSuccess[] = $this->goalFulfillingFormSucceeded(...);
+		$cilID = (int)$this->getParameter('cilID');
+		$form = $this->goalFulfillingFormFactory->create();
+		$form->onSuccess[] = function (\stdClass $data) use ($cilID) {
+			$this->goalFulfillingFormFactory->process($data, $this->explorer, null, $cilID);
+			$this->flashMessage('Plnění vzdělávacího cíle úspěšně přidáno', 'success');
+			$this->redirect('this');
+		};
 
 		return $form;
-	}
-
-	private function goalFulfillingFormSucceeded(\stdClass $data): void
-	{
-		$cilID = $this->getParameter('cilID');
-
-		$this->database->table('plneniCile')->insert([
-			'cil_cilID' => $cilID,
-			'popisPlneniCile' => $data->popisPlneni,
-			'vzdelavaciObsah_vzdelavaciObsahID' => $data->vzdelavaciObsah
-		]);
-
-		$this->flashMessage('Plnění vzdělávacího cíle úspěšně přidáno', 'success');
-		$this->redirect('this');
 	}
 
 	protected function createComponentGoalForm(): Form
