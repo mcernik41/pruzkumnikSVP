@@ -25,8 +25,7 @@ class GoalFulfillingFormFactory
 		$obsahy_mezery = $recursiveGetters->createRecArray_content_breaks($vzdelavaciObsahy);
 
 		$form->addTextarea('popisPlneni', 'Popis plnění:')
-			->setDefaultValue($defaultValues['popisPlneni'] ?? '')
-			->setRequired();
+			->setDefaultValue($defaultValues['popisPlneni'] ?? '');
 
 		$form->addSelect('vzdelavaciObsah', 'Vzdělávací obsah:', $obsahy_mezery)
 			->setDefaultValue($defaultValues['vzdelavaciObsah'] ?? null)
