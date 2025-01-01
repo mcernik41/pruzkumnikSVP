@@ -119,12 +119,14 @@ function showAll()
     {if isset($soucastiAktivit[$oborID][$obsahID])}
         {foreach $soucastiAktivit[$oborID][$obsahID] as $soucast}
             <div>
-				<strong>
-                    <a n:href="SoucastAktivity:default, soucastID: $soucast['soucastID'], aktivitaID: $soucast['aktivitaID'], svpID: $svpID">
-                        {$soucast['jmenoSoucasti']}
-                    </a>
-                </strong>
-                (<a n:href="VzdelavaciAktivita:default, aktivitaID: $soucast['aktivitaID'], svpID: $svpID">{$soucast['jmenoAktivity']}</a>)
+                <p>
+                    <strong>
+                        <a n:href="SoucastAktivity:default, soucastID: $soucast['soucastID'], aktivitaID: $soucast['aktivitaID'], svpID: $svpID">
+                            {$soucast['jmenoSoucasti']}
+                        </a>
+                    </strong>
+                    (<a n:href="VzdelavaciAktivita:default, aktivitaID: $soucast['aktivitaID'], svpID: $svpID">{$soucast['jmenoAktivity']}</a>)
+                </p>
             </div>
         {/foreach}
     {/if}
