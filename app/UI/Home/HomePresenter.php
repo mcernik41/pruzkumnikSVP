@@ -6,22 +6,25 @@ namespace App\UI\Home;
 
 use App\Forms\SchoolFormFactory;
 use App\Forms\ToolFormFactory;
+use App\Forms\GradeFormFactory;
 use Nette\Application\UI\Form;
 use Nette;
 
 final class HomePresenter extends Nette\Application\UI\Presenter
 {
-	public function __construct(Nette\Database\Explorer $database, SchoolFormFactory $schoolFormFactory, ToolFormFactory $toolFormFactory)
+	public function __construct(Nette\Database\Explorer $database, SchoolFormFactory $schoolFormFactory, ToolFormFactory $toolFormFactory, GradeFormFactory $gradeFormFactory)
 	{
 		parent::__construct();
 		$this->explorer = $database;
 		$this->schoolFormFactory = $schoolFormFactory;
 		$this->toolFormFactory = $toolFormFactory;
+		$this->gradeFormFactory = $gradeFormFactory;
 	}
 
 	protected $explorer;
 	private SchoolFormFactory $schoolFormFactory;
 	private ToolFormFactory $toolFormFactory;
+	private GradeFormFactory $gradeFormFactory;
 
 	public function handleCreateTestData(): void
 	{
@@ -96,33 +99,6 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	}
 
 	/* ROČNÍKY */
-	protected function createComponentGradeForm(): Form
-	{
-		$form = new Form; // means Nette\Application\UI\Form
-
-		$form->addText('jmenoRocniku', 'Jméno ročníku:')
-			->setRequired();
-
-		$form->addTextarea('popisRocniku', 'Popis ročníku:');
-
-		$form->addSubmit('send', 'Přidat ročník');
-
-		$form->onSuccess[] = $this->gradeFormSucceeded(...);
-
-		return $form;
-	}
-
-	private function gradeFormSucceeded(\stdClass $data): void
-	{
-		$this->database->table('rocnik')->insert([
-			'jmenoRocniku' => $data->jmenoRocniku,
-			'popisRocniku' => $data->popisRocniku
-		]);
-
-		$this->flashMessage('Ročník úspěšně přidán', 'success');
-		$this->redirect('this');
-	}
-
 	public function handleCreateGrades(): void
 	{
 		$dataInsetrer = new \App\Services\DataInserter($this->explorer);
@@ -132,11 +108,22 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 		$this->redirect('this');
 	}
 
+	protected function createComponentGradeForm(): Form
+	{
+		$form = $this->gradeFormFactory->create();
+		$form->onSuccess[] = function (\stdClass $data) {
+			$this->gradeFormFactory->process($data, $this->explorer);
+			$this->flashMessage('Ročník úspěšně přidán', 'success');
+			$this->redirect('this');
+		};
+
+		return $form;
+	}
+
 	public function handleDeleteGrade(int $id): void
 	{
-		$this->database->table('rocnik')->where('rocnikID', $id)->delete();
-
-		$this->flashMessage('Ročník úspěšně odebrán', 'success');
+		$this->gradeFormFactory->delete($this->explorer, $id);
+		$this->flashMessage('Ročník úspěšně odebránn', 'success');
 		$this->redirect('this');
 	}
 
