@@ -19,9 +19,7 @@
                 <th>Obsahy/Obory</th>
                 {foreach $obory as $obor}
                     <th>
-                        <a n:href="VzdelavaciObor:default, svpID: $svpID, vzdelavaciOborID: $obor->vzdelavaciOborID">
-                            {$obor->jmenoOboru}
-                        </a>
+                        <a n:href="VzdelavaciObor:default, svpID: $svpID, vzdelavaciOborID: $obor->vzdelavaciOborID">{$obor->jmenoOboru}</a>
                         <button onclick="hideColumn(this)" class="icoButton"><img src="{$basePath}/images/hide.png"></button>
                     </th>
                     {include #rekurzivniObory, obory => $obor->children, uroven => 1}
@@ -32,9 +30,7 @@
             {foreach $obsahy as $obsah}
                 <tr>
                     <td>
-                        <a n:href="VzdelavaciObsah:default, svpID: $svpID, vzdelavaciObsahID: $obsah->vzdelavaciObsahID">
-                            {$obsah->jmenoObsahu}
-                        </a>
+                        <a n:href="VzdelavaciObsah:default, svpID: $svpID, vzdelavaciObsahID: $obsah->vzdelavaciObsahID">{$obsah->jmenoObsahu}</a>
                         <button onclick="hideRow(this)" class="icoButton"><img src="{$basePath}/images/hide.png"></button>
                     </td>
                     {foreach $oboryIds as $obor}
@@ -141,9 +137,7 @@ document.addEventListener('DOMContentLoaded', hideEmptyRowsAndColumns);
     {foreach $obsahy as $obsah}
         <tr>
             <td style="padding-left: {$uroven * 20}px">
-                <a n:href="VzdelavaciObsah:default, svpID: $svpID, vzdelavaciObsahID: $obsah->vzdelavaciObsahID">
-                    {$obsah->jmenoObsahu}
-                </a>
+                <a n:href="VzdelavaciObsah:default, svpID: $svpID, vzdelavaciObsahID: $obsah->vzdelavaciObsahID">{$obsah->jmenoObsahu}</a>
                 <button onclick="hideRow(this)" class="icoButton"><img src="{$basePath}/images/hide.png"></button>
             </td>
             {foreach $oboryIds as $obor}
@@ -159,9 +153,7 @@ document.addEventListener('DOMContentLoaded', hideEmptyRowsAndColumns);
 {block #rekurzivniObory}
     {foreach $obory as $obor}
         <th style="padding-top: {$uroven * 30}px">
-            <a n:href="VzdelavaciObor:default, svpID: $svpID, vzdelavaciOborID: $obor->vzdelavaciOborID">
-                {$obor->jmenoOboru}
-            </a>
+            <a n:href="VzdelavaciObor:default, svpID: $svpID, vzdelavaciOborID: $obor->vzdelavaciOborID">{$obor->jmenoOboru}</a>
             <button onclick="hideColumn(this)" class="icoButton"><img src="{$basePath}/images/hide.png"></button>
         </th>
         {include #rekurzivniObory, obory => $obor->children, uroven => $uroven + 1}
@@ -174,9 +166,7 @@ document.addEventListener('DOMContentLoaded', hideEmptyRowsAndColumns);
             <div>
                 <p>
                     <strong>
-                        <a n:href="SoucastAktivity:default, soucastID: $soucast['soucastID'], aktivitaID: $soucast['aktivitaID'], svpID: $svpID">
-                            {$soucast['jmenoSoucasti']}
-                        </a>
+                        <a n:href="SoucastAktivity:default, soucastID: $soucast['soucastID'], aktivitaID: $soucast['aktivitaID'], svpID: $svpID">{$soucast['jmenoSoucasti']}</a>
                     </strong>
                     (<a n:href="VzdelavaciAktivita:default, aktivitaID: $soucast['aktivitaID'], svpID: $svpID">{$soucast['jmenoAktivity']}</a>)
                 </p>
