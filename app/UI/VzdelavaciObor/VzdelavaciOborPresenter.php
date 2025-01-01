@@ -4,22 +4,25 @@ declare(strict_types=1);
 
 namespace App\UI\VzdelavaciObor;
 
+use App\Forms\AreaFormFactory;
 use App\Forms\TopicFormFactory;
 use Nette\Application\UI\Form;
 use Nette;
 
-
 final class VzdelavaciOborPresenter extends Nette\Application\UI\Presenter
 {
-    public function __construct(private Nette\Database\Explorer $database, TopicFormFactory $topicFormFactory) 
+
+	public function __construct(Nette\Database\Explorer $database, AreaFormFactory $areaFormFactory, TopicFormFactory $topicFormFactory)
 	{
-        parent::__construct();
+		parent::__construct();
 		$this->explorer = $database;
-        $this->topicFormFactory = $topicFormFactory;
+		$this->areaFormFactory = $areaFormFactory;
+		$this->topicFormFactory = $topicFormFactory;
 	}
 
 	protected $explorer;
-    private TopicFormFactory $topicFormFactory;
+	private AreaFormFactory $areaFormFactory;
+	private TopicFormFactory $topicFormFactory;
 
 	public function renderDefault(int $svpID, int $vzdelavaciOborID): void
 	{
@@ -67,83 +70,47 @@ final class VzdelavaciOborPresenter extends Nette\Application\UI\Presenter
 
 	protected function createComponentAreaForm(): Form
 	{
-		$form = new Form; // means Nette\Application\UI\Form
-
-		$form->addText('jmenoOboru', 'Jméno vzdělvávacího oboru:')
-			->setRequired();
-
-		$form->addTextarea('popisOboru', 'Popis vzdělvávacího oboru:');
-
-		$form->addSubmit('send', 'Přidat vzdělávací obor');
-
-		$form->onSuccess[] = $this->areaFormSucceeded(...);
+		$form = $this->areaFormFactory->create();
+		$form->onSuccess[] = function (\stdClass $data) {
+			$this->areaFormFactory->process($data, $this->explorer, null, (int)$this->getParameter('svpID'), ((int)$this->getParameter('vzdelavaciOborID') == -1) ? null : (int)$this->getParameter('vzdelavaciOborID'));
+			$this->flashMessage('Vzdělávací obor úspěšně přidán', 'success');
+			$this->redirect('this');
+		};
 
 		return $form;
-	}
-
-	private function areaFormSucceeded(\stdClass $data): void
-	{
-		$svpID = $this->getParameter('svpID');
-		$vzdelavaciOborID = $this->getParameter('vzdelavaciOborID');
-
-		$this->database->table('vzdelavaciObor')->insert([
-			'svp_svpID' => $svpID,
-			'rodicovskyVzdelavaciOborID' => ($vzdelavaciOborID == -1) ? null : $vzdelavaciOborID,
-			'jmenoOboru' => $data->jmenoOboru,
-			'popisOboru' => $data->popisOboru,
-		]);
-
-		$this->flashMessage('Vzdělávací obor úspěšně přidán', 'success');
-		$this->redirect('this');
 	}
 
 	protected function createComponentAreaModifyForm(): Form
 	{
-		$form = new Form; // means Nette\Application\UI\Form
-
-		$vzdelavaciOborID = $this->getParameter('vzdelavaciOborID');		
+		$vzdelavaciOborID = (int)$this->getParameter('vzdelavaciOborID');
 		$obor = $this->explorer->table('vzdelavaciObor')->get($vzdelavaciOborID);
 
-		$form->addText('jmenoOboru', 'Jméno vzdělvávacího oboru:')
-			->setDefaultValue($obor->jmenoOboru)
-			->setRequired();
+		$defaultValues = [
+			'jmenoOboru' => $obor->jmenoOboru,
+			'popisOboru' => $obor->popisOboru
+		];
 
-		$form->addTextarea('popisOboru', 'Popis vzdělvávacího oboru:')
-			->setDefaultValue($obor->popisOboru);
-
-		$form->addSubmit('send', 'Upravit vzdělávací obor');
-
-		$form->onSuccess[] = $this->areaModifyFormSucceeded(...);
+		$form = $this->areaFormFactory->create($defaultValues);
+		$form->onSuccess[] = function (\stdClass $data) use ($vzdelavaciOborID) {
+			$this->areaFormFactory->process($data, $this->explorer, $vzdelavaciOborID, (int)$this->getParameter('svpID'), ((int)$this->getParameter('vzdelavaciOborID') == -1) ? null : (int)$this->getParameter('vzdelavaciOborID'));
+			$this->flashMessage('Vzdělávací obor úspěšně upraven', 'success');
+			$this->redirect('this');
+		};
 
 		return $form;
 	}
 
-	private function areaModifyFormSucceeded(\stdClass $data): void
-	{
-		$vzdelavaciOborID = $this->getParameter('vzdelavaciOborID');
-
-		$this->database->table('vzdelavaciObor')
-			->where('vzdelavaciOborID', $vzdelavaciOborID)
-			->update([
-				'jmenoOboru' => $data->jmenoOboru,
-				'popisOboru' => $data->popisOboru,
-		]);
-
-		$this->flashMessage('Vzdělávací obor úspěšně upraven', 'success');
-		$this->redirect('this');
-	}
-
 	protected function createComponentTopicForm(): Form
-    {
-        $form = $this->topicFormFactory->create();
-        $form->onSuccess[] = function (\stdClass $data) {
-            $this->topicFormFactory->process($data, $this->explorer, null, (int)$this->getParameter('vzdelavaciOborID'));
-            $this->flashMessage('Téma úspěšně přidáno', 'success');
-            $this->redirect('this');
-        };
+	{
+		$form = $this->topicFormFactory->create();
+		$form->onSuccess[] = function (\stdClass $data) {
+			$this->topicFormFactory->process($data, $this->explorer, null, (int)$this->getParameter('vzdelavaciOborID'));
+			$this->flashMessage('Téma úspěšně přidáno', 'success');
+			$this->redirect('this');
+		};
 
-        return $form;
-    }
+		return $form;
+	}
 
 	public function handleNahratOborySVP_NV(int $svpID)
 	{
