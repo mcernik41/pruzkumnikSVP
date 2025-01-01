@@ -3,19 +3,22 @@
 declare(strict_types=1);
 
 namespace App\UI\SeznamAktivit;
+
+use App\Forms\ActivityFormFactory;
 use Nette\Application\UI\Form;
-
 use Nette;
-
 
 final class SeznamAktivitPresenter extends Nette\Application\UI\Presenter
 {
-    public function __construct(private Nette\Database\Explorer $database) 
+	public function __construct(Nette\Database\Explorer $database, ActivityFormFactory $activityFormFactory)
 	{
+		parent::__construct();
 		$this->explorer = $database;
+		$this->activityFormFactory = $activityFormFactory;
 	}
 
 	protected $explorer;
+	private ActivityFormFactory $activityFormFactory;
 
 	public function renderDefault(int $svpID): void
 	{
@@ -31,36 +34,20 @@ final class SeznamAktivitPresenter extends Nette\Application\UI\Presenter
 
 	protected function createComponentActivityForm(): Form
 	{
-		$form = new Form; // means Nette\Application\UI\Form
-
-		$form->addText('jmenoAktivity', 'Jméno vzdělvávací aktivity:')
-			->setRequired();
-
-		$form->addTextarea('popisAktivity', 'Popis vzdělvávací aktivity:');
-
-		$form->addSelect('typAktivity', 'Typ aktivity:', $this->explorer->table('typAktivity')->fetchPairs('typAktivityID', 'jmenoTypu'))
-			->setPrompt('Vyberte typ aktivity')
-			->setRequired();
-
-		$form->addSubmit('send', 'Přidat vzdělávací aktivitu');
-
-		$form->onSuccess[] = $this->activityFormSucceeded(...);
+		$form = $this->activityFormFactory->create();
+		$form->onSuccess[] = function (\stdClass $data) {
+			$this->activityFormFactory->process($data, $this->explorer, null, (int)$this->getParameter('svpID'));
+			$this->flashMessage('Vzdělávací aktivita úspěšně přidána', 'success');
+			$this->redirect('this');
+		};
 
 		return $form;
 	}
 
-	private function activityFormSucceeded(\stdClass $data): void
+	public function handleDeleteActivity(int $id): void
 	{
-		$svpID = $this->getParameter('svpID');
-
-		$this->database->table('vzdelavaciAktivita')->insert([
-			'svp_svpID' => $svpID,
-			'jmenoAktivity' => $data->jmenoAktivity,
-			'popisAktivity' => $data->popisAktivity,
-			'typAktivity_typAktivityID' => $data->typAktivity
-		]);
-
-		$this->flashMessage('Vzdělávací aktivita úspěšně přidána', 'success');
+		$this->activityFormFactory->delete($this->explorer, $id);
+		$this->flashMessage('Vzdělávací aktivita úspěšně odebrána', 'success');
 		$this->redirect('this');
 	}
 }

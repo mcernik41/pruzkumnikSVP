@@ -3,19 +3,22 @@
 declare(strict_types=1);
 
 namespace App\UI\VzdelavaciAktivita;
+
+use App\Forms\ActivityFormFactory;
 use Nette\Application\UI\Form;
-
 use Nette;
-
 
 final class VzdelavaciAktivitaPresenter extends Nette\Application\UI\Presenter
 {
-    public function __construct(private Nette\Database\Explorer $database) 
+	public function __construct(Nette\Database\Explorer $database, ActivityFormFactory $activityFormFactory)
 	{
+		parent::__construct();
 		$this->explorer = $database;
+		$this->activityFormFactory = $activityFormFactory;
 	}
 
 	protected $explorer;
+	private ActivityFormFactory $activityFormFactory;
 
 	public function renderDefault(int $aktivitaID, int $svpID): void
 	{
@@ -87,46 +90,22 @@ final class VzdelavaciAktivitaPresenter extends Nette\Application\UI\Presenter
 
 	protected function createComponentActivityForm(): Form
 	{
-		$form = new Form; // means Nette\Application\UI\Form
-		
-		$aktivitaID = $this->getParameter('aktivitaID');
+		$aktivitaID = (int)$this->getParameter('aktivitaID');
 		$aktivita = $this->explorer->table('vzdelavaciAktivita')->get($aktivitaID);
-		$jmenoAktivity = $aktivita->jmenoAktivity;
-		$popisAktivity = $aktivita->popisAktivity;
-		$typAktivity = $aktivita->typAktivity;
 
-		$form->addText('jmenoAktivity', 'Jméno vzdělvávací aktivity:')
-			->setDefaultValue($jmenoAktivity)
-			->setRequired();
+		$defaultValues = [
+			'jmenoAktivity' => $aktivita->jmenoAktivity,
+			'popisAktivity' => $aktivita->popisAktivity,
+			'typAktivity' => $aktivita->typAktivity_typAktivityID
+		];
 
-		$form->addTextarea('popisAktivity', 'Popis vzdělvávací aktivity:')
-			->setDefaultValue($popisAktivity);
-
-		$form->addSelect('typAktivity', 'Typ aktivity:', $this->explorer->table('typAktivity')->fetchPairs('typAktivityID', 'jmenoTypu'))
-			->setDefaultValue($typAktivity)
-			->setPrompt('Vyberte typ aktivity')
-			->setRequired();
-
-		$form->addSubmit('send', 'Upravit vzdělávací aktivitu');
-
-		$form->onSuccess[] = $this->activityFormSucceeded(...);
+		$form = $this->activityFormFactory->create($defaultValues);
+		$form->onSuccess[] = function (\stdClass $data) use ($aktivitaID) {
+			$this->activityFormFactory->process($data, $this->explorer, $aktivitaID);
+			$this->flashMessage('Vzdělávací aktivita úspěšně upravena', 'success');
+			$this->redirect('this');
+		};
 
 		return $form;
-	}
-
-	private function activityFormSucceeded(\stdClass $data): void
-	{
-		$aktivitaID = $this->getParameter('aktivitaID');
-
-		$this->database->table('vzdelavaciAktivita')
-			->where('vzdelavaciAktivitaID = ?', $aktivitaID)
-			->update([
-				'jmenoAktivity' => $data->jmenoAktivity,
-				'popisAktivity' => $data->popisAktivity,
-				'typAktivity_typAktivityID' => $data->typAktivity
-		]);
-
-		$this->flashMessage('Vzdělávací aktivita úspěšně upravena', 'success');
-		$this->redirect('this');
 	}
 }
