@@ -10,8 +10,11 @@
 	<h2>Přidat vzdělávací obsah</h2>
 	{control contentForm}
 
-	<h2>Vzdělávací obsah</h2>
-	<div class="seznamOdkazu vzdelavaciObsahy">
+	<h2>
+		Vzdělávací obsah
+		<button id="toggleObsahy" onclick="toggleTemata('obsahyContent', 'toggleObsahy')">+</button>
+	</h2>
+	<div class="seznamOdkazu vzdelavaciObsahy" id="obsahyContent" style="display: none;">
 		{foreach $vzdelavaciObsahy as $vzdelavaciObsah}
 			<p>
 				<a n:href="VzdelavaciObsah:default, svpID: $svpID, vzdelavaciObsahID: $vzdelavaciObsah->vzdelavaciObsahID">{$vzdelavaciObsah->jmenoObsahu}</a>
@@ -20,8 +23,11 @@
 		{/foreach}
 	</div>
 
-	<h2>Přidružené aktivity</h2>
-	<div class="pridruzeneAktivity">
+	<h2>
+		Přidružené aktivity
+		<button id="toggleAktivity" onclick="toggleTemata('aktivityContent', 'toggleAktivity')">+</button>
+	</h2>
+	<div class="pridruzeneAktivity" id="aktivityContent" style="display: none;">
 		{foreach $obory as $obor}
 			<h3><a n:href="VzdelavaciObor:default, svpID: $svpID, vzdelavaciOborID: $obor->oborID">{$obor->jmenoOboru}</a></h3>
 			{foreach $obor->aktivity as $aktivita}

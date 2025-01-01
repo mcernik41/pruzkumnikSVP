@@ -4,7 +4,21 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
 
-	<link rel="stylesheet" href="{$basePath}/styly/styly.css">
+	<link rel="stylesheet" href="{$basePath}/styly/styly.css">	
+
+	<script>
+		function toggleTemata(contentID, buttonID) {
+			var content = document.getElementById(contentID);
+			var button = document.getElementById(buttonID);
+			if (content.style.display === 'none') {
+				content.style.display = 'block';
+				button.textContent = '-';
+			} else {
+				content.style.display = 'none';
+				button.textContent = '+';
+			}
+		}
+	</script>
 
 	<title>{ifset title}{include title|stripHtml} | {/ifset}Nette Web</title>
 </head>
