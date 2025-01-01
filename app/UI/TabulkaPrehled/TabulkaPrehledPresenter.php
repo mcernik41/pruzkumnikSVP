@@ -98,7 +98,7 @@ final class TabulkaPrehledPresenter extends Nette\Application\UI\Presenter
         return $oboryIds;
     }
 
-	protected function createComponentFilterByTypeForm(): Form
+	protected function createComponentFilterForm(): Form
 	{
 		$form = new Form; // means Nette\Application\UI\Form
 
@@ -106,41 +106,9 @@ final class TabulkaPrehledPresenter extends Nette\Application\UI\Presenter
             ->setPrompt('Vyberte typ aktivity')
             ->setDefaultValue($this->getParameter('typAktivity'));
 
-		$form->addSubmit('send', 'Filtrovat');
-
-        $form->onSuccess[] = function (Form $form, \stdClass $values): void
-        {
-            $this->redirect('this', ['typAktivity' => $values->typAktivity]);
-        };
-
-        $form->setHtmlAttribute('class', 'filterForm');
-
-		return $form;
-	}
-
-	protected function createComponentFilterByToolForm(): Form
-	{
-		$form = new Form; // means Nette\Application\UI\Form
-
         $form->addSelect('pomucka', 'Pomůcka:', $this->explorer->table('pomucka')->fetchPairs('pomuckaID', 'jmenoPomucky'))
             ->setPrompt('Vyberte pomůcku')
             ->setDefaultValue($this->getParameter('pomucka'));
-
-		$form->addSubmit('send', 'Filtrovat');
-
-        $form->onSuccess[] = function (Form $form, \stdClass $values): void
-        {
-            $this->redirect('this', ['pomucka' => $values->pomucka]);
-        };
-
-        $form->setHtmlAttribute('class', 'filterForm');
-
-		return $form;
-	}
-
-	protected function createComponentFilterByGradeForm(): Form
-	{
-		$form = new Form; // means Nette\Application\UI\Form
 
         $form->addSelect('rocnik', 'Ročník:', $this->explorer->table('rocnik')->fetchPairs('rocnikID', 'jmenoRocniku'))
             ->setPrompt('Vyberte ročník')
@@ -150,7 +118,7 @@ final class TabulkaPrehledPresenter extends Nette\Application\UI\Presenter
 
         $form->onSuccess[] = function (Form $form, \stdClass $values): void
         {
-            $this->redirect('this', ['rocnik' => $values->rocnik]);
+            $this->redirect('this', ['typAktivity' => $values->typAktivity, 'pomucka' => $values->pomucka, 'rocnik' => $values->rocnik]);
         };
 
         $form->setHtmlAttribute('class', 'filterForm');
