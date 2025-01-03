@@ -10,6 +10,7 @@ use App\Forms\GradeFormFactory;
 use App\Forms\ActivityTypeFormFactory;
 use Nette\Application\UI\Form;
 use Nette;
+use Nette\Http\FileUpload;
 
 final class HomePresenter extends Nette\Application\UI\Presenter
 {
@@ -132,5 +133,61 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 		$this->toolFormFactory->delete($this->explorer, $id);
 		$this->flashMessage('Pomůcka úspěšně odebrána', 'success');
 		$this->redirect('this');
+	}
+
+	public function handleDownloadBackup(): void
+	{
+		$backupFile = __DIR__ . '/../../backup.sql';
+		$mysqldumpPath = 'C:/xampp/mysql/bin/mysqldump.exe'; // Upravte cestu podle vaší instalace XAMPP
+		$command = "$mysqldumpPath --user=root --password= --host=localhost pruzkumniksvp > $backupFile";
+		exec($command . ' 2>&1', $output, $returnVar);
+
+		if ($returnVar === 0) 
+		{
+			$this->sendResponse(new \Nette\Application\Responses\FileResponse($backupFile, 'backup.sql'));
+		} 
+		else 
+		{
+			$errorMessage = implode("\n", $output);
+			$this->flashMessage('Chyba při vytváření zálohy databáze: ' . $errorMessage, 'error');
+			$this->redirect('this');
+		}
+	}
+
+	public function handleUploadBackup(FileUpload $file): void
+	{
+		if ($file->isOk()) 
+		{
+			$backupFile = __DIR__ . '/../../backup.sql';
+			$file->move($backupFile);
+
+			$command = "mysql --user=root --password= --host=localhost pruzkumniksvp < $backupFile";
+			exec($command, $output, $returnVar);
+
+			if ($returnVar === 0) 
+			{
+				$this->flashMessage('Obnovení databáze bylo úspěšné', 'success');
+			} 
+			else 
+			{
+				$this->flashMessage('Chyba při obnovování databáze', 'error');
+			}
+		} else {
+			$this->flashMessage('Neplatný soubor pro obnovení databáze', 'error');
+		}
+
+		$this->redirect('this');
+	}
+
+	protected function createComponentUploadBackupForm(): Form
+	{
+		$form = new Form;
+		$form->addUpload('backup', 'Záloha databáze:')
+			->setRequired('Vyberte soubor se zálohou databáze.')
+			->addRule(Form::MIME_TYPE, 'Soubor musí být ve formátu SQL.', 'application/sql');
+		$form->addSubmit('submit', 'Nahrát zálohu');
+		$form->onSuccess[] = [$this, 'handleUploadBackup'];
+
+		return $form;
 	}
 }
