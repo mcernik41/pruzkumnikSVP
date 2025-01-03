@@ -161,18 +161,21 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 			$backupFile = __DIR__ . '/../../backup.sql';
 			$file->move($backupFile);
 
-			$command = "mysql --user=root --password= --host=localhost pruzkumniksvp < $backupFile";
-			exec($command, $output, $returnVar);
+			$mysqlPath = 'C:/xampp/mysql/bin/mysql.exe'; // Upravte cestu podle vaší instalace XAMPP
+			$command = "$mysqlPath --user=root --password= --host=localhost pruzkumniksvp < $backupFile";
+			exec($command . ' 2>&1', $output, $returnVar);
 
 			if ($returnVar === 0) 
 			{
-				$this->flashMessage('Obnovení databáze bylo úspěšné', 'success');
+				$this->flashMessage('Obnovení databáze bylo úspěšné. Log: ' . implode("\n", $output), 'success');
 			} 
 			else 
 			{
-				$this->flashMessage('Chyba při obnovování databáze', 'error');
+				$this->flashMessage('Chyba při obnovování databáze: ' . implode("\n", $output), 'error');
 			}
-		} else {
+		} 
+		else 
+		{
 			$this->flashMessage('Neplatný soubor pro obnovení databáze', 'error');
 		}
 
@@ -183,10 +186,11 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	{
 		$form = new Form;
 		$form->addUpload('backup', 'Záloha databáze:')
-			->setRequired('Vyberte soubor se zálohou databáze.')
-			->addRule(Form::MIME_TYPE, 'Soubor musí být ve formátu SQL. Nahraný soubor je typu %s.', 'application/sql');
+			->setRequired('Vyberte soubor se zálohou databáze.');
 		$form->addSubmit('submit', 'Nahrát zálohu');
-		$form->onSuccess[] = [$this, 'handleUploadBackup'];
+		$form->onSuccess[] = function (Form $form, \stdClass $values) {
+			$this->handleUploadBackup($values->backup);
+		};
 
 		return $form;
 	}
