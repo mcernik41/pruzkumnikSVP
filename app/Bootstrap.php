@@ -37,17 +37,17 @@ class Bootstrap
 
 	private static function createDatabaseIfNotExists($container): void
     {
-        $dbHost = 'localhost';  // Změňte na správné nastavení
-        $dbUser = 'root';       // Změňte na správné nastavení
-        $dbPassword = ''; // Změňte na správné nastavení
-        $dbName = 'pruzkumniksvp'; // Změňte na název vaší databáze
+        $dbHost = DatabaseConfig::$dbHost;
+        $dbUser = DatabaseConfig::$dbUser;
+        $dbPassword = DatabaseConfig::$dbPassword;
+        $dbName = DatabaseConfig::$dbName;
 
         $dsn = "mysql:host=$dbHost";
 
         try 
 		{
 			$pdo = new \PDO($dsn, $dbUser, $dbPassword);
-			$pdo->setAttribute(\PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
 			$stmt = $pdo->query("SHOW DATABASES LIKE '$dbName'");
 			$dbExists = $stmt->fetch();

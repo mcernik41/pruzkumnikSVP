@@ -11,6 +11,7 @@ use App\Forms\ActivityTypeFormFactory;
 use Nette\Application\UI\Form;
 use Nette;
 use Nette\Http\FileUpload;
+use App\DatabaseConfig;
 
 final class HomePresenter extends Nette\Application\UI\Presenter
 {
@@ -139,7 +140,7 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 	{
 		$backupFile = __DIR__ . '/../../backup.sql';
 		$mysqldumpPath = 'C:/xampp/mysql/bin/mysqldump.exe'; // Upravte cestu podle vaší instalace XAMPP
-		$command = "$mysqldumpPath --user=root --password= --host=localhost pruzkumniksvp > $backupFile";
+		$command = "$mysqldumpPath --user=" . DatabaseConfig::$dbUser . " --password=" . DatabaseConfig::$dbPassword . " --host=" . DatabaseConfig::$dbHost . " " . DatabaseConfig::$dbName . " > $backupFile";
 		exec($command . ' 2>&1', $output, $returnVar);
 
 		if ($returnVar === 0) 
@@ -162,7 +163,7 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 			$file->move($backupFile);
 
 			$mysqlPath = 'C:/xampp/mysql/bin/mysql.exe'; // Upravte cestu podle vaší instalace XAMPP
-			$command = "$mysqlPath --user=root --password= --host=localhost pruzkumniksvp < $backupFile";
+			$command = "$mysqlPath --user=" . DatabaseConfig::$dbUser . " --password=" . DatabaseConfig::$dbPassword . " --host=" . DatabaseConfig::$dbHost . " " . DatabaseConfig::$dbName . " < $backupFile";
 			exec($command . ' 2>&1', $output, $returnVar);
 
 			if ($returnVar === 0) 
