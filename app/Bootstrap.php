@@ -46,25 +46,31 @@ class Bootstrap
 
         try 
 		{
-            $pdo = new \PDO($dsn, $dbUser, $dbPassword);
-            $pdo->setAttribute(\PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$pdo = new \PDO($dsn, $dbUser, $dbPassword);
+			$pdo->setAttribute(\PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbName`");			
+			$stmt = $pdo->query("SHOW DATABASES LIKE '$dbName'");
+			$dbExists = $stmt->fetch();
 
-			//vytvoření tabulek
-			$runner = $container->getByType(Services\sqlRunner::class);
-			$runner->runSQLFile(__DIR__ . '/../createScript.sql');
-
-			//pokud se vytváří databáze, vloží se měsíce
-			$pdo->exec("USE `$dbName`");
-			$stmt = $pdo->query("SELECT COUNT(*) FROM mesic");
-			$count = $stmt->fetchColumn();
- 
-			if ($count == 0) 
+			if (!$dbExists) 
 			{
-				$database = $container->getByType(\Nette\Database\Explorer::class);
-				$dataInsetrer = new \App\Services\DataInserter($database);
-				$dataInsetrer->insertMonths();
+				$pdo->exec("CREATE DATABASE `$dbName`");
+
+				// vytvoření tabulek
+				$runner = $container->getByType(Services\sqlRunner::class);
+				$runner->runSQLFile(__DIR__ . '/../createScript.sql');
+
+				// pokud se vytváří databáze, vloží se měsíce
+				$pdo->exec("USE `$dbName`");
+				$stmt = $pdo->query("SELECT COUNT(*) FROM mesic");
+				$count = $stmt->fetchColumn();
+
+				if ($count == 0) 
+				{
+					$database = $container->getByType(\Nette\Database\Explorer::class);
+					$dataInsetrer = new \App\Services\DataInserter($database);
+					$dataInsetrer->insertMonths();
+				}
 			}
         } 
 		catch (\PDOException $e) 
