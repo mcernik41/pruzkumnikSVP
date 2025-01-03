@@ -108,6 +108,7 @@ class VzdelavaciObor
     public $jmenoOboru;
     public $popisOboru;
     public $rodicovskyVzdelavaciOborID;
+    public $children;
 
     public function __construct(
         int $vzdelavaciOborID,
@@ -128,6 +129,7 @@ class VzdelavaciObsah
     public $jmenoObsahu;
     public $popisObsahu;
     public $rodicovskyVzdelavaciObsahID;
+    public $children;
 
     public function __construct(
         int $vzdelavaciObsahID,
