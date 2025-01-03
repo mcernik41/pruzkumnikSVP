@@ -36,15 +36,17 @@ class Bootstrap
 	}
 
 	private static function createDatabaseIfNotExists($container): void
-    {
-        $dbHost = DatabaseConfig::$dbHost;
-        $dbUser = DatabaseConfig::$dbUser;
-        $dbPassword = DatabaseConfig::$dbPassword;
-        $dbName = DatabaseConfig::$dbName;
+	{
+		DatabaseConfig::setConfig();
 
-        $dsn = "mysql:host=$dbHost";
+		$dbHost = DatabaseConfig::$dbHost;
+		$dbUser = DatabaseConfig::$dbUser;
+		$dbPassword = DatabaseConfig::$dbPassword;
+		$dbName = DatabaseConfig::$dbName;
 
-        try 
+		$dsn = "mysql:host=$dbHost";
+
+		try 
 		{
 			$pdo = new \PDO($dsn, $dbUser, $dbPassword);
 			$pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
@@ -72,10 +74,10 @@ class Bootstrap
 					$dataInsetrer->insertMonths();
 				}
 			}
-        } 
+		} 
 		catch (\PDOException $e) 
 		{
-            throw new \Exception("Database creation failed: " . $e->getMessage());
-        }
-    }
+			throw new \Exception("Database creation failed: " . $e->getMessage());
+		}
+	}
 }
