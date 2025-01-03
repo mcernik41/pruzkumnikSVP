@@ -3,9 +3,11 @@
 
 	<h3><a n:href="createTestData!">Přidat testovací data</a></h3>
 
-	<div>
-		<h2>Školy</h2>
-
+    <h2>
+        Školy
+        <button id="toggleSkoly" onclick="toggleTemata('skolyContent', 'toggleSkoly')">-</button>
+    </h2>
+    <div id="skolyContent">
 		<h3>Přidat školu</h3>
 		{control schoolForm}
 
@@ -19,9 +21,11 @@
 		</div>
 	</div>
 
-	<div>
-		<h2>Typy aktivit</h2>
-
+    <h2>
+        Typy aktivit
+        <button id="toggleTypyAktivit" onclick="toggleTemata('typyAktivitContent', 'toggleTypyAktivit')">-</button>
+    </h2>
+    <div id="typyAktivitContent">
 		<h3>Přidat typ aktivity</h3>
 		{control activityTypeForm}
 
@@ -36,9 +40,11 @@
 		</div>
 	</div>
 
-	<div>
-        <h2>Ročníky</h2>
-
+	<h2>
+		Ročníky
+		<button id="toggleRocniky" onclick="toggleTemata('rocnikyContent', 'toggleRocniky')">-</button>
+	</h2>
+	<div id="rocnikyContent">
         <h3>Přidat ročník</h3>
         {control gradeForm}
 
@@ -55,9 +61,11 @@
         </div>
     </div>
 
-    <div>
-        <h2>Pomůcky</h2>
-
+    <h2>
+        Pomůcky
+        <button id="togglePomucky" onclick="toggleTemata('pomuckyContent', 'togglePomucky')">-</button>
+    </h2>
+    <div id="pomuckyContent">
         <h3>Přidat pomůcku</h3>
         {control toolForm}
 
@@ -72,11 +80,15 @@
         </div>
     </div>
 
-	<div>
-		<h2>Zálohování databáze</h2>
+    <h2>
+        Zálohování databáze
+        <button id="toggleZalohovani" onclick="toggleTemata('zalohovaniContent', 'toggleZalohovani')">-</button>
+    </h2>
+    <div id="zalohovaniContent">
+		<h3>Zálohování</h3>
 		<a n:href="downloadBackup!" class="btn btn-primary">Stáhnout zálohu databáze</a>
 
-		<h2>Nahrát zálohu databáze</h2>
+		<h3>Nahrát zálohu databáze</h3>
 		{control uploadBackupForm}
 	</div>
 {/block}
