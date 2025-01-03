@@ -184,7 +184,7 @@ final class HomePresenter extends Nette\Application\UI\Presenter
 		$form = new Form;
 		$form->addUpload('backup', 'Záloha databáze:')
 			->setRequired('Vyberte soubor se zálohou databáze.')
-			->addRule(Form::MIME_TYPE, 'Soubor musí být ve formátu SQL.', 'application/sql');
+			->addRule(Form::MIME_TYPE, 'Soubor musí být ve formátu SQL. Nahraný soubor je typu %s.', 'application/sql');
 		$form->addSubmit('submit', 'Nahrát zálohu');
 		$form->onSuccess[] = [$this, 'handleUploadBackup'];
 
