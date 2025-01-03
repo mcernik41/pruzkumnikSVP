@@ -10,10 +10,17 @@
 }
 
 .flash {
-    background-color: rgb(135, 187, 17);
     color: rgb(0, 0, 0);
     padding: 16px;
     margin-top: 8px;
+}
+
+.success {
+    background-color: rgb(135, 187, 17);
+}
+
+.error {
+    background-color: rgb(255, 138, 13);
 }
 
 table {
