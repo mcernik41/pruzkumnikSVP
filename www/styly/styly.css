@@ -90,3 +90,8 @@ tr:nth-child(odd) td:first-child { background-color: rgb(198, 198, 198); }
 .filterForm table {
     display: inline;
 }
+
+textarea {
+    width: 300px;
+    height: 150px;
+}
